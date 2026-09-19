@@ -1,0 +1,4 @@
+__pycache__/
+*.py[cod]
+self-session-bootstrap/scripts/_meta/env_card.json
+find-skills/log.json
