@@ -1,35 +1,28 @@
 # Moye-Skills
 
-个人 skill 的技能仓。本机工作树：`<本仓路径>`。
+个人 skill 仓库。clone 后把各产品的个人 skills 目录联接到本仓 `skills/`，不要再各拷一份。
 
-Cursor 与 dsh 的默认 skills 目录做成**目录联接**，指向这份工作树，不要再各拷一份。
+本机路径写在 `.env`，不要写进 README。
 
-## Cursor 目录联接（人做一次）
-
-dsh 侧联接由灌仓时做好。Cursor 仍用自己的 `~\.cursor\skills` 时，关掉 Cursor 后在 **以管理员以外的普通 PowerShell** 执行：
+## 使用
 
 ```powershell
-$cursorSkills = "$env:USERPROFILE\.cursor\skills"
-$workTree = "<本仓路径>"
-$backup = "$env:USERPROFILE\.cursor\skills.bak-$(Get-Date -Format yyyyMMdd)"
-
-if (Test-Path $cursorSkills) {
-    Rename-Item $cursorSkills $backup
-}
-cmd /c mklink /J $cursorSkills $workTree
-Get-Item $cursorSkills | Format-List FullName, LinkType, Target
+git clone git@github.com:moye233057/Moye-Skills.git
+cd Moye-Skills
+copy .env.example .env
+# 按本机改 .env；Windows 默认值一般不用动
+powershell -ExecutionPolicy Bypass -File .\setup.ps1
 ```
 
-`LinkType` 应为 `Junction`，`Target` 为 `<本仓路径>`。然后重新打开 Cursor。
+改完路径后重启 Cursor / dsh。
 
-不要联接到 `~\.dsh\skills`（多一跳，dsh 路径坏了 Cursor 跟着挂）。目标始终是工作树。
+联接目标是本仓的 `skills/`，不要指到另一个产品的 skills 目录。
 
 ## 验收
 
 ```powershell
-cmd /c dir /AL %USERPROFILE%\.cursor\skills
-cmd /c dir /AL %USERPROFILE%\.dsh\skills
-git -C <本仓路径> remote -v
+powershell -ExecutionPolicy Bypass -File .\setup.ps1
+git remote -v
 ```
 
-两条联接都应指向 `<本仓路径>`。`origin` 必须是 `git@github.com:moye233057/Moye-Skills.git`。
+`setup.ps1` 对已指向 `skills/` 的联接会打印 `ok`。`origin` 用 SSH。

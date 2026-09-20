@@ -9,9 +9,8 @@ description: >
 
 # 网站复刻
 
-- 脚本：`<用户目录>\.cursor\skills\web-clone\scripts\`（下称 `$S`）
-- 克隆根：`<工作目录>\Clone\<站名>-clone\`（下称 `$R`）
-- `<工作目录>\Clone` 不存在：先问用户确认路径，确认后再建。不要默默 mkdir。
+- 脚本：本 skill 根目录下的 `scripts/`（下称 `$S`）
+- 克隆根（下称 `$R`）：先问用户确认路径，确认后再建。不要默默 mkdir。
 
 AI「复刻分析」里的可执行代码默认臆造，必须逐行对真源码。反例见 `references/marbles-case.md`。
 
@@ -20,7 +19,7 @@ AI「复刻分析」里的可执行代码默认臆造，必须逐行对真源码
 确认克隆根存在后：
 
 ```
-node <用户目录>\.cursor\skills\web-clone\scripts\init-clone.mjs <站名> --url <原站URL>
+node $S/init-clone.mjs <站名> --url <原站URL>
 ```
 
 ## 1 先搜 GitHub 源码

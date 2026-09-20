@@ -15,7 +15,7 @@ description: 会话索引：对话开场必须加载的个人 skills 路由。�
 
 本对话只做一次：读完本文件，记住第 4 节路由表，然后做开场对齐。不读环境卡、不预读其它 skill。
 
-工作树 = 本 skill 根目录的父目录（`SKILL.md` 所在目录的上一级）。换电脑后 fullPath 会变，不要写死盘符。
+工作树 = 本 skill 根目录的父目录（即 `skills/`）。仓库根用 `git -C "<skill根目录>" rev-parse --show-toplevel` 取得。换电脑后 fullPath 会变，不要写死盘符。
 
 开场完成：已读本文、记住路由表、开场对齐已执行或已跳过。其它 skill 等本轮任务命中再第一次 Read。写或改 `.py`、或本对话第一次要为任务跑 Python 时加读 `self-python-style`。任务涉及 `笔记库` 知识库 `.md` 时加读 `self-notes-read`。
 
@@ -23,18 +23,18 @@ description: 会话索引：对话开场必须加载的个人 skills 路由。�
 
 ### 开场对齐
 
-在工作树执行。`git fetch` 失败（目录还不是 git 仓库、网络不通、没有 git）则跳过，用本地继续。
+在仓库根执行。`git fetch` 失败（还不是 git 仓库、网络不通、没有 git）则跳过，用本地继续。
 
 ```powershell
-$workTree = Split-Path "<skill根目录>" -Parent
-git -C $workTree fetch
+$repoRoot = git -C "<skill根目录>" rev-parse --show-toplevel
+git -C $repoRoot fetch
 ```
 
 fetch 成功后按顺序只走一条：
 
-1. `git -C $workTree status --porcelain` 有输出 → 向用户报告 dirty，结束开场对齐。
-2. `git -C $workTree rev-list --left-right --count HEAD...@{u}` 得到 ahead（左）与 behind（右）。没有上游则跳过。
-3. behind>0 且 ahead=0 → `git -C $workTree pull --ff-only`。失败则报告，结束开场对齐。
+1. `git -C $repoRoot status --porcelain` 有输出 → 向用户报告 dirty，结束开场对齐。
+2. `git -C $repoRoot rev-list --left-right --count HEAD...@{u}` 得到 ahead（左）与 behind（右）。没有上游则跳过。
+3. behind>0 且 ahead=0 → `git -C $repoRoot pull --ff-only`。失败则报告，结束开场对齐。
 4. ahead>0 且 behind=0 → 问用户是否 push，等确切回复。本步不 push、不 commit。
 5. ahead>0 且 behind>0 → 向用户报告分叉，结束开场对齐。
 6. 都是 0 → 不说话，继续本轮任务。
@@ -92,7 +92,7 @@ conda run -n base python "<skill根目录>/scripts/env_detect.py"
 
 ## 4. 路由表
 
-目录里永远能看到 name + description。这张表决定 **什么时候才读正文**，是 agent 的单一事实源。人读分组见工作树根目录 `skills-list.md`，不要把那份当路由。
+目录里永远能看到 name + description。这张表决定 **什么时候才读正文**，是 agent 的单一事实源。人读分组见仓库根目录 `skills-list.md`，不要把那份当路由。
 
 | Skill | 管什么 | 何时 Read 正文 |
 |-------|--------|----------------|
@@ -113,7 +113,6 @@ conda run -n base python "<skill根目录>/scripts/env_detect.py"
 | `research` | 后台调研 | 调研话题、查文档/API 事实 |
 | `writing-for-agents` | 写 agent 文档 | 写/改 skill、优化 description、写规范文件 |
 | `show-me` | 可视化讲清结构 | 画一下 / 示意 / 数据流 / show me |
-| `find-skills` | trending 前 20，每条都介绍用途；词表只标贴近本机栈 | 用户打了 `/find-skills` 或 `/find-skills <关键词>`（本对话已附上则不必再 Read） |
 | `cli-service-desktop-shortcut` | 命令行服务做成桌面快捷方式 | 桌面快捷方式、双击启动、把服务做成图标 |
 
 写代码默认加读 `self-code-principles`，有更专门 `self-*` 则那份优先。对齐用 `grilling`；沉淀术语用 `grill-with-docs` + `domain-modeling`。细节以各 skill 自己的「何时用 / 何时不用」为准。

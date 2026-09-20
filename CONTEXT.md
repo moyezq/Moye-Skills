@@ -9,8 +9,12 @@ GitHub 上的 `Moye-Skills` 仓库，个人 skill 的单一远程事实源。
 _Avoid_: 两份 skill, 同步目录, skills 备份
 
 **工作树**：
-本机唯一一份 skill 文件目录（`<本仓路径>`）。Cursor 与 dsh 的默认 skills 路径是指向它的目录联接，不是第二份拷贝。
-_Avoid_: 双 clone, 同步一份到另一端
+本仓 `skills/` 目录。各产品的个人 skills 路径用目录联接指向它，不是第二份拷贝。
+_Avoid_: 双 clone, 同步一份到另一端, 仓根平铺
+
+**本机配置**：
+未进仓的 `.env`，只放各产品 skills 目录的本机路径。模板是 `.env.example`。
+_Avoid_: 写进 README 的盘符路径
 
 **开场对齐**：
 新对话读完会话索引后，对技能仓做的一次 `git fetch` 与 ahead/behind 判断。失败则用本地继续。不是环境卡的日探测。

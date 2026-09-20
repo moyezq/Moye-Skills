@@ -1,14 +1,12 @@
-> 归纳日期：2026-09-19
+> 归纳日期：2026-09-20
 
 # 个人 Skills 清单
 
-给人看的薄索引。Agent **何时读哪份正文** 以会话索引 [`self-session-bootstrap`](./self-session-bootstrap/SKILL.md) 的路由表为准，这里不复述触发条件。
+给人看的薄索引。Agent **何时读哪份正文** 以会话索引 [`self-session-bootstrap`](./skills/self-session-bootstrap/SKILL.md) 的路由表为准，这里不复述触发条件。
 
-**工作树**：`<本仓路径>`（技能仓 `git@github.com:moye233057/Moye-Skills.git`）  
-**dsh**：`<用户目录>\.dsh\skills` 目录联接指向工作树  
-**Cursor**：`<用户目录>\.cursor\skills` 按根目录 `README.md` 做成同一条目录联接
+正文在 `skills/`。各产品目录联接见根目录 `README.md` 与 `.env.example`。
 
-术语与决策见 [`CONTEXT.md`](./CONTEXT.md)。共 **19** 个个人 skill。仅一端会读的 skill 仍在这份树里，靠路由表约束。
+术语与决策见 [`CONTEXT.md`](./CONTEXT.md)。共 **18** 个个人 skill。仅一端会读的 skill 仍在这份树里，靠路由表约束。
 
 ## 会话与规范
 
@@ -55,17 +53,8 @@
 
 | Skill | 一句话 |
 |-------|--------|
-| `find-skills` | `/find-skills` 看 trending 前 20，每条都介绍用途 |
 | `skill-creator` | 新建 / 改 skill、跑 eval |
 | `writing-for-agents` | 写 agent 会读的文档（skill、规范文件） |
-
-## 已停用（2026-09-11）
-
-`handoff`、`grill-me`、`diagnosing-bugs` 已从个人 skills 移除。
-
-`self-crawler-from-ref`（2026-09-17）：知识并进 [`笔记库/05-Spyder/10_从对照项目还原协议.md`](<工作目录>\笔记库\05-Spyder\10_从对照项目还原协议.md)。
-
-`self-project-style`（2026-09-17）改名为 `self-python-project`。
 
 ## 官方 Skills
 
