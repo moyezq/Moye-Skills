@@ -78,19 +78,22 @@ Shell 里要用第三方命令时：
 
 1. `git -C "<skill根目录>" status -sb`：首行 `## 分支...上游 [ahead N, behind M]`，其后每行一个改动文件。
    - 报错（没有 git 或不在仓库里）→ 跳过，用本地继续。
-   - 有改动文件行 → 报 dirty，结束。脏树不 pull、不 commit。
+   - 有改动文件行 → 报 dirty 并列文件，但不因此结束：dirty 只挡 `pull`，不挡 `push`。
    - 首行无 `...上游` → 报无上游，结束。
-2. `git -C "<skill根目录>" fetch`：失败或超时 → 报「fetch 不通，用本地继续」，结束。不重试、不 pull。
-3. 再 `git -C "<skill根目录>" status -sb`，只看首行的 ahead（左）/ behind（右）：
+2. `git -C "<skill根目录>" fetch`，给它一个上限（约 30 秒无结果就当中断；dsh 用 pwsh 的 `timeoutMs`，超时被杀 = 不通）。
+   - fetch 不通 → behind 未知，但 **ahead 不受影响**，`push` 路照走。把 `git fetch` / `git push` 原样交给用户在自己终端跑：git 的 ssh 子进程在沙箱里会挂死到超时，用户终端是通的。
+3. 再 `git -C "<skill根目录>" status -sb` 读首行；fetch 不通就用步骤 1 的值，并注明是旧值。
 
-| ahead / behind | 动作 |
+| ahead（本地待推）/ behind | 动作 |
 |---|---|
-| `behind>0`、`ahead=0` | `git pull --ff-only`；失败则报告，结束 |
-| `ahead>0`、`behind=0` | 问用户是否 push，等确切回复。本步不 commit、不 push |
+| `ahead>0` | 问用户是否 push，等确切回复；同意则 `git push`（走上游，不写分支名） |
+| `behind>0`、`ahead=0`、工作区干净 | `git pull --ff-only`；失败则报告，结束 |
 | 两者都>0 | 报分叉，结束 |
 | 都为 0 | 不说话，继续本轮任务 |
 
-`status -sb` 的 ahead/behind 是相对上次 fetch 的值，所以第 3 步必须读 fetch 之后的。
+用户说「同步」＝授权走完 `git add -A` → `git commit -m "<一句概括>"` → `git push`，并把文件清单与 message 一并报给用户。没听到「同步」就只按上表问，不 commit、不 push。
+
+`status -sb` 的 ahead/behind 是相对上次 fetch 的值。
 
 白名单例外：本流程的 `status` / `fetch` / `pull --ff-only` 不先读环境卡；`commit` / `push` 仍须当天 `commands` 含 `git`、用户明确要求，并遵守用户 git 规则。只用快进，分叉只报告。
 
