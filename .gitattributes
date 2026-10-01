@@ -1,0 +1,2 @@
+# 文本文件入库与检出统一用 LF；覆盖 core.autocrlf=true，消掉全仓 CRLF 警告与幻影 diff。
+* text=auto eol=lf
