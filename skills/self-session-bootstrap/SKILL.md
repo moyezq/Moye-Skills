@@ -78,9 +78,18 @@ Shell 里要用第三方命令时：
 
 `AGENT` = `dsh`：
 
-- 能做：本地操作——`status` / `log` / `diff` / `add` / `commit`。
-- 不能做：`fetch` / `pull` / `push`。一律挂死到超时，不重试、不等待。
-- 同步本地仓到远程仓：会话内 `git add -A` → `git commit -m "<一句概括>"`，再把 `git push`（走上游，不写分支名）交给用户在**自己的终端**跑，同一轮报文件清单与 message。
+- 能做：本地操作——`status` / `log` / `diff` / `add` / `commit`；以及带下面两个 `-c` 的 `fetch` / `pull --ff-only` / `push`。
+- 不能做：不带那两个 `-c` 的 `fetch` / `pull` / `push`——会走 origin 的 SSH 与凭据助手，一律挂死到超时，不重试、不等待。
+- 同步本地仓到远程仓：`$pat` 读自 `.env` 的 `GITHUB_PAT`（不打印、不外传），然后
+
+  ```powershell
+  $instead = "url.https://x-access-token:$pat@github.com/.insteadOf=git@github.com:"
+  git -C "<skill根目录>" add -A
+  git -C "<skill根目录>" commit -m "<一句概括>"
+  git -C "<skill根目录>" -c credential.helper= -c $instead push
+  ```
+
+  `GITHUB_PAT` 缺失或失效时，把 `git push` 交给用户在**自己的终端**跑。同一轮报文件清单与 message。
 
 `AGENT` 不是 `dsh` 时，`fetch` / `pull` / `push` 照跑。
 
@@ -92,8 +101,8 @@ Shell 里要用第三方命令时：
 
 | 首行 | 动作 |
 |---|---|
-| `ahead>0` | 报「本地领先 N 条」，把 `git push` 交给用户终端 |
-| `behind>0`、`ahead=0`、工作区干净 | 把 `git pull --ff-only` 交给用户终端；失败则报告，结束 |
+| `ahead>0` | 报「本地领先 N 条」，问是否 push；同意则按上面那条推，没 token 就交用户终端 |
+| `behind>0`、`ahead=0`、工作区干净 | 带那两个 `-c` 跑 `git pull --ff-only`；失败则报告，结束 |
 | 两者都>0 | 报分叉，结束 |
 | 都为 0 | 不说话，继续本轮任务 |
 
