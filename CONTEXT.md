@@ -17,11 +17,11 @@ _Avoid_: 双 clone, 同步一份到另一端, 仓根平铺
 _Avoid_: 写进 README 的盘符路径
 
 **仓对齐**：
-要对技能仓做 git 时，按会话索引 §3「仓对齐」在 skill 根目录下 status / fetch / 看 ahead-behind。不是开场必做，不是日探测。
+要对技能仓做 git 时，读会话索引同目录 `agent-git-op.md`，按它执行。不是开场必做，不是日探测。
 _Avoid_: 开场对齐, 开场探测, 日探测
 
 **会话索引**：
-新对话开场必须加载的那一份 skill（`self-session-bootstrap`）。它是开场步骤、进程级硬约束、个人 skills 命令清单的同一份正文。开场读这一份。技能仓 git 在其 §3。
+新对话开场必须加载的那一份 skill（`self-session-bootstrap`）。它是开场步骤、进程级硬约束、个人 skills 命令清单的同一份正文。开场读这一份。技能仓 git 在其同目录 `agent-git-op.md`。
 _Avoid_: 规范总览, 开场检查单, skills 总文档
 
 **会话标题**：

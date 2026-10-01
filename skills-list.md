@@ -14,7 +14,7 @@
 
 | Skill | 一句话 |
 |-------|--------|
-| `self-session-bootstrap` | 会话索引：开场规矩、白名单、仓对齐、开场输出；命令/conda 日探测用到才触发 |
+| `self-session-bootstrap` | 会话索引：开场规矩、白名单、Git操作、开场输出；命令/conda 日探测用到才触发 |
 | `self-code-principles` | 代码设计默认原则（12 条，跨语言兜底） |
 
 ## Python 与项目
