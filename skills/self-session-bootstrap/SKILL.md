@@ -70,45 +70,9 @@ Shell 里要用第三方命令时：
 4. 本对话自带工具（`AGENT` = `cursor` 时是 Read / Write / Grep / Glob / Shell，`dsh` 时是 read / write / grep / glob / pwsh）和 PowerShell 内建始终可用。不要用 Shell 反复 which。
 5. `commit` / `push`：当天 `commands` 含 `git`，且用户明确要求，并遵守用户 git 规则。
 
-### 仓对齐
+### Git操作
 
-仅本轮要对技能仓做 git（fetch / pull / push / commit，或用户说同步 skill）时做。开场不做。完成：走完下面一条路径，或失败已报告。
-
-`<skill根目录>` = 加载本文件时给出的目录，不写死盘符。
-
-`AGENT` = `dsh`：
-
-- 能做：本地操作——`status` / `log` / `diff` / `add` / `commit`；以及带下面两个 `-c` 的 `fetch` / `pull --ff-only` / `push`。
-- 不能做：不带那两个 `-c` 的 `fetch` / `pull` / `push`——会走 origin 的 SSH 与凭据助手，一律挂死到超时，不重试、不等待。
-- 同步本地仓到远程仓：`$pat` 读自 `.env` 的 `GITHUB_PAT`（不打印、不外传），然后
-
-  ```powershell
-  $instead = "url.https://x-access-token:$pat@github.com/.insteadOf=git@github.com:"
-  git -C "<skill根目录>" add -A
-  git -C "<skill根目录>" commit -m "<一句概括>"
-  git -C "<skill根目录>" -c credential.helper= -c $instead push
-  ```
-
-  `GITHUB_PAT` 缺失或失效时，把 `git push` 交给用户在**自己的终端**跑。同一轮报文件清单与 message。
-
-`AGENT` 不是 `dsh` 时，`fetch` / `pull` / `push` 照跑。
-
-1. `git -C "<skill根目录>" status -sb`：首行 `## 分支...上游 [ahead N, behind M]`，其后每行一个改动文件。
-   - 报错（没有 git 或不在仓库里）→ 跳过，用本地继续。
-   - 有改动文件行 → 报 dirty 并列文件，但不因此结束：dirty 只挡 `pull`，不挡 `push`。
-   - 首行无 `...上游` → 报无上游，结束。
-2. 按首行分派。`ahead` 取本地读数。
-
-| 首行 | 动作 |
-|---|---|
-| `ahead>0` | 报「本地领先 N 条」，问是否 push；同意则按上面那条推，没 token 就交用户终端 |
-| `behind>0`、`ahead=0`、工作区干净 | 带那两个 `-c` 跑 `git pull --ff-only`；失败则报告，结束 |
-| 两者都>0 | 报分叉，结束 |
-| 都为 0 | 不说话，继续本轮任务 |
-
-用户说「同步」＝按上面「同步本地仓到远程仓」那条走；没听到「同步」就只按上表问。
-
-白名单例外：本流程的 `status` / `pull --ff-only` 不先读环境卡；`commit` / `push` 仍须当天 `commands` 含 `git`、用户明确要求，并遵守用户 git 规则。只用快进，分叉只报告。
+当涉及 Git 操作（fetch / pull / push / commit，或用户说同步 skill）时，读同目录 [agent-git-op.md](./agent-git-op.md)，按它执行。开场不读。
 
 ### 命令行列目录
 
