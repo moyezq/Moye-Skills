@@ -1,9 +1,8 @@
 ---
 name: web-clone
 description: >
-  网站复刻方法论。用户说复刻网站、克隆网站、clone website、抄个站、仿站、
-  照着这个站做一个、reproduce site、还原某个网页效果、把这个站搬下来改成我的、
-  复刻某个交互/WebGL/Canvas/Three.js 效果时用。先拿真源码再判路径。
+  按网页的前端样式、交互、WebGL 效果做复刻（克隆/仿站/抄个站）。
+  先拿真源码再判路径。不要用本文件还原接口签名或对照协议。
   验收自己写的 React 页走 self-react；只做页面点击走查走 playwright-cli。
 ---
 
@@ -13,6 +12,12 @@ description: >
 - 克隆根（下称 `$R`）：先问用户确认路径，确认后再建。不要默默 mkdir。
 
 AI「复刻分析」里的可执行代码默认臆造，必须逐行对真源码。反例见 `references/marbles-case.md`。
+
+## 应用场景
+
+本文件只做网页前端样式复刻：布局、视觉、交互、WebGL/Canvas。先拿真源码再判路径。不要用本文件还原 `sign` 或对照协议。
+
+验收自己写的 React 页加读 `self-react`。只点页面核对加读 `playwright-cli`。
 
 ## 0 建工程
 

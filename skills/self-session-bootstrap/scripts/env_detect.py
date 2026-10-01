@@ -6,7 +6,7 @@
 使用前注意事项
 ================================================================================
 1. 固定 `conda run -n base python` 调用本文件；不读 conda 环境名单。
-2. 要增删命令只改 COMMANDS_TO_CHECK；每条 version 参数写死。
+2. 要增删命令只改 COMMANDS_TO_CHECK；每条 version 参数写死。PATH 上 which 不到时看 FALLBACK_EXES。
 3. 只把探测成功的名字写入 commands；不写版本、不写失败项。
 4. stdout 只有 commands_date 与 commands。本脚本不算为任务跑 Python。
 """
@@ -32,18 +32,46 @@ COMMANDS_TO_CHECK = [
     ("pip", ["--version"]),
     ("playwright-cli", ["--version"]),
     ("ffmpeg", ["-version"]),
+    ("whisper", ["-h"]),
     ("soffice", ["--version"]),
     ("pandoc", ["--version"]),
 ]
 
+# PATH 上 which 不到时仍视为可用的本机入口（本轮已实测）。
+FALLBACK_EXES = {
+    "ffmpeg": Path(r"<软件目录>\ffmpeg-9.0.2\bin\ffmpeg.exe"),
+    "whisper": Path(r"<conda 根>\envs\asr\Scripts\whisper.exe"),
+}
+
 VERSION_TIMEOUT_SEC = 8
 
 
+def _resolve_exe(name: str):
+    """
+    解析命令可执行文件：先 PATH，再 FALLBACK_EXES。
+
+    功能：给探测提供单一入口路径。
+    应用场景：which 不到但本机已装在固定目录时。
+    输入：name — COMMANDS_TO_CHECK 里的命令名。
+    输出：存在的 exe 路径；都没有则 None。
+    """
+    found = shutil.which(name)
+    if found:
+        return found
+    fallback = FALLBACK_EXES.get(name)
+    if fallback is not None and fallback.is_file():
+        return str(fallback)
+    return None
+
+
 def _command_is_available(name: str, version_args: list) -> bool:
-    """which 到可执行文件后跑固定 version 参数，返回码 0 视为可用。"""
-    exe = shutil.which(name)
+    """解析到 exe 后跑固定 version 参数；whisper 无独立 --version，文件在即算可用。"""
+    exe = _resolve_exe(name)
     if exe is None:
         return False
+    # openai-whisper 的 CLI 把 -h/--version 走转写入口，返回非 0；以文件存在为准
+    if name == "whisper":
+        return True
     try:
         proc = subprocess.run(
             [exe] + version_args,

@@ -1,6 +1,6 @@
 ---
 name: self-code-principles
-description: 代码设计默认原则（12 条兜底）。写/改任何代码时查阅，不限语言、不限任务形态；用户问「代码设计基本原则」或判断某段实现好不好时也查阅。与更专门 self-*（风格、脚本、函数、目录、React）冲突时，更专门的那份优先，但本 skill 仍要读。
+description: 代码设计默认原则（12 条兜底）。写/改任何代码时查阅，不限语言、不限任务形态；用户问「代码设计基本原则」或判断某段实现好不好时也查阅。与更专门 self-*（风格、脚本、函数、目录、前端）冲突时，更专门的那份优先，但本 skill 仍要读。命令：/self-code-principles
 ---
 
 # 代码设计默认原则
@@ -13,7 +13,7 @@ description: 代码设计默认原则（12 条兜底）。写/改任何代码时
 
 **用**：写/改任何代码；或用户问基本原则、判断某段实现好不好。
 
-**冲突**：`self-python-style` / `self-python-script` / `self-python-function` / `self-python-project` / `self-react` 管形态上的「怎么做」。冲突点以那份为准，不是整份跳过本 skill。
+**冲突**：`self-python-style` / `self-python-script` / `self-python-function` / `self-python-project` / `self-frontend`（其下 `self-react`）管各自的「怎么做」。冲突点以那份为准，不是整份跳过本 skill。
 
 那些文件不要复述这 12 条的「为什么」。对应关系：能简则简 ↔ 少拆、不抽薄包装；外科式改动 ↔ 能跑的旧代码不要乱动、保留原注释；冲突摊开 ↔ 契约先于重构；先读后写 ↔ 先读同目录再写。
 

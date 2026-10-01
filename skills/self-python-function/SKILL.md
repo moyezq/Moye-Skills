@@ -1,19 +1,19 @@
 ---
 name: self-python-function
-description: Python 函数、方法与类怎么写。改 def、class、工具函数、FastAPI 路由处理时查阅；用户嫌模块或函数拆太碎时也查阅（即使用户没说代码规范）。风格与怎么跑见 self-python-style；脚本怎么分阶段见 self-python-script；目录与小服务见 self-python-project。
+description: Python 函数、方法与类怎么写。改 def、class、工具函数、FastAPI 路由处理时查阅；用户嫌模块或函数拆太碎时也查阅（即使用户没说代码规范）。风格与怎么跑见 self-python-style；脚本怎么分阶段见 self-python-script；目录分层见 self-python-project。命令：/self-python-function
 ---
 
 # Python 函数、方法与类
 
-管 **一个函数、方法、类怎么写**。风格与怎么跑见 `self-python-style`；脚本切步见 `self-python-script`；仓库目录与何时用流水线类见 `self-python-project`；12 条判断见 `self-code-principles`。
+管 **一个函数、方法、类怎么写**。风格与怎么跑见 `self-python-style`；脚本切步见 `self-python-script`；目录分层见 `self-python-project`；12 条判断见 `self-code-principles`。
 
-完成标准：改到的每个 def / class / 路由都过一遍下面的怎么做。文件级拆分不在本文件。
+完成标准：改到的每个 def / class / 路由都过一遍下面的怎么做。拆文件时也过「什么时候才拆文件」。
 
 ## 何时用
 
 **用**：编写或修改 Python 函数、方法、类、FastAPI 路由处理；或嫌拆太碎。
 
-风格（docstring、注释、顺序、命名、信任上游字段、运行参数、print 与 logger）见 `self-python-style`，不替代本文件。脚本切步、目录形态分别再加读对应 skill。
+风格（docstring、注释、顺序、命名、信任上游字段、运行参数、print 与 logger）见 `self-python-style`，不替代本文件。脚本切步、目录分层分别再加读对应 skill。
 
 ---
 
@@ -27,11 +27,25 @@ description: Python 函数、方法与类怎么写。改 def、class、工具函
 
 **字段与返回值**：以调用方、fixtures、scheme 已固定的名字为准；不要在重构时顺手换一套近义字段名却只改到一半。
 
-同一条短流水线不要拆成多个只被编排层调用一次的文件；文件级拆分见 `self-python-project`。脚本场景下「一步一个 step、线程池用嵌套 def」见 `self-python-script`。
+脚本场景下「一步一个 step、线程池用嵌套 def」见 `self-python-script`。
+
+## 什么时候才拆文件
+
+同一条短流水线默认写在一个业务文件里。不要为目录好看按阶段建空文件夹，也不要每个步骤各拆一个很薄的 `.py`。
+
+仅当规则在两处以上真正复用，或工具相对独立（过滤、数据库初始化、外部 SDK 适配）时再拆成单独文件。用户要求合并、少拆文件时：合并后删除已无入口的拆分文件。
+
+改字段名、类名、路由、配置常量之前，以调用方、fixtures、scheme、联调脚本里真实请求体为准，整条链用同一套名字。目录叫什么见 `self-python-project`。
 
 ## 流水线类（有类的时候怎么写）
 
-**何时用这种类** 由 `self-python-project` 决定。这里只定类内部习惯：
+**何时用这种类**：加载 → 处理 → 输出，某一步失败就要停掉后续步骤，并且步骤写在类里。
+
+不要用这种类：工具函数集合、单一 HTTP 服务、步骤边界不清楚、一个文件就写得完的脚本（那种入口见 `self-python-script`）。
+
+入口里每个阶段一行调用、一行注释（做什么），不要只调一个看不见步骤的 `run()` / `fetch_all()`。类上的 `run()` 可以保留，那是编排。
+
+类内部习惯：
 
 ```python
 class ReportPipeline:
@@ -69,7 +83,7 @@ class ReportPipeline:
 
 ## FastAPI：路由与 schema
 
-**适用**：编写或修改路由处理函数、Pydantic schema、依赖函数。生产约定（Apollo、业务码、网关、队列）以当前项目为准，目录形态见 `self-python-project`。
+**适用**：编写或修改路由处理函数、Pydantic schema、依赖函数。目录见 `self-python-project` 的 FastAPI reference。
 
 **请求体**
 

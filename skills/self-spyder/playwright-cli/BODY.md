@@ -1,6 +1,6 @@
 ---
 name: playwright-cli
-description: 用 playwright-cli 自动化浏览器交互、测网页、调试/生成 Playwright 测试。用户提到浏览器自动化、网页点击填表、页面快照、Playwright CLI、UI 走查、录屏/tracing、请求 mock、或要用 npx playwright test --debug=cli 时必须使用本 skill。整站复刻/仿站走 web-clone。
+description: 用 playwright-cli 自动化浏览器交互、测网页、调试/生成 Playwright 测试。用户提到浏览器自动化、网页点击填表、页面快照、Playwright CLI、UI 走查、录屏/tracing、请求 mock、或要用 npx playwright test --debug=cli 时必须使用本 skill。整站复刻/仿站走 self-frontend。
 allowed-tools: Bash(playwright-cli:*) Bash(npx:*) Bash(npm:*)
 ---
 

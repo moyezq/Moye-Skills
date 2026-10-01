@@ -1,18 +1,20 @@
-> 归纳日期：2026-09-20
+> 归纳日期：2026-10-01
 
 # 个人 Skills 清单
 
-给人看的薄索引。Agent **何时读哪份正文** 以会话索引 [`self-session-bootstrap`](./skills/self-session-bootstrap/SKILL.md) 的路由表为准，这里不复述触发条件。
+给人看的薄索引。Agent **何时读哪份正文** 以对话里 `available_skills` 的 description 为准，这里不复述触发条件。命令 = `/` + skill 名。
 
 正文在 `skills/`。各产品目录联接见根目录 `README.md` 与 `.env.example`。
 
-术语与决策见 [`CONTEXT.md`](./CONTEXT.md)。共 **18** 个个人 skill。仅一端会读的 skill 仍在这份树里，靠路由表约束。
+术语与决策见 [`CONTEXT.md`](./CONTEXT.md)。共 **16** 个个人 skill。仅一端会读的 skill 仍在这份树里，靠各自的 description 约束。
+
+暂存（不进工作树）：`backup/` 下的 `apk-reverse`、`js-reverse`、`protocol-reverse`、`research`、`cli-service-desktop-shortcut`、`caveman`。
 
 ## 会话与规范
 
 | Skill | 一句话 |
 |-------|--------|
-| `self-session-bootstrap` | 会话索引：开场读路由表并做开场对齐；命令/conda 日探测用到才触发 |
+| `self-session-bootstrap` | 会话索引：开场规矩、白名单、仓对齐、开场输出；命令/conda 日探测用到才触发 |
 | `self-code-principles` | 代码设计默认原则（12 条，跨语言兜底） |
 
 ## Python 与项目
@@ -21,9 +23,14 @@
 |-------|--------|
 | `self-python-style` | 本机 Python 风格与第一次怎么跑 |
 | `self-python-function` | 函数 / 类 / FastAPI 路由怎么写 |
-| `self-python-script` | 单文件分阶段脚本（stepN、参数硬编码） |
+| `self-python-script` | 单文件分阶段脚本（stepN、参数硬编码、顶部注释） |
 | `self-python-project` | 目录归档、案例形态、小服务怎么摆 |
-| `self-react` | React 页面 / 布局 / 界面验收（Vite + TS） |
+
+## 前端
+
+| Skill | 一句话 |
+|-------|--------|
+| `self-frontend` | 前端入口：其下 `self-react`（页面/布局/验收）、`web-clone`（按真源码复刻） |
 
 ## 知识库
 
@@ -35,25 +42,23 @@
 
 | Skill | 一句话 |
 |-------|--------|
-| `grilling` | 拷问式访谈原语（设计树 + 前沿 + 轮次） |
-| `grill-with-docs` | 边对齐边沉淀 CONTEXT / ADR（用户手动触发） |
-| `domain-modeling` | 项目术语表 CONTEXT.md 与 ADR |
+| `grill-with-docs` | 拷问式访谈（设计树 + 前沿 + 轮次），结晶了按落点沉淀文档 |
+| `project-docs` | 项目术语表、ADR、蓝图、文档地图、最小视图 |
 
-## 调试、调研、表达
+## 工具
 
 | Skill | 一句话 |
 |-------|--------|
-| `research` | 后台调研，产出带引用的 Markdown |
-| `show-me` | 用树 / Mermaid / diff 等可视化讲清结构 |
-| `playwright-cli` | 浏览器自动化与 Playwright CLI 调试 |
-| `web-clone` | 网站复刻：真源码 → 判路径 → 搭工程 |
-| `cli-service-desktop-shortcut` | 命令行服务做成 Windows 桌面快捷方式 |
+| `self-spyder` | 浏览器自动化入口：其下 `playwright-cli` |
+| `self-video-notes` | 本地视频或 B 站链接转成 SRT + Markdown 学习笔记 |
+| `interview-from-dev` | 把开发经历抽成可迁移的面试题 |
 
 ## Skill 自身
 
 | Skill | 一句话 |
 |-------|--------|
 | `skill-creator` | 新建 / 改 skill、跑 eval |
+| `skill-analyse` | 分析上游/本地 skill，写成 analyse 报告（用户触发 `/skill-analyse`） |
 | `writing-for-agents` | 写 agent 会读的文档（skill、规范文件） |
 
 ## 官方 Skills

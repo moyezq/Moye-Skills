@@ -63,3 +63,4 @@ function Set-SkillsJunction([string]$linkPath, [string]$target) {
 $cfg = Read-DotEnv $envFile
 Set-SkillsJunction $cfg["CURSOR_SKILLS"] $skillsDir
 Set-SkillsJunction $cfg["DSH_SKILLS"] $skillsDir
+Set-SkillsJunction $cfg["CODEX_SKILLS"] $skillsDir

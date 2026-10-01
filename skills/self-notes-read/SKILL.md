@@ -1,6 +1,6 @@
 ---
 name: self-notes-read
-description: 笔记库 查阅、整理与书写（唯一事实源）。要读知识库 .md、批量整理/拆分/外链归纳、新建或改库文档结构、写库/框架入门、课件截图转笔记、处理「外部文档」时查阅。归纳日期为当天且用户未点名该文件/主题则跳过不读。写法框架见 references/writing.md。
+description: 笔记库 查阅、整理与书写（唯一事实源）。要读知识库 .md、批量整理/拆分/外链归纳、新建或改库文档结构、写库/框架入门、课件截图转笔记、处理「外部文档」时查阅。归纳日期为当天且用户未点名该文件/主题则跳过不读。写法框架见 references/writing.md。命令：/self-notes-read
 ---
 
 # 笔记库 知识库查阅 · 整理 · 书写
@@ -17,7 +17,7 @@ description: 笔记库 查阅、整理与书写（唯一事实源）。要读知
 - 写库/框架入门，或把课件/截图转成自有笔记
 - 处理带 `> 外部文档` 的第三方总结稿（含库外同形态笔记）
 
-命令与 conda 日探测见会话索引，不要在这里重跑。案例代码目录见 `self-python-project`；工程脚本见 `self-python-script` / `self-python-function`。
+命令与 conda 日探测见会话索引，不要在这里重跑。多文件 Python 项目目录见 `self-python-project`；`cases/` 命名见 `references/writing.md`；工程脚本见 `self-python-script` / `self-python-function`。
 
 新建/改结构、不确定概述/安装/实战/概念综览/库入门怎么摆时，**接着 Read** `references/writing.md` 全文。只改文风/精简、不改形态时，至少 Read 其中「文风对照」。只做外链收敛且不改结构、不改文风时，本节硬约束够用。
 
@@ -83,11 +83,13 @@ conda run -n base python "<skill根目录>/scripts/list_today_notes.py"
 1. 先定知识主题再定路径。代码碰巧在 `Spyder/` 不代表笔记进爬虫。
 2. 不要新建「工具链 / 脚本索引」式假案例；过时脚本直接舍弃。真正新工具才新建编号文，其余并进已有文。
 3. 生产已验证路径与研究/深采分节，不要混成一条案例。
-4. 案例目录英文名、产物进 `data/`：见 `self-python-project`。
+4. 案例目录英文名、脱敏：见 `references/writing.md`「案例目录」。
 
 ### 案例粒度与删档
 
 多系统案例不要只留目录名 + 模式名表；每类写清代表 Host/path、关键字段、与邻类差异。流水线案例须写字段/列结构，不要只写「有某某文件」。薄 `utils/` 只有一两个原子文件时上移到案例根。
+
+教学流水线（分块、抽点边、建图）的笔记要求见 `references/writing.md`「案例目录」。抽点边、建图、知识图谱 HTML 的案例脚本另 Read `references/graph-index-case.md`。
 
 删外仓/留档前能回答：判断写进哪篇正式 `.md`；字段表是否进正文；可跑样例是否在库里或读者能按字段表重写；用户是否确认这是留档/可删。仍在管的生产仓不要擅自删。
 

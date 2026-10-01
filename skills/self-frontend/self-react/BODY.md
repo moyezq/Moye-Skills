@@ -1,15 +1,15 @@
 ---
 name: self-react
-description: React 页面 / 布局 / 界面验收（Vite + TypeScript）。加页面、改布局、调滚动、前后端联调、界面验收时查阅；dev server 像在提供旧代码时也查阅。界面验收用几何测量。通用原则见 self-code-principles；点选与快照见 playwright-cli。
+description: React 页面 / 布局 / 界面验收（Vite + TypeScript）。加页面、改布局、调滚动、前后端联调、镜像类型、界面验收时查阅；dev server 像在提供旧代码时也查阅。界面验收用几何测量。通用原则见 self-code-principles；点选与快照见 playwright-cli。
 ---
 
 # React 页面 / 布局 / 界面验收
 
 管 **页面怎么写、布局怎么定、界面怎么验收**。默认 Vite + TypeScript；换构建工具时只换命令，规范本身不变。
 
-12 条判断见 `self-code-principles`（冲突点以本文件为准，不是整份跳过那份）。目录与服务形态见 `self-python-project`。点选、结构快照见 `playwright-cli`。
+12 条判断见 `self-code-principles`（冲突点以本文件为准，不是整份跳过那份）。目录分层见 `self-python-project`。点选、结构快照见 `playwright-cli`。
 
-完成标准：类型与构建门禁都 exit 0；改布局则五个几何断言都给出数字；每个改动过的交互都真点过；改了类型则前后端镜像字段对齐。逐条都做到才算完成。
+完成标准：类型与构建门禁都 exit 0；写了 `.ts` / `.tsx` 则 `references/typescript.md` 的完成标准都做到；改布局则五个几何断言都给出数字；每个改动过的交互都真点过。逐条都做到才算完成。
 
 ## 何时用
 
@@ -17,6 +17,7 @@ description: React 页面 / 布局 / 界面验收（Vite + TypeScript）。加�
 
 **不用**：只改一处颜色或字号；非 React 前端；后端接口实现。
 
+写或改 `.ts` / `.tsx`、镜像类型、API 模块类型：读 `references/typescript.md`。
 源文件改了页面仍是旧的、HMR 后错误指向已删变量、依赖装上但行为不对：读 `references/troubleshooting.md`。
 
 ---
@@ -31,17 +32,9 @@ description: React 页面 / 布局 / 界面验收（Vite + TypeScript）。加�
 
 `vite dev` **不做类型检查**。改完先过类型与构建，再去浏览器点。这两条是本 skill 的检查点，不是会话索引禁止的业务脚本。
 
-tsconfig 开 `strict` + `noUnusedLocals` + `noUnusedParameters`。依赖选稳定线（当前大版本），lockfile 入库。
+tsconfig 要求见 `references/typescript.md`。依赖选稳定线（当前大版本），lockfile 入库。
 
 用户说构建慢或产物异常大时，先 `npx vite-bundle-visualizer`，看清大包再改分包或依赖。
-
-## 镜像类型
-
-后端契约字段在前端有一份**同名镜像类型**，字段逐个对齐。契约改名，前端同一次改完。契约是单一事实源，镜像只跟随：不发明字段、不改名、不另起一套。契约本身怎么钉见 `self-python-project`。
-
-响应里字段稳定、含义固定的部分（枚举、必填 id）用字面量或联合类型写死。
-
-互斥变体用带 `kind` 字面量的判别联合，不用 optional 字段袋；`switch` 的 `default` 写 `const _: never = x` 做穷尽检查。
 
 ## API 调用
 
@@ -114,7 +107,7 @@ html, body, #root { height: 100%; }
 
 ## 验收前
 
-打开浏览器前先看本机已有 dev 端口：只有一个就用它，多个问用户，没有再按项目脚本起。
+打开浏览器前先看本机已有 dev 端口：只有一个就用它，多个问用户，没有再按项目脚本起。自己起的 dev server 测完立刻停，不要常驻。
 
 ## 验收：用测量
 
@@ -135,6 +128,6 @@ html, body, #root { height: 100%; }
 
 3. **交互真点一遍**：点按钮 → 检查输入被正确填入 → 检查**只有目标区域**发生变化。走 `playwright-cli` 时用 snapshot / eval，不要只截图。
 4. **结构读一遍**：可访问性快照是纯文本，逐字核对层级与文案。
-5. **契约一致性**：改了类型则前后端两份定义逐字段比对。
+5. **契约一致性**：改了类型则按 `references/typescript.md` 逐字段比对。
 
 没有视觉能力时明说「我看不了截图」，用上面的测量与快照代替。不要凭「渲染出来了」宣布完成。

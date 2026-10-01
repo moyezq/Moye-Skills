@@ -1,21 +1,8 @@
----
-name: show-me
-description: >-
-  用最少视觉手段讲清当前话题：伪代码、调用树、组件树、浅层文件树、Mermaid、
-  diff 形变、可打开的聚焦 HTML。用户说「画一下 / 示意 / 用图讲 / 结构长什么样 /
-  调用关系 / 数据流 / show me / 可视化讲清楚」时用；解释逻辑、UI 结构、重构边界、
-  前后差异时优先读本 skill，少写长文。
----
+# 最小视图选型
 
-# 可视化讲清（show-me）
+何时落盘、文件名见主文件「最小视图」。本文只管选哪种视图、怎么呈现。
 
 用视觉把当前话题讲明白。跳过开场套话，正文短。选**能说清关键点的最小视图**。
-
-## 何时用 / 何时不用
-
-**用**：要把算法、调用链、组件边界、目录职责、数据流、改动差异讲清楚；用户要「看一眼就懂」。
-
-**不用**：要落成可交互分析面板 / 图表仪表时用官方 `canvas`；纯事实查询直接答。
 
 ## 视图选型
 
@@ -93,12 +80,12 @@ sequenceDiagram
 ```diff
  src/
  ├── commands/
-+│   └── show-me.ts       # 展开 slash command
++│   └── expand.ts
  ├── sessions/
 -└── transport.ts
 +└── transport/
-+    ├── client.ts
-+    └── stream.ts
+   ├── client.ts
+   └── stream.ts
 ```
 
 调用树 / 调用栈改动：
@@ -117,7 +104,7 @@ sequenceDiagram
 状态或控制流改动：
 
 ```diff
- on(save)
+   on(save)
 -  write content
 +  if content is unchanged
 +    return cached result
@@ -138,13 +125,15 @@ function expandSkill(command: string): string {
 
 ### 密 UI / 布局 / 状态对比 / Mermaid 放不下 → 聚焦 HTML
 
-写**一个**聚焦 HTML（示意图、信息图、或短幻灯，择一贴合要点）。对齐产品配色、字体、间距与组件；用真实标签与数据；兼顾桌面与移动。然后打开给用户看（Windows）：
+写**一个**聚焦 HTML（示意图、信息图、或短幻灯，择一贴合要点）。对齐产品配色、字体、间距与组件；用真实标签与数据；兼顾桌面与移动。
+
+路径由主文件落盘规则决定。写完后打开该路径（Windows）：
 
 ```powershell
-Invoke-Item "$env:TEMP\show-me-{description}.html"
+Invoke-Item "<已写入的 html 路径>"
 ```
 
-文件名用短英文描述；默认落在 `$env:TEMP`，除非用户指定路径。
+`.md` 不打开。
 
 ## 呈现纪律
 
