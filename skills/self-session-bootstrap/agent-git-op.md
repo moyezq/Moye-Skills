@@ -27,6 +27,37 @@
 - 不要走 dsh 那条 PAT `insteadOf`——Cursor 会话里会 `Connection was reset` 或挂死。
 - 同步本地→远程：普通 `add` / `commit` / `push`。`push` 失败再交用户终端。
 
+`AGENT` = `codex`（sandbox 默认无网络；走普通 SSH）：
+
+- 读远端状态/同步：`git` 直接走现有 SSH remote，不加 dsh 那两个 `-c`、不改写 URL、不读 `GITHUB_PAT`。
+- Codex sandbox 第一次连 `github.com:22` 可能报 `Permission denied` 或连接失败；这不是认证失败。把同一命令申请网络权限后重跑，仍走 SSH。
+- 命令统一设 `GIT_TERMINAL_PROMPT=0`，SSH 用 `BatchMode=yes` 和 `ConnectTimeout=10`，避免等待交互口令；口令/密钥不可用时交用户终端，不自动切 PAT。
+
+  ```powershell
+  $env:GIT_TERMINAL_PROMPT = '0'
+  git -C "<skill根目录>" -c core.sshCommand="ssh -o BatchMode=yes -o ConnectTimeout=10" <fetch|pull --ff-only|push>
+  ```
+
+- `push` 仍按共用分派：仅用户明确要求，禁止 force；分叉只报告。
+
+**Codex 操作分流（本地 / 插件 / SSH）**：
+
+工具名形如 `mcp__codex_apps__github._fetch_file`；下表用短名。插件走 Codex 后端，不依赖本机外网；当前会话已实测通。
+
+| 场景 | 首选 | 最简步骤 |
+|---|---|---|
+| 本地工作树已有内容 | 本地工具 | 直接 `Read` / `git status -sb`；不要调 `fetch_file` |
+| 远端文件、分支、commit | GitHub 插件 | `fetch_file`（带 `path` / `ref` / `start_line` / `end_line`）；分支 `search_branches`；历史 `search_commits` |
+| Issue / PR | GitHub 插件 | `search_issues` / `search_prs` → 命中后 `fetch_pr` / `fetch_pr_patch` |
+| CI | GitHub 插件 | `get_commit_combined_status` → `fetch_commit_workflow_runs` → `fetch_workflow_run_jobs` → `fetch_workflow_job_logs` |
+| 单文件远端写 | GitHub 插件 | `fetch_file` 取 `sha` → `create_branch` → `create_file` / `update_file` / `delete_file`；要 PR 再加 `create_pull_request`（未实测） |
+| 临时分支清理 | SSH | `git push origin --delete <branch>`；插件没有 `delete_branch` |
+| clone / fetch / pull --ff-only / push / 多文件提交 / 本地历史 | SSH | 走上文 SSH 命令；sandbox 网络失败就申请权限重跑 |
+| 插件 transport / HTTP 失败 | 先插件重试 | 原样重试 1 次；仍失败：Git 类动作转 SSH，Issue / PR / CI / 远端写报告阻塞 |
+| 未明确要求 | 禁止写 | 不调 `create_*` / `update_*` / `delete_*` / `merge_*` / 评论 / reaction |
+
+已验证读：`get_repo`、`fetch_file`、`search_branches`、`search_commits`、`search_issues`、`search_prs`、`get_commit_combined_status`、`fetch_commit_workflow_runs`。已验证写：`create_branch`、`create_file`、`update_file`、`delete_file`（临时分支已清理）。未实测：`create_pull_request`、merge、评论 / reaction；仅在用户明确要求时使用。账号权限为 `admin`。写操作可能 1–2 分钟，调用中不要重复提交，失败后先读回核对。
+
 其它 AGENT：与 `cursor` 相同。
 
 ## 状态分派（共用）
