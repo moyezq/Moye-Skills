@@ -2,7 +2,7 @@
 name: skill-analyse
 description: >-
   把上游或本地的 Agent Skill 项目写成 analyse 分析报告（简介、安装与命令、源码结构、核心原理、分步举例）。
-  命令：/skill-analyse
+  命令：/skill-analyse —— 把 skill 项目写成 analyse 分析报告
 ---
 
 # 分析 Skill 项目
@@ -18,7 +18,7 @@ description: >-
 - 新建或改本仓个人 skill → `skill-creator`
 - 写 agent 会读的规范 / description → `writing-for-agents`
 - 写 笔记库 主题文 → `self-notes-read`
-- 从本轮开发抽面试题 → `interview-from-dev`
+- 从本轮开发抽面试题 → `self-interview-question`
 
 ---
 

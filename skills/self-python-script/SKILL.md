@@ -1,6 +1,6 @@
 ---
 name: self-python-script
-description: 单文件分阶段 Python 脚本。目标已定、实现落进一个 .py、能按真实数据跳写流程时查阅；写爬虫、批处理、离线流水线、探测接口、说「写个脚本」时也查阅（没提 step 也要读）。写或改入口脚本的文件头模块注释时必须查阅（顶部 docstring：一句职责、按系统流程写原理、用本文件样本举例、怎么跑；原理编号与入口编号分开）。风格与怎么跑见 self-python-style；函数内部见 self-python-function；多文件目录见 self-python-project。命令：/self-python-script
+description: 单文件分阶段 Python 脚本。目标已定、实现落进一个 .py、能按真实数据跳写流程时查阅；写爬虫、批处理、离线流水线、探测接口、说「写个脚本」时也查阅（没提 step 也要读）。写或改入口脚本的文件头模块注释时必须查阅（顶部 docstring：一句职责、按系统流程写原理、用本文件样本举例、怎么跑；原理编号与入口编号分开）。风格与怎么跑见 self-python-style；函数内部见 self-python-function；多文件目录见 self-python-project。
 ---
 
 # 单文件分阶段 Python 脚本

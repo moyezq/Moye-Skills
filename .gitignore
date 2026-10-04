@@ -2,3 +2,6 @@
 __pycache__/
 *.py[cod]
 skills/self-session-bootstrap/scripts/_meta/env_card.json
+
+# find-skills 取回的上游 skill 审阅区：第三方代码，审过再收编，不入仓。
+preinstall/

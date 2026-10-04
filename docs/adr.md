@@ -40,9 +40,9 @@
 
 网页按前端样式复刻与协议/JS/APK 同属分析向逆向，不是渗透，也不是普通 UI 走查。`web-clone` 只还原外观、交互和 WebGL 效果；接口签名和对照协议仍走 `js-reverse` / `protocol-reverse`。清单与四份 skill 的应用场景表按四选一互指。
 
-## ADR-0009 · 2026-10-01 · 最小视图并入 project-docs
+## ADR-0009 · 2026-10-01 · 最小视图并入 self-project-docs
 
-把「用最小视图讲清结构」收进 `project-docs`，不再作为独立 skill。`architecture.md` 只收清单和文字；现状图走 `docs/overview.md`（密 UI 用 `.html`）等最小视图文件。独立 `show-me` 从工作树删除。
+把「用最小视图讲清结构」收进 `self-project-docs`，不再作为独立 skill。`architecture.md` 只收清单和文字；现状图走 `docs/overview.md`（密 UI 用 `.html`）等最小视图文件。独立 `show-me` 从工作树删除。
 
 备选是保留独立 skill，或把图写进蓝图。否掉是为了单一入口，并分开现状可视化和目标态蓝图。
 
@@ -58,7 +58,7 @@
 
 ## ADR-0012 · 2026-10-01 · grilling 并入 grill-with-docs
 
-拷问访谈与按落点沉淀文档不再拆成两份 skill。工作树只留 `grill-with-docs`：访谈原语在正文里，结晶了再加载 `project-docs` 或 `self-notes-read`。独立 `grilling` 从工作树删除。
+拷问访谈与按落点沉淀文档不再拆成两份 skill。工作树只留 `grill-with-docs`：访谈原语在正文里，结晶了再加载 `self-project-docs` 或 `self-notes-read`。独立 `grilling` 从工作树删除。
 
 备选是继续两份（访谈一份、沉淀一份）。否掉是因为每次对齐几乎都要沉淀，拆开会让 agent 只问不写。
 

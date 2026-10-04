@@ -1,6 +1,6 @@
 ---
 name: self-python-function
-description: Python 函数、方法与类怎么写。改 def、class、工具函数、FastAPI 路由处理时查阅；用户嫌模块或函数拆太碎时也查阅（即使用户没说代码规范）。风格与怎么跑见 self-python-style；脚本怎么分阶段见 self-python-script；目录分层见 self-python-project。命令：/self-python-function
+description: Python 函数、方法与类怎么写。改 def、class、工具函数、FastAPI 路由处理时查阅；用户嫌模块或函数拆太碎时也查阅（即使用户没说代码规范）。风格与怎么跑见 self-python-style；脚本怎么分阶段见 self-python-script；目录分层见 self-python-project。
 ---
 
 # Python 函数、方法与类

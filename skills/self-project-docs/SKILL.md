@@ -1,6 +1,6 @@
 ---
-name: project-docs
-description: 项目文档。管仓库里 CONTEXT、adr.md、HISTORY.md、architecture、README、AGENTS.md 等什么时候读、什么时候改、什么时候必须照做。讨论术语、写目标态蓝图、定本仓给 AI 的规矩、改启动方式或 UI 规范时用。最小视图：把项目、模块或代码文件收成能说清关键点的可视化；clone 无架构图要看结构、用户要了解算法/调用链/组件边界/目录职责/数据流/改动差异、或一个英文单词指代的成熟方案（RAG/SaaS/ERP）时用。画一下、示意、用图讲、调用关系、数据流、show me、可视化讲清楚走本 skill。写代码若改了叫法、决策、模块状态、端口入口或本仓禁令，同一轮改对应文件，不要攒到下轮。触发词：项目文档、CONTEXT.md、ADR、architecture.md、目标态、模块落点、术语、最小视图。不是 笔记库。配套 grill-with-docs。不要一决策一个 ADR 文件。可交互分析面板走官方 canvas。命令：/project-docs
+name: self-project-docs
+description: 项目文档。管仓库里 CONTEXT、adr.md、HISTORY.md、architecture、README、AGENTS.md 等什么时候读、什么时候改、什么时候必须照做。讨论术语、写目标态蓝图、定本仓给 AI 的规矩、改启动方式或 UI 规范时用。最小视图：把项目、模块或代码文件收成能说清关键点的可视化；clone 无架构图要看结构、用户要了解算法/调用链/组件边界/目录职责/数据流/改动差异、或一个英文单词指代的成熟方案（RAG/SaaS/ERP）时用。画一下、示意、用图讲、调用关系、数据流、show me、可视化讲清楚走本 skill。写代码若改了叫法、决策、模块状态、端口入口或本仓禁令，同一轮改对应文件，不要攒到下轮。触发词：项目文档、CONTEXT.md、ADR、architecture.md、目标态、模块落点、术语、最小视图。不是 笔记库。配套 grill-with-docs。不要一决策一个 ADR 文件。可交互分析面板走官方 canvas。
 ---
 
 # 项目文档
@@ -13,7 +13,7 @@ description: 项目文档。管仓库里 CONTEXT、adr.md、HISTORY.md、archite
 
 **用**：讨论术语；写或编辑下面「文档地图」里的任何文件；多入口 / 多模块 / 对照实验台动手前画目标态。项目里已有这些文件之一，且本轮代码改了叫法、为什么、模块状态、启动方式、本仓 AI 禁令或 UI 规范。最小视图见下节。
 
-**不用**：只读词、查定义；笔记库（见 `self-notes-read`）；把开发经历抽成面试题（见 `interview-from-dev`）；本轮只改函数内部，且不改叫法、决策、模块落点、端口或入口（缺空检查、修打印）。单文件脚本不必建蓝图和 UI 文档。可交互分析面板 / 图表仪表走官方 `canvas`。
+**不用**：只读词、查定义；笔记库（见 `self-notes-read`）；把开发经历抽成面试题（见 `self-interview-question`）；本轮只改函数内部，且不改叫法、决策、模块落点、端口或入口（缺空检查、修打印）。单文件脚本不必建蓝图和 UI 文档。可交互分析面板 / 图表仪表走官方 `canvas`。
 
 完成标准：本轮若改了某份文档所管的事，对应文件在同一轮已改。不把「下轮规范再改文档」当成完成。每份已存在的文档都按 [DOC-MAP.md](./DOC-MAP.md) 的读 / 改 / 守来用。本轮若画了最小视图：已按 [SHOW-FORMAT.md](./SHOW-FORMAT.md) 选型；该落盘的已写到规定路径；图没有写进 `architecture.md`。
 

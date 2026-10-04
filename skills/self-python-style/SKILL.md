@@ -1,6 +1,6 @@
 ---
 name: self-python-style
-description: 写或改 Python 文件时查阅本机代码风格（docstring、行内注释、文件内顺序、命名、信任上游字段、运行参数、print 与 logger）。业务启动与 README 命令分两步：conda activate 环境，再 python / pip；禁止 conda run -n。本对话第一次为任务跑 Python 时做 conda 日探测（探测脚本不算）；缺包不预检、失败再报告。新项目装环境依赖时钉 requirements.txt（包名==版本），只装能跑起来的最小集。切步与入口脚本顶部注释见 self-python-script；函数抽法与 FastAPI 见 self-python-function；目录见 self-python-project。命令：/self-python-style
+description: 写或改 Python 文件时查阅本机代码风格（docstring、行内注释、文件内顺序、命名、信任上游字段、运行参数、print 与 logger）。业务启动与 README 命令分两步：conda activate 环境，再 python / pip；禁止 conda run -n。本对话第一次为任务跑 Python 时做 conda 日探测（探测脚本不算）；缺包不预检、失败再报告。新项目装环境依赖时钉 requirements.txt（包名==版本），只装能跑起来的最小集。切步与入口脚本顶部注释见 self-python-script；函数抽法与 FastAPI 见 self-python-function；目录见 self-python-project。
 ---
 
 # Python 代码风格与怎么跑
@@ -40,6 +40,9 @@ python <入口>
 ```
 
 装包只走已 activate 的环境的 `pip`，不信 PATH 上未激活的 `pip`。
+
+**AI 自己在非交互 shell 里跑时**，`conda activate` 不生效（没有 hook，`CONDA_DEFAULT_ENV` 仍空、用的还是 base 的解释器）。
+所以上面两步是写给用户与 README 的；AI 侧直接用环境里的解释器绝对路径（`<envs>/<环境>/python.exe -m pytest …`）。
 
 不预检第三方包。出现 `ModuleNotFoundError` / `ImportError` 时不要自己装，向用户报告：
 

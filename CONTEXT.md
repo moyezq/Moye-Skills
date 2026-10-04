@@ -69,7 +69,7 @@ _Avoid_: 触发条件, 何时读
 _Avoid_: 外部文档（分析报告文头只写来源）, 知识库文
 
 **最小视图**：
-把项目、模块或代码文件收成能说清关键点的可视化。选型在 `project-docs` 的 `SHOW-FORMAT.md`。不是目标态蓝图（`architecture.md`）。
+把项目、模块或代码文件收成能说清关键点的可视化。选型在 `self-project-docs` 的 `SHOW-FORMAT.md`。不是目标态蓝图（`architecture.md`）。
 _Avoid_: 状态图（当用来指这份产物时）, show-me, 架构图（口语落到文件仍叫最小视图）
 
 **兜底**：

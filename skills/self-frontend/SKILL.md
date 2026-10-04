@@ -4,7 +4,6 @@ description: >
   前端开发入口。写或改页面、布局、React、Vite、TypeScript、界面验收、
   仿站、克隆网页、抄个站时查阅。读完按本文再读其下 self-react 或 web-clone。
   点选走查走 self-spyder。不要用本文件还原接口签名。
-  命令：/self-frontend
 ---
 
 # 前端
@@ -29,3 +28,9 @@ description: >
 | [`web-clone/`](./web-clone/BODY.md) | 按网页前端样式、交互、WebGL 复刻 | 克隆 / 仿站 / 抄个站；先拿真源码。不要用那份还原 `sign` 或对照协议 |
 
 `web-clone` 的脚本在其自己的 `scripts/`（那份里的 `$S`）。
+
+## 受限沙箱下的构建门禁
+
+`npx vite build` 会 `spawn EPERM`——esbuild 要起一个带管道 stdio 的子进程，而受限沙箱禁止命名管道。类型门禁
+`npx tsc --noEmit` 不受影响，先跑它；要跑构建就按沙箱规矩对**同一条命令**提权重试一次（`sandbox_permissions`），
+不要改写成别的命令绕开。

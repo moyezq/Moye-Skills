@@ -4,7 +4,6 @@ description: >
   浏览器自动化入口。用户提到 playwright-cli、页面快照、UI 走查、
   录屏、tracing、请求 mock、npx playwright test --debug=cli、
   网页点击填表时查阅。读完再读其下 playwright-cli。整站复刻/仿站走 self-frontend。
-  命令：/self-spyder
 ---
 
 # 浏览器自动化
