@@ -8,9 +8,13 @@
 1. 固定 `conda run -n base python` 调用本文件。
 2. 读 `conda info --json` 的 envs 与 root_prefix，不要把原始 JSON 打到 stdout。
 3. stdout 只有 conda_date 与 conda_envs。本脚本不算为任务跑 Python。
+4. 调 conda 的子进程带空 `CONDA_OVERRIDE_CUDA`：沙箱（DSH workspace-write）不许开命名管道，
+   而 conda 的 CUDA 虚拟包探测要起 multiprocessing 队列，会以 WinError 5 失败；
+   空覆盖让该 hook 不评估。本文件只取环境名，不关心 __cuda。
 """
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -38,12 +42,16 @@ def list_conda_env_names() -> list:
     conda_exe = shutil.which("conda")
     if conda_exe is None:
         raise FileNotFoundError("conda not found on PATH")
+    # 已显式设过就尊重原值，只在没设时兜底，避免沙箱外也改掉 conda 看到的 CUDA
+    child_env = dict(os.environ)
+    child_env.setdefault("CONDA_OVERRIDE_CUDA", "")
     try:
         proc = subprocess.run(
             [conda_exe, "info", "--json"],
             capture_output=True,
             text=True,
             timeout=CONDA_INFO_TIMEOUT_SEC,
+            env=child_env,
         )
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError("conda info --json timed out") from exc
