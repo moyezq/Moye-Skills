@@ -8,7 +8,7 @@
 
 术语与决策见 [`CONTEXT.md`](./CONTEXT.md)。共 **18** 个个人 skill。仅一端会读的 skill 仍在这份树里，靠各自的 description 约束。
 
-暂存（不进工作树）：`backup/` 下的 `apk-reverse`、`js-reverse`、`protocol-reverse`、`research`、`cli-service-desktop-shortcut`、`caveman`、`skill-creator`、`writing-for-agents`、`find-skills`、`skill-crud-eval`（对照实验那套：评审与复盘子代理 brief、观测台脚本）。
+暂存（不进工作树）：`backup/` 下的 `apk-reverse`、`js-reverse`、`protocol-reverse`、`cli-service-desktop-shortcut`、`caveman`。退役的 skill 直接删，内容在 git 历史里。
 
 ## 会话与规范
 

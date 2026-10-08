@@ -90,4 +90,4 @@
 
 为什么不留着：它的正文全是本机专属值（ffmpeg / whisper / yt-dlp 的绝对路径、`asr` 环境、medium.pt 模型目录），而这些值又要指向工作区里**另一个项目**（`Individual/whisper`）——既常年占 description 的常驻成本，又是跨项目泄漏的来源。退役比改成通用版划算：它服务的场景（把视频转成笔记）在本仓没有第二个用户。
 
-被否的备选：① 改成通用版留着（ffmpeg / whisper 路径挪进 `.env`）——用户判它连场景都不常用，为它维护一份 `.env` 契约不值；② 移进 `backup/` 暂存——本仓 `backup/` 已有 10 份对照实验留档，再塞一份没在用、也没在对比的 skill 只会堆陈旧层。真要复活，`git log` 里有全文。
+被否的备选：① 改成通用版留着（ffmpeg / whisper 路径挪进 `.env`）——用户判它连场景都不常用，为它维护一份 `.env` 契约不值；② ~~移进 `backup/` 暂存~~——2026-10-09 用户清理了 `backup/` 里最后一批对照实验留档（`research`、`skill-creator`、`skill-crud-eval`、`writing-for-agents` 4 份），但不打算把 `backup/` 整个取消，暂存约定仍有效。真要复活，`git log` 里有全文。
