@@ -15,8 +15,8 @@ description: >-
 
 **不用**：
 
-- 新建或改本仓个人 skill → `skill-creator`
-- 写 agent 会读的规范 / description → `writing-for-agents`
+- 新建或改本仓个人 skill、删 skill、找上游 skill → `self-skill-crud`
+- 写 agent 会读的规范 / description → `self-skill-crud/references/style.md`
 - 写 笔记库 主题文 → `self-notes-read`
 - 从本轮开发抽面试题 → `self-interview-question`
 

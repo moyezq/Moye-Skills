@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
-探测 PATH 高频命令，把当天可用命令名写入环境卡。
+r"""
+探测 PATH 高频命令：只读入口给出当天可用命令名，写入入口更新环境卡。
 
 ================================================================================
 使用前注意事项
 ================================================================================
-1. 固定 `conda run -n base python` 调用本文件；不读 conda 环境名单。
+1. 会话只调只读入口 `list_available_commands()`；写环境卡的 `detect_and_save_commands()` 在受限沙箱下会被拒。不读 conda 环境名单。
 2. 要增删命令只改 COMMANDS_TO_CHECK；每条 version 参数写死。PATH 上 which 不到时看 FALLBACK_EXES。
 3. 只把探测成功的名字写入 commands；不写版本、不写失败项。
 4. stdout 只有 commands_date 与 commands。本脚本不算为任务跑 Python。
@@ -25,6 +25,7 @@ from env_card import load_env_card, print_card_slice, save_env_card, today_iso_d
 # 高频开发命令：名字 + 用来确认存在的 version 参数。conda / python 不在此列。
 COMMANDS_TO_CHECK = [
     ("git", ["--version"]),
+    ("ssh", ["-V"]),
     ("node", ["--version"]),
     ("npm", ["--version"]),
     ("pnpm", ["--version"]),
@@ -77,6 +78,10 @@ def _command_is_available(name: str, version_args: list) -> bool:
             [exe] + version_args,
             capture_output=True,
             text=True,
+            # 子进程按本地代码页吐字节；固定 utf-8 + replace，避免读线程抛 UnicodeDecodeError。
+            # 这里只用 returncode，替换字符不影响判定。
+            encoding="utf-8",
+            errors="replace",
             timeout=VERSION_TIMEOUT_SEC,
         )
     except subprocess.TimeoutExpired:

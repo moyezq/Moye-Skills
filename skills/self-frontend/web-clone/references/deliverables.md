@@ -1,6 +1,6 @@
 # 产物
 
-每个复刻：`<工作目录>\Clone\<站名>-clone\`。
+每个复刻：`<工作区根>\Clone\<站名>-clone\`。
 
 ## NOTES.md（必须）
 
@@ -23,7 +23,7 @@
 - 可高保真 / 需近似 / 不克隆 / 主要风险:
 
 ## 跑起来
-cd <工作目录>\Clone\<站名>-clone
+cd <工作区根>\Clone\<站名>-clone
 python -m http.server 8123
 
 ## 改了什么

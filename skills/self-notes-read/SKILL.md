@@ -36,10 +36,10 @@ description: 笔记库 查阅、整理与书写（唯一事实源）。要读知
 ## 开场流程
 
 1. Read 本文件（bootstrap 已做过则不要重读 bootstrap）
-2. 需要「今日已归纳、可跳过」列表时，用本 skill 根目录下的脚本（`available_skills` 里本 skill 的 fullPath 的父目录），不要写死盘符：
+2. 需要「今日已归纳、可跳过」列表时，跑：
 
 ```powershell
-conda run -n base python "<skill根目录>/scripts/list_today_notes.py"
+python "<skill根目录>/scripts/list_today_notes.py"
 ```
 
 3. 只 Read 用户点名或未命中跳过规则的文档

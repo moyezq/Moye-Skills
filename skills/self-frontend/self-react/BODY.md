@@ -111,7 +111,7 @@ html, body, #root { height: 100%; }
 
 ## 验收：用测量
 
-界面落到可核查的证据。几何测量的取舍见 `<工作目录>\skills-docs\adr\0009-react-geometry-not-eyeball.md`。
+界面落到可核查的证据。
 
 1. **门禁**：`npx tsc --noEmit` 与 `npx vite build` 都 exit 0。
 2. **几何测量**——问 DOM：

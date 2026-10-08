@@ -1,11 +1,13 @@
 ---
 name: self-session-bootstrap
-description: 新对话第一条用户消息必须先读本 skill——开场硬前置，全局约束与开场规矩都在这里。本对话尚未读过它、或用户说「先读规范 / 先看 skills」时同样先读。读时判当前 Coding Agent；系统命令日探测用到才做。
+description: 新对话第一条用户消息必须先读本 skill——开场硬前置，全局约束与开场规矩都在这里。本对话尚未读过它、或用户说「先读规范 / 先看 skills」时同样先读。读时判当前 Coding Agent。
 ---
 
 # 会话索引
 
-本文件不是某个具体任务的写法。四块：§1 开场一次，§2 全程约束，§3 用到才做，§4 输出要求。读完按用户这一轮的任务继续；不要向用户复述环境卡全文，除非对方在问规范本身。
+本文件不是某个具体任务的写法。三块：§1 开场一次，§2 全程约束，§3 输出要求。读完按用户这一轮的任务继续；不要向用户复述本文件全文，除非对方在问规范本身。
+
+先读仓库根 `.env`，拿到本机专属环境变量（`MOYE_SKILLS_ROOT`、`WORKSPACE_ROOT`、`NOTES_ROOT`、`NPM_CACHE`）；skill 正文不写死盘符与用户名，要用绝对路径就取这里的键。
 
 ---
 
@@ -14,13 +16,47 @@ description: 新对话第一条用户消息必须先读本 skill——开场硬�
 本对话只做一次，按序：
 
 1. 读完本文件。
+
 2. 通过已注入的系统提示词，判断当前 Coding Agent（`dsh` / `cursor` / `codex` / 其它），记作 `AGENT`。
-3. 判当前系统，取最省的一步：
 
-   - 工具集里有 `pwsh` → Windows；有 `bash` → Linux / macOS
-   - Windows 要硬确认跑 `$IsWindows`；Linux / macOS 跑 `uname -s`（Linux / Darwin）
+3. 判当前系统：看命令工具跑的是哪种 shell——PowerShell（`dsh` 的 `pwsh`、`codex` 的 `exec_command`、`cursor` 的 `Shell`）→ Windows；`bash` → Linux / macOS。硬确认按 shell 分支：PowerShell Core 跑 `$IsWindows`；**Windows PowerShell 5.1（cursor 默认）没有 `$IsWindows`**，跑 `$PSVersionTable.PSEdition`（`Desktop`）或 `[Environment]::OSVersion`；Linux / macOS 跑 `uname -s`（Linux / Darwin）。
 
-开场只做这三步。环境卡、日探测、conda / pip 列表、git 在第 3 节，触发了再做。其它正文：用到才读，读过不重读。
+4. 认出**本 skill 自己的目录**（下称 `<skill根目录>`；各 skill 正文里的这个占位都指这一层，就是加载时给本文件的那一层）：
+
+   - `dsh` 看加载时给的「Base directory for this skill」那行。
+   - `cursor` 看 `available_skills` 里本文件 fullPath 的父目录。
+   - `codex` 看清单条目尾部的 `(file: r0/<名字>/SKILL.md)`，再用注入的全局 `Skill roots` 表把 `r0` 解析成真实路径（`r1`–`r6` 是 codex 自带的系统与插件 skill，不是本仓）。
+
+   别把它和**工作树**搞混：`%USERPROFILE%\.dsh\skills`、`%USERPROFILE%\.cursor\skills`、`%USERPROFILE%\.agents\skills` 都只是指向同一个工作树的目录联接，由本仓 `setup.ps1` 按根目录 `.env` 建立；`<skill根目录>` 是工作树下面**单个 skill** 的那一层。skill 只有这一份正文，读与写都落在 `<skill根目录>`。命令与路径随系统走，不写死盘符。
+
+5. **系统命令白名单**：读环境卡 `<skill根目录>/scripts/_meta/env_card.json` 的 `commands`；`commands_date` 不是今天就跑一次只读探测，拿到当天必定可用的第三方命令清单：
+
+   ```powershell
+   python -c "import sys; sys.path.insert(0, r'<skill根目录>/scripts'); import env_detect; print(env_detect.list_available_commands())"
+   ```
+
+   不在清单里的命令不用，也不罗列缺什么。要增删探测项只改 `env_detect.py` 顶部的 `COMMANDS_TO_CHECK`；这不是为任务跑 Python。
+
+6. **Conda 环境**：读环境卡同一份的 `conda_envs`；`conda_date` 不是今天就跑一次只读探测，拿到本机环境名清单：
+
+   ```powershell
+   python -c "import sys; sys.path.insert(0, r'<skill根目录>/scripts'); import conda_envs; print(conda_envs.list_conda_env_names())"
+   ```
+
+   默认环境 `base`；项目 README 或用户点名了才换（如 `rag`）。不要跑 `pip list`。
+
+7. **Harness 操作**：按第 2 步的 `AGENT`，读 `<skill根目录>` 下对应的一份，按它执行，别读别家那份：
+
+   - `dsh` → `<skill根目录>/agent-dsh.md`
+   - `cursor` → `<skill根目录>/agent-cursor.md`
+   - `codex` → `<skill根目录>/agent-codex.md`
+   - 其它 → 不读，按该 harness 自带工具照通用做法做。
+
+   每份同一套六块：读文件与列目录 / 改文件 / 运行 Python 脚本 / Git 操作 / 权限与提权 / 长跑、后台与服务。
+
+   三端共用的三条先照这个：新建文件直接写；改已有文件先读再改；一个文件要改多处就一次改完，生成文件（`.d.ts`、绑定的模型声明、前端产物）不手改、改源头再重跑。
+
+开场只做这七步。其它正文：用到才读，读过不重读。
 
 ---
 
@@ -33,84 +69,15 @@ description: 新对话第一条用户消息必须先读本 skill——开场硬�
 - 可独立完成的简单、确定多步活优先派 SubAgent；一眼能查的用本对话工具，不派。主问题仍在本对话做。
 - 验证由用户手动执行；AI 只做静态审查和逻辑说明。默认不跑 `test_*.py`、`.sh`、`.bat` 及业务入口脚本；用户本轮明确要求「跑通再写入文档 / 验证真实可用」时 → 跑用户点名的那个。
 - 任务结束后不主动新建说明用 `.md`。用户明确要求、或更新与任务相关的 README / docstring / 阶段注释除外。
-- 删模块、改配置路径、换入口后，在回复中请用户重启服务再手动验证；勿把仍在跑的旧进程当成新代码已通过。
 - Agent 为探测或联调起服务（HTTP、向量、Vite）→ 测完立刻停掉，不常驻占端口；用户终端里已在跑的进程不要杀。
-- `AGENT` = `dsh` 时改文件先读：`edit` / `write` 前对目标路径调一次 `read`。
-  - 批量改多个文件 → 先并行 `read` 全部目标再动手。
-  - 目标只用 `grep` / `glob` / `pwsh` 看过 → 照样 `read`。
-  - 会话恢复或 fork 过 → 重读。
-  - 派 SubAgent 改 → 子 agent 自己 `read`。
-  - 改名 / 移动 / 重构目录后（`Move-Item`、`git mv`）→ 新路径先 `read` 再 `edit`。
-  - 能先改后移的 → move 放最后。
-- `edit` 的 `old_string` 从**刚读到的输出里复制**。凭记忆重写会因为缩进、被省略的行、错字而失配，白费一整轮。
-- **同一文件的改动一次改完**：先把要改的几处读齐，再发一次 `edit`（或一次 `write`）。步数是成本的量级杠杆——
-  缓存读取总量 ≈ Σ(每步的上下文)，而上下文单调增长，所以总花费近似随步数**平方**增长；同一个文件连发四次小改，四次都重读同一份上下文。
-- **反复要用的检查落进仓里**：回归比对、指纹、结构扫描这类第二轮就写成仓内的一份测试或脚本，用仓内的固定落点，
-  别每轮现写一个临时文件。落点见本仓 `AGENTS.md`（系统 Temp 在沙箱下常被拒写）。
+
+- **先跑一次真实入口，别先推理数据流**：现象与真因常常不在代码表面上，程序自己说出来的错误比分段重构便宜得多。跑不动或太贵时，退一步打一次真实输出或错误；拿到事实再只读被点名的那一层。排障时先看清报障要的是哪个量，再谈修好没有；构建通过不等于报障点验过。
+- 删模块、改配置路径、换入口后，在回复中请用户重启服务再手动验证；勿把仍在跑的旧进程当成新代码已通过。
+- 写文件前先读要改的那个文件（具体做法见 §1 第 7 步对应的那份 harness 文档）。
 
 ---
 
-## 3. 用到才做
-
-每小节 = 触发条件 + 按序步骤。探测脚本只随本文件提供。
-
-skill 根目录 = 加载本文件时给出的那个目录：
-- Cursor 看 `available_skills` 里本文件 fullPath 的父目录
-- dsh 看「Base directory for this skill」那行。
-
-命令与路径随系统走，不写死盘符。
-
-### 系统命令日探测
-
-本对话第一次要用白名单 PATH 命令时：
-
-1. Read `scripts/_meta/env_card.json`。没有文件当过期。
-2. 把今天写成 `YYYY-MM-DD`，和卡上 `commands_date` 比。相同则用卡里的 `commands`，停。
-3. 不同则跑：`conda run -n base python "<skill根目录>/scripts/env_detect.py"`。固定 base。stdout 字段以脚本为准，不要猜、不要补。
-4. 当天已经跑过则停。
-
-增删命令只改该脚本顶部 `COMMANDS_TO_CHECK`。这不是为任务跑 Python。
-
-### 白名单
-
-Shell 里要用第三方命令时：
-
-1. 先完成「系统命令日探测」（当天只做一次）。
-2. 名字在环境卡当天 `commands` 里 → 用；不在 → 不用，也不点名罗列缺什么。
-3. `conda` 始终可用：探测用 `conda run -n base`；业务启动用 `conda activate` 再 `python`。PATH 上的 `pip` 不用于装包。
-4. 本对话自带工具（`AGENT` = `cursor` 时是 Read / Write / Grep / Glob / Shell，`dsh` 时是 read / write / grep / glob / pwsh）和 PowerShell 内建始终可用。不要用 Shell 反复 which。
-5. `commit` / `push`：当天 `commands` 含 `git`，且用户明确要求，并遵守用户 git 规则。
-
-### Git操作
-
-当涉及 Git 操作（fetch / pull / push / commit，或用户说同步 skill）时，读同目录 [agent-git-op.md](./agent-git-op.md)，按它执行。开场不读。
-
-### 命令行列目录
-
-要找文件或看某目录里有什么时：先选工具，选中一种就做完。
-
-#### DSH（`AGENT` = `dsh`）
-
-1. 找文件名 → `glob`：`path` 给最小父目录，pattern 收窄（`src/**/*.ts`）。
-2. 找内容 → `grep`。
-3. 要清单 / 媒体 / 二进制 / 刚落盘的文件 → `Get-ChildItem -LiteralPath <父目录>`。
-4. 结果里出现 spill 路径时 → `read` 或 `grep` 那个文件取全量。
-5. 每条命令前先 `[Console]::OutputEncoding=[Text.Encoding]::UTF8`。
-
-#### Cursor（其余 `AGENT`）
-
-Glob：工作区里按模式找源码和文本（`.py` `.md` `.ts` 等）。走索引，通常比扫盘快。父目录已知则把范围限定在那里。
-
-列目录：已知父目录要清单；找媒体或二进制（视频、音频、图片、压缩包）；或要刚落盘、索引可能还没有的磁盘实况。索引默认不含这类文件。步骤：
-
-1. 用本对话的 PowerShell，不用 cmd。
-2. 把控制台输出设成 UTF-8。
-3. `Get-ChildItem -LiteralPath <父目录>`。名字含非 ASCII 时用 `-LiteralPath`，或 `-Filter` 之后取 `.FullName`。
-4. 读文件内容用 Read。
-
----
-
-## 4. 输出要求
+## 3. 输出要求
 
 用户给了明确任务：直接出任务结果。
 

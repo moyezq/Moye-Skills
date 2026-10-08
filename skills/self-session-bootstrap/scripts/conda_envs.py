@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
-列出本机 conda 环境名，写入环境卡。
+r"""
+列出本机 conda 环境名：只读入口给环境名，写入入口更新环境卡。
 
 ================================================================================
 使用前注意事项
 ================================================================================
-1. 固定 `conda run -n base python` 调用本文件。
+1. 会话只调只读入口 `list_conda_env_names()`；写环境卡的 `detect_and_save_conda_envs()` 在受限沙箱下会被拒。
 2. 读 `conda info --json` 的 envs 与 root_prefix，不要把原始 JSON 打到 stdout。
 3. stdout 只有 conda_date 与 conda_envs。本脚本不算为任务跑 Python。
 4. 调 conda 的子进程带空 `CONDA_OVERRIDE_CUDA`：沙箱（DSH workspace-write）不许开命名管道，
@@ -50,6 +50,8 @@ def list_conda_env_names() -> list:
             [conda_exe, "info", "--json"],
             capture_output=True,
             text=True,
+            # conda 吐 UTF-8 JSON；钉死编码，别让本地代码页去猜（这里不加 errors=，解码失败要直接报错）
+            encoding="utf-8",
             timeout=CONDA_INFO_TIMEOUT_SEC,
             env=child_env,
         )

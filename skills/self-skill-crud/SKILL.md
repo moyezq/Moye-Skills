@@ -1,0 +1,75 @@
+---
+name: self-skill-crud
+description: 个人 skill 的增删改查：新建、修改、删除 skill 的规范，以及该自己写还是去生态找现成 skill 的判据。要写或改 `skills/` 下任何 `SKILL.md`、判断一段内容值不值得写进 skill、判断某份上游 skill 值不值得收编、要删掉或退役一个 skill 时读这一份。四件事各有一份流程：`references/create.md`、`references/update.md`、`references/delete.md`、`references/find.md`；文本规范在 `references/style.md`，验证在 `references/verify.md`，调用机制在 `references/mechanics.md`。
+---
+
+# 个人 skill 的增删改查
+
+四件事各有一份流程，共用同一套判据（§2 判落哪，§4 是动手前必须过的一关）。先认出是哪一件、读那一份，再动手。
+
+## 认场景
+
+| 情形 | 读 |
+|---|---|
+| 新建一个 skill | `references/create.md` |
+| 改已有 skill 的正文、description 或目录 | `references/update.md` |
+| 删掉、退役一个 skill，或把它移进 `backup/` | `references/delete.md` |
+| 去生态里找现成 skill，或把上游 skill 收编进来 | `references/find.md` |
+
+写任何 skill 文本前先读 `references/style.md`——它是 skill 文本规范的唯一事实源。
+落盘后按 `references/verify.md` 查脚本层。
+
+## 四件事共用的判据
+
+### 1. 先判值不值得进 skill
+
+两条同时成立才建，缺一条就当场把活干了、别建 skill：
+
+- 这件事会重复发生，不是一次性的。
+- 它有模型默认不会做的判断或步骤。
+
+判据相对模型、不相对读者。模型默认就会做的事（加注释、把代码解释一遍、报告改了哪些文件）写进 skill 是废话指令，花常驻成本换零行为改变。
+
+### 2. 先判落哪
+
+内容先找**现有归属**：哪个 skill 的作用域已经管这件事，就写进那一处。四个候选按序试：
+
+1. 现有 skill 的作用域接得住 → 写进去，改它的正文（`description` 只在触发条件变了时才动）。
+2. 接不住，但它属于某一层已有的不变项 → 写进管那一层的文档：本仓给 AI 的规矩进项目 `AGENTS.md`，项目文档进 `docs/`，skill 自身机制进 `references/mechanics.md`。
+3. 接不住，且没有任何 skill 的作用域覆盖 → 新建一个 skill（走 `references/create.md`）。
+4. 判不出归谁 → 先问用户，不硬塞。
+
+**不许**塞进「最接近的那个 skill」。硬塞的代价是双份：那个 skill 的层级地位被抬高，读它的人要跳过不属于它的段落。
+
+判据是「这条内容的不变项归谁管」——是某个 harness 的操作、某个领域的做法、还是某一层文档的规矩。
+
+### 3. 单一事实源
+
+同一含义只在一处权威，改行为只改那一处。skill 之间可以互相指向，不复制正文——复制出来的第二份会漂移，还把该含义的层级地位抬过它真实的档位。
+
+### 4. 落盘前先给对照
+
+改任何 skill 正文、`description` 或目录之前，先把改动对照摆给用户：**改哪一处、改前、改后、为什么**；连同「落哪、为什么落那」一起说清。用户点头才动笔。
+
+**拦的是**：改完才让用户看见改了什么。对照措辞按 `references/style.md` 的「改动怎么给人看」。
+
+### 5. 连带文件同一轮改完
+
+改 skill 会牵动四处，同一轮一起改，不攒到下轮：
+
+| 牵动 | 什么时候 |
+|---|---|
+| `skills-list.md` | 增删 skill、改它的一句话作用 |
+| `CONTEXT.md` | 新增或废弃本仓特有叫法 |
+| `docs/adr.md` | 决策性取舍：合并、拆分、入口归属、删除 |
+| 其它 skill 里的指针 | 改名、删除、换入口以后 |
+
+### 6. 落盘后必须查
+
+脚本层必跑：路径、frontmatter、命令尾巴（`references/verify.md`）。有没有用不靠离线案例判——简单案例测不出真实价值，看实际使用，发现某条没被照做或拖慢读的人再回来改。
+
+## 收编与边界
+
+- 上游 skill 按本仓规范**改写收编**：抽需要的能力，用本仓的话重写；原样拷贝和整篇中译都不算收编。
+- 工作树是唯一的写入落点。装进产品目录是人的决定；找回来的候选落到 `preinstall/` 等人审。
+- 删除或移走前的连带面先报清单、等人点头，再动手。

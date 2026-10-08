@@ -7,7 +7,7 @@ description: 单文件分阶段 Python 脚本。目标已定、实现落进一�
 
 只管 **一个 `.py` 里怎么把已定目标写成可顺着读的流程**，以及 **入口脚本文件头怎么写**。风格、字段、运行参数、print 与 logger、第一次怎么跑见 `self-python-style`。抽不抽函数见 `self-python-function`。多文件项目目录见 `self-python-project`。
 
-完成标准：每个数据跳一个 `stepN`；`__main__` 只编排、且在文件最末尾；参数硬编码；输入在 `data/` 或 `data/source/`，产出在 `data/result/`，分步文件名与 `stepN` 同号。入口脚本模块 docstring 按「顶部注释」四层写（真·一步可压成开场 + 怎么跑）；原理编号与入口编号不混用。写分层文件头时已对照 [references/header-example.py](references/header-example.py)。
+完成标准：每个数据跳一个 `stepN`；`__main__` 只编排、且在文件最末尾；参数硬编码；脚本自己带运行上限（默认 5 分钟，见「运行上限」）；输入在 `data/` 或 `data/source/`，产出在 `data/result/`，分步文件名与 `stepN` 同号。入口脚本模块 docstring 按「顶部注释」四层写（真·一步可压成开场 + 怎么跑）；原理编号与入口编号不混用。写分层文件头时已对照 [references/header-example.py](references/header-example.py)。
 
 ## 何时用
 
@@ -114,6 +114,15 @@ if __name__ == "__main__":
 
 - 每阶段一行注释（做什么、产出路径）+ 一行调用。不要再包一层 `run()` / `fetch_all()` 把步骤藏进去。
 - 步骤函数就写在本文件，按 `step0`、`step1`… 排。不要为了对齐「逻辑必须在 utils」而拆文件。
+
+## 运行上限
+
+一次运行默认最多 **5 分钟**：预估更久，先报给用户或主进程「预计 X 分钟」，得到同意再改上限常量。
+
+- 装法：文件顶部 `RUN_LIMIT_SEC = 300`，`__main__` 第一行 `faulthandler.dump_traceback_later(RUN_LIMIT_SEC, exit=True)`——到点自己退出，并打出所有线程的栈（精确到行），不用等谁发现。
+- 进度行加 `flush=True`：`exit=True` 是直接结束进程，缓冲里没 flush 的行会丢，而它们正是判断卡在哪一步的证据。
+- 拉起的子进程要自己收：父进程到点自杀**不带走**子进程，杀掉直接子进程也**不带走**孙进程（都实测过）——`subprocess.run(..., timeout=N)` 只管一层，所以每个 spawn 点都要带上限；主动收用 `Popen.kill()` / `psutil`，`taskkill` 在受限沙箱里会被拒（实测 `ERROR: Access denied`）。
+- 本机实测超过 5 分钟的：整库入库约 13 分钟；跑真模型的评测同理。这类先问再跑。
 
 ## 按真实数据跳切步骤
 

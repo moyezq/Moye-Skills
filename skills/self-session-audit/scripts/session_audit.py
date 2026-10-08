@@ -71,12 +71,13 @@ def find_session(session_id: str) -> Path:
     定位一个会话的事件流文件。
 
     功能：给定 id（可带可不带 `session-` 前缀）就在 <dsh>/sessions/*/ 下找它；给定空串就取最近改动的。
-    应用场景：report_* 之前的第一步；本机所有会话的事件流都叫 session.v3.jsonl.zstd。
+    应用场景：report_* 之前的第一步；不同 DSH 版本的会话事件流文件名不一样
+              （v3 与 v4 的差别之一就在这里），所以按 `session.v[34].jsonl.zstd` 一起找。
     输入：session_id — 会话 id，空串表示「最近的那个」。
     输出：事件流文件路径。
     异常：找不到时 SystemExit，并列出可用的工作区目录。
     """
-    candidates = list(SESSIONS_DIR.glob("*/*/session.v3.jsonl.zstd"))
+    candidates = list(SESSIONS_DIR.glob("*/*/session.v[34].jsonl.zstd"))
     if not candidates:
         raise SystemExit(f"没找到任何会话事件流：{SESSIONS_DIR}")
     if not session_id:
@@ -112,12 +113,31 @@ def load_events(session_path: Path) -> list:
     return events
 
 
+def has_error_flag(event: dict) -> bool:
+    """这条 tool/result 是否被标成错误。
+
+    读取比文本模式可靠得多：编译失败、类型检查失败这类「命令本身跑完了、但内容是错误」
+    的调用，只有这个字段能认出来。三份报告的第一份用它兜底，避免把这类失败算成成功。
+    """
+    message = (event.get("data") or {}).get("message") or {}
+    return bool(message.get("isError"))
+
+
 def result_text(event: dict) -> str:
-    """取一条 tool/result 事件里的纯文本（内容块嵌了两层，这里摊平）。"""
+    """取一条 tool/result 事件里的纯文本。
+
+    文本块在不同事件流版本里嵌套层数不同：v4 是 content[].text，更早的是
+    content[].content[].text。两种都要认——只按两层取时，在 v4 上恒为空串，
+    于是失败判定、非 0 退出、skill 加载三样一起读空，报告出「0 次失败、全部 skill
+    从未加载」这种假结论。
+    """
     chunks = []
     for block in event["data"]["message"].get("content", []):
-        for piece in block.get("content", []):
-            if piece.get("type") == "text":
+        if block.get("type") == "text":
+            chunks.append(block.get("text") or "")
+            continue
+        for piece in block.get("content", []) or []:
+            if isinstance(piece, dict) and piece.get("type") == "text":
                 chunks.append(piece.get("text") or "")
     return "\n".join(chunks)
 
@@ -152,16 +172,24 @@ def report_operations(events: list, turn: int) -> None:
     failure_lines = []
     exits = []
     for call in calls:
-        text = result_text(results[call["callId"]]) if call["callId"] in results else ""
+        event = results.get(call["callId"])
+        text = result_text(event) if event else ""
         if SELF_MARKER in call["arguments"]:
             continue  # 本脚本自己的输出含失败标签，扫进来就是自己给自己记一笔
+        matched = False
         for label, pattern, tools in FAILURE_PATTERNS:
             if tools and call["name"] not in tools:
                 continue
             if re.search(pattern, text, re.M):
                 failures[label] += 1
                 failure_lines.append((call.get("turn"), call.get("step"), call["name"], label))
-                break
+                matched = True
+                # 不 break：一次调用可能同时命中多条，全都记下来
+        # 兜底：工具结果被标成错误但没命中任何文本模式（编译器与类型检查器的报错
+        # 就属于这类——命令跑完了，内容是错误）。只标成「工具报错」，便于人剔。
+        if not matched and event is not None and has_error_flag(event):
+            failures["工具报错(isError)"] += 1
+            failure_lines.append((call.get("turn"), call.get("step"), call["name"], "工具报错(isError)"))
         codes = {int(code) for code in EXIT_CODE.findall(text)} - {0}
         if codes:
             exits.append((call.get("turn"), call.get("step"), call["name"], sorted(codes)))

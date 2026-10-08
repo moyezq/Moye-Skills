@@ -12,16 +12,20 @@ _Avoid_: 两份 skill, 同步目录, skills 备份
 本仓 `skills/` 目录。各产品的个人 skills 路径用目录联接指向它，不是第二份拷贝。
 _Avoid_: 双 clone, 同步一份到另一端, 仓根平铺
 
+**skill 根目录**：
+加载本文件时给出的那一层，即**单个 skill 自己的目录**（`<工作树>/<名字>/`）。各 skill 正文里的 `<skill根目录>` 都指这一层，`scripts/`、`references/`、各 harness 文档都在它下面。
+_Avoid_: 拿它指工作树, 把它当 skills 仓根
+
 **本机配置**：
 未进仓的 `.env`，只放各产品 skills 目录的本机路径。模板是 `.env.example`。
 _Avoid_: 写进 README 的盘符路径
 
 **仓对齐**：
-要对技能仓做 git 时，读会话索引同目录 `agent-git-op.md`，按它执行。不是开场必做，不是日探测。
+要对技能仓做 git 时，按会话索引第 7 步读的那份 harness 文档（`agent-dsh.md` / `agent-cursor.md` / `agent-codex.md`）里的 Git 一节执行。不是开场动作，不是日探测。
 _Avoid_: 开场对齐, 开场探测, 日探测
 
 **会话索引**：
-新对话开场必须加载的那一份 skill（`self-session-bootstrap`）。它是开场步骤、进程级硬约束、个人 skills 命令清单的同一份正文。开场读这一份。技能仓 git 在其同目录 `agent-git-op.md`。
+新对话开场必须加载的那一份 skill（`self-session-bootstrap`）。它是开场步骤、进程级硬约束、个人 skills 命令清单的同一份正文。开场读这一份。各 harness 的操作规范在 `self-session-bootstrap/` 下按 `AGENT` 各一份：`agent-dsh.md`、`agent-cursor.md`、`agent-codex.md`，开场第 7 步读对应那份。
 _Avoid_: 规范总览, 开场检查单, skills 总文档
 
 **会话标题**：
@@ -48,17 +52,49 @@ _Avoid_: 自定义 skill, 个人规范
 description 末尾的 `/名字`，人打它触发该 skill；开场清单从 `available_skills` 现抄，不另存一份。
 _Avoid_: 路由表, 触发条件表, 叠用关系
 
+**常驻成本**：
+每轮都躺在上下文里、不触发也照烧的 token 与注意力。skill 的 description、`AGENTS.md` 的一行都花这份预算。
+_Avoid_: 上下文负载, 常驻 token
+
+**人的记忆负担**：
+花在人身上的成本——有哪些文档、何时该去够哪一份。人是索引，不是要最小化的成本；人的判断值钱处就花它。
+_Avoid_: 认知负载
+
+**指针**：
+一句话点名一份正文外的材料，并编码「何时去够它」的条件。skill 的 description 是一个，正文里点名某文件的一行也是。
+_Avoid_: 上下文指针, 引用
+
+**逐层往下推**：
+正文只留每条路径都要的步骤，把只有部分路径需要的细则推到单独文件、靠指针够到。为的是保住顶层的可读层级，不是省 token。
+_Avoid_: 渐进披露, 信息层级, 披露参考
+
+**完成标准**：
+一个步骤干完的条件，写清「完成」与「未完成」的边界。既可核查又穷尽的那种最强。
+_Avoid_: 验收标准, 判据（当用来指步骤终点的那个条件时）
+
+**锚词**：
+模型预训练里已有的紧凑概念，在正文里当词反复出现，用最少的 token 锚住一整片行为。
+_Avoid_: 引导词, leading word
+
+**废话指令**：
+模型默认就会照做的指令，花了常驻成本换零行为改变。判据是「改不改默认行为」，相对模型、不相对读者。
+_Avoid_: 空操作, no-op
+
+**抢跑**：
+步骤没做完，agent 自己宣布完成。根因通常是完成标准模糊，先打磨边界；边界不可约模糊且确实观察到抢跑，才把后续步骤推出视野。
+_Avoid_: 提前完成, premature completion
+
 **前端入口**：
-工作树顶层的 `self-frontend`。前端任务先读这一份，再按其表读目录下的 `self-react` 或 `web-clone`（入口是 `BODY.md`，不是 `SKILL.md`）。
+工作树顶层的 `self-frontend`。前端任务先读这一份，再按其表读目录下的 `self-react` 或 `web-clone`（入口是 `BODY.md`，不是 `SKILL.md`）。桌面壳那一层归 `self-desktop-ui`。
 _Avoid_: 把那两份再平铺到 skills/, 被收目录里再放 SKILL.md
+
+**桌面壳**：
+Electron / Tauri / WebView2 桌面应用里，窗口层与网页层的分界。窗口、标题栏、材质、托盘、全局热键、单一实例、IME 候选框、原生右键菜单属于壳层，归 `self-desktop-ui`；页面、组件、布局属于页面层，归 `self-frontend`。
+_Avoid_: 桌面端（当用来同时指这两层时）, 客户端界面（当用来指壳层时）
 
 **浏览器入口**：
 工作树顶层的 `self-spyder`。页面快照、UI 走查、Playwright CLI 先读这一份，再读目录下的 `playwright-cli`（入口是 `BODY.md`，不是 `SKILL.md`）。
 _Avoid_: 把 playwright-cli 再平铺到 skills/, 被收目录里再放 SKILL.md
-
-**视频笔记**：
-工作树顶层的 `self-video-notes`。本地 mp4 或 B 站链接转成 SRT + Markdown。本机命令入口只写在该 skill。
-_Avoid_: 未验证的 LaTeX PDF 流水线当默认交付
 
 **清单**：
 给人看的薄索引（`skills-list.md`）：路径、分组、一句话。不复述何时 Read。

@@ -199,6 +199,34 @@ playwright-cli run-code "async page => {
 }"
 ```
 
+## 在页面加载前注入（桩数据、mock、全局钩子）
+
+**要在 `goto` 之前生效的注入一律用 `addInitScript`，不要用 `page.evaluate`。** `page.evaluate` 是一次性执行：它设好的 `window.*` 会被随后的页面加载覆盖成 undefined，被测页面于是白屏或报「某方法不存在」。更坏的是这个现象**看起来像被测应用自己启动失败**，容易把人带去排查应用。
+
+```bash
+playwright-cli run-code "async page => {
+  await page.context().addInitScript((stub) => {
+    window.__stub = stub;
+  }, { api: 'http://localhost:3000' });
+  await page.goto('http://127.0.0.1:8080/');
+  return await page.title();
+}"
+```
+
+两条容易再踩的：
+
+- `addInitScript` 的**第一个参数必须是函数**，注入的数据是它的实参（第二项）。把 JSON 直接插到形参位置上会报 `Invalid destructuring assignment target` 这类语法错，看起来像 CLI 或脚本坏了。
+- `addInitScript` **每次导航都会重跑**，`reload()` 也算。所以「只在第一次导航清一次存储」这类初始化不能无条件写在里面——第二次跑会把你前一步刚存下的状态擦掉，于是「刷新后是否记住」永远验不过（假失败）。用 `sessionStorage` 放一个记号，只清一次：
+
+```javascript
+try {
+  if (!window.sessionStorage.getItem('probe-started')) {
+    window.localStorage.clear();
+    window.sessionStorage.setItem('probe-started', '1');
+  }
+} catch (e) {}
+```
+
 ## 错误处理
 
 ```bash

@@ -3,5 +3,12 @@ __pycache__/
 *.py[cod]
 skills/self-session-bootstrap/scripts/_meta/env_card.json
 
-# find-skills 取回的上游 skill 审阅区：第三方代码，审过再收编，不入仓。
+# self-skill-crud 取源的上游 skill 审阅区：第三方代码，审过再收编，不入仓。
 preinstall/
+
+# 临时工作区（复制一份 skill 做试验、或落探查产出的目录）：过程文件，不入仓。
+# 正常落在本的上一级 .skill-workspace/（仓外，不占本仓）；本仓已是顶层目录时留在仓根，靠这条兜底。
+*-workspace/
+
+# IDE 本地状态：每台机器一份，不入仓。
+.idea/

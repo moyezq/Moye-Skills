@@ -1,8 +1,3 @@
----
-name: find-skills
-description: 从开放 skill 生态里找到合适的 skill 并取回本仓 preinstall/ 等人审。用户问「怎么做 X」「有没有做 X 的 skill」「有没有 skill 能……」、想扩展 agent 能力、或要拿下生态里某个 skill 时用。搜索走 skills.sh 榜单与 `npx skills find`；取源走 `scripts/fetch-skill.ps1`，落 .env 的 `PREINSTALL_SKILLS`。不要用 `npx skills add` 装到 C 盘产品目录。
----
-
 # 找 skill 并取回 preinstall
 
 只做两件事：**找**（生态里有没有现成的、值不值得用）与**取回**（把文件放进本仓 `preinstall/` 等人审）。装不装、收不收编，是人的决定。
@@ -50,10 +45,10 @@ vercel-labs/agent-skills@vercel-react-best-practices 763.2K installs
 
 **筛输出别用行首行尾锚点。** `find` 的输出带 ANSI 颜色码：`installs` 后面其实是 `ESC[0m`，`└` 前面是颜色码。所以 `installs$`、`^\s*└` 一条都匹配不上（实测 20 行结果里匹配 0 行），按 `installs`、`skills.sh/`、`@` 这类子串筛，或先剥掉 ANSI。
 
-**npx 报 EPERM 写不了缓存时**（沙箱把 `C:\...\npm-cache` 挡在外面），把缓存指到工作区内再重试：
+**npx 报 EPERM 写不了缓存时**（沙箱把 `C:\...\npm-cache` 挡在外面），把缓存指到仓里 `.env` 的 `NPM_CACHE`（没有就取 `WORKSPACE_ROOT` 下的 `.npm-cache`）再重试：
 
 ```powershell
-$env:npm_config_cache = '<工作目录>\.npm-cache'; npx -y skills find "<query>"
+$env:npm_config_cache = (Select-String -Path <仓根>\.env -Pattern '^NPM_CACHE=').Line.Split('=')[1]; npx -y skills find "<query>"
 ```
 
 **不要**跑不带 query 的 `npx skills find`：在真人终端里它会在你选中后直接安装到产品目录；带 query 才是只打印。
@@ -81,7 +76,7 @@ $env:npm_config_cache = '<工作目录>\.npm-cache'; npx -y skills find "<query>
 ### 第 6 步：取回 preinstall
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File <本 skill 目录>\scripts\fetch-skill.ps1 <owner>/<repo>@<skill>
+powershell -ExecutionPolicy Bypass -File <self-skill-crud 目录>\scripts\fetch-skill.ps1 <owner>/<repo>@<skill>
 ```
 
 脚本做的事：读本仓 `.env` 的 `PREINSTALL_SKILLS`（相对值按仓库根解析，缺省 `preinstall`）；git 偏克隆 + 稀疏检出，只拉目标 skill 那一个目录；落到 `<preinstall>/<skill>/`；把来源仓与 commit 追加进 `<preinstall>/SOURCES.md`。同名目录已存在就停下报错，除非加 `-Force`。
@@ -95,7 +90,7 @@ powershell -ExecutionPolicy Bypass -File <本 skill 目录>\scripts\fetch-skill.
 要比几个候选、或想先看清规则再决定取哪个，用 `-PreinstallDir` 把落点指到一次性目录，读完删掉即可，`preinstall/` 与 `skills/` 都不受影响：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File <本 skill 目录>\scripts\fetch-skill.ps1 <owner>/<repo>@<skill> -PreinstallDir <一次性目录>
+powershell -ExecutionPolicy Bypass -File <self-skill-crud 目录>\scripts\fetch-skill.ps1 <owner>/<repo>@<skill> -PreinstallDir <一次性目录>
 ```
 
 #### 三条常态，别当故障
@@ -139,4 +134,4 @@ powershell -ExecutionPolicy Bypass -File <本 skill 目录>\scripts\fetch-skill.
 
 1. 说明确实没有现成的。
 2. 提出用自己的通用能力直接把这活干了。
-3. 这事要长期复用，就在本仓建自己的 skill（`npx skills init <name>` 会在当前目录建 `<name>/SKILL.md`，落位后仍要人决定放 `backup/` 还是 `skills/`）。
+3. 这事要长期复用，就按 `references/create.md` 在本仓建自己的 skill。

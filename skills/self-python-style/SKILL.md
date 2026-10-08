@@ -1,13 +1,13 @@
 ---
 name: self-python-style
-description: 写或改 Python 文件时查阅本机代码风格（docstring、行内注释、文件内顺序、命名、信任上游字段、运行参数、print 与 logger）。业务启动与 README 命令分两步：conda activate 环境，再 python / pip；禁止 conda run -n。本对话第一次为任务跑 Python 时做 conda 日探测（探测脚本不算）；缺包不预检、失败再报告。新项目装环境依赖时钉 requirements.txt（包名==版本），只装能跑起来的最小集。切步与入口脚本顶部注释见 self-python-script；函数抽法与 FastAPI 见 self-python-function；目录见 self-python-project。
+description: 写或改 Python 文件时查阅本机代码风格（docstring、行内注释、文件内顺序、命名、信任上游字段、运行参数、print 与 logger）。业务启动与 README 命令分两步：conda activate 环境，再 python / pip；禁止 conda run -n。本对话第一次为任务跑 Python 时先按会话索引 §1 第 5、6 步取命令白名单与环境名（探测脚本不算）；缺包不预检、失败再报告。新项目装环境依赖时钉 requirements.txt（包名==版本），只装能跑起来的最小集。切步与入口脚本顶部注释见 self-python-script；函数抽法与 FastAPI 见 self-python-function；目录见 self-python-project。
 ---
 
 # Python 代码风格与怎么跑
 
 管 **本机 Python 看起来什么样、第一次怎么跑**。怎么抽函数、流水线类内部、FastAPI 路由见 `self-python-function`。分阶段脚本怎么切步、入口脚本文件头怎么分层见 `self-python-script`。
 
-完成标准：写到的每个 def 都有本文件规定的 docstring；重要块有 `#` 说明；文件内顺序符合「辅助在上、入口在下」；命名用常见英文单词 + 下划线 / 数字；字段按上游约定直接取；运行参数写成常量赋值；脚本与探测入口用 `print`，FastAPI 生产用项目已有 logger。第一次为任务跑 Python 时：环境卡 conda 字段已按日探测或沿用；缺包不预检。新项目装依赖结束时：项目根 `requirements.txt` 每一行都是这次直接装的包，格式 `包名==版本`。
+完成标准：写到的每个 def 都有本文件规定的 docstring；重要块有 `#` 说明；文件内顺序符合「辅助在上、入口在下」；命名用常见英文单词 + 下划线 / 数字；字段按上游约定直接取；运行参数写成常量赋值；脚本与探测入口用 `print`，FastAPI 生产用项目已有 logger。第一次为任务跑 Python 时：命令白名单与环境名已按会话索引 §1 第 5、6 步取到；缺包不预检。新项目装依赖结束时：项目根 `requirements.txt` 每一行都是这次直接装的包，格式 `包名==版本`。
 
 ## 何时用
 
@@ -19,20 +19,11 @@ description: 写或改 Python 文件时查阅本机代码风格（docstring、�
 
 ## 1. 跑 Python：conda 环境与缺包
 
-默认环境 **base**；用户或项目 README 点名了才换（如 `rag`）。会话索引根目录定位见 `self-session-bootstrap`（本 skill 不要写死盘符）。环境卡：`<会话索引根>/scripts/_meta/env_card.json`。对照对话里的今天，写成 `YYYY-MM-DD` 再和 `conda_date` 比。
+默认环境 **base**；用户或项目 README 点名了才换（如 `rag`）。本机有哪些环境名，按会话索引 §1 第 6 步取。
 
-第一次为任务跑 Python 时（探测脚本不算）：
+第一次为任务跑 Python 时（探测脚本不算）：先按会话索引 §1 第 5、6 步拿到命令白名单与环境名，再往下走。不要跑 `pip list`。
 
-1. Read 环境卡（没有当过期）。`conda_date` 等于今天则用卡里的 `conda_envs`。
-2. 否则（这不是为任务跑 Python，探测仍用 `conda run`）：
-
-```powershell
-conda run -n base python "<会话索引根>/scripts/conda_envs.py"
-```
-
-当天 `conda_date` 已是今天则不要再跑。不要跑 `pip list`。
-
-3. 业务入口、README、告诉用户怎么跑：**禁止** `conda run -n`。每个终端两步：
+1. 业务入口、README、告诉用户怎么跑：**禁止** `conda run -n`（每次固定开销 6.20s，`conda --version` 单跑就 2.86s；把子进程 stdout 缓存到进程结束才吐；中文经它按本地代码页转码会抛 `UnicodeEncodeError` 打崩 conda 自身。`python` 直接跑 0.23s 且输出实时）。每个终端两步：
 
 ```powershell
 conda activate <环境>
@@ -41,8 +32,8 @@ python <入口>
 
 装包只走已 activate 的环境的 `pip`，不信 PATH 上未激活的 `pip`。
 
-**AI 自己在非交互 shell 里跑时**，`conda activate` 不生效（没有 hook，`CONDA_DEFAULT_ENV` 仍空、用的还是 base 的解释器）。
-所以上面两步是写给用户与 README 的；AI 侧直接用环境里的解释器绝对路径（`<envs>/<环境>/python.exe -m pytest …`）。
+**AI 自己在非交互 shell 里跑时不依赖 `conda activate`**：它生效与否按宿主而异（机制见对应 harness 文档，dsh 是 `self-session-bootstrap/agent-dsh.md` §3），稳的是解释器绝对路径。
+所以上面两步是写给用户与 README 的；不确定当前是哪个环境时，用解释器绝对路径（`<envs>/<环境>/python.exe -m pytest …`）。
 
 不预检第三方包。出现 `ModuleNotFoundError` / `ImportError` 时不要自己装，向用户报告：
 
@@ -90,6 +81,9 @@ def load_sample_data(path: str) -> list:
 
 方法里按块或重要行加 `#`，写这小段在做什么。踩坑备注留在用到的那一行旁边，不写到文件头当散文。
 
+改含中文的 Python 源文件时，`old_string` 从 `read` 的输出里复制，不要凭记忆重写；
+中文本身可以直接写在文件里，不需要转义。
+
 ## 3. 文件内顺序
 
 辅助与内部实现在上，越靠近对外入口越往下，入口方法在文件下部。`if __name__ == "__main__":` 放在文件最末尾。
@@ -103,6 +97,8 @@ def load_sample_data(path: str) -> list:
 文件名、函数名、变量名用常见英文单词，单词之间下划线，序号用数字（`step2_fetch_detail`、`user_id`）。不要靠缩写堆砌（`usr_repo`、`typ_b`）。
 
 类名用 PascalCase，仍由常见单词组成（`UserRepository`）。含中文的 `.py` 文件头加 `# -*- coding: utf-8 -*-`。
+
+探针与工具文件加前缀（如 `dsh_probe_<用途>.py`）：与标准库同名的文件会 shadow 掉它——同目录一个 `inspect.py` 能让 `import lancedb` 这类第三方导入全炸，报错栈却指向那个库。
 
 ## 5. 信任上游字段
 
@@ -121,3 +117,11 @@ def load_sample_data(path: str) -> list:
 案例脚本、分阶段入口、可探测模块的 `__main__` 用 `print`。分阶段前缀（`[阶段N]`、循环进度）见 `self-python-script`。
 
 FastAPI 生产服务用项目已有 logger，不新造一套 logging 配置。
+
+命令行跑 Python 且输出有中文时，用本机包装入口 `Scripts\py.ps1`（内部已设 `PYTHONUTF8=1`）；
+不走它就得自己设 `PYTHONUTF8=1`，或 `sys.stdout.reconfigure(encoding="utf-8")`，否则输出是乱码。
+
+要让 Python 的输出落成文件核对时，用 Python 自己写（`open(..., encoding="utf-8")`），
+或 `cmd /c "python x.py > x.bin"`（字节直通）。
+**不要**用 PowerShell 管道配 `Out-File -Encoding utf8`：解不出的字节会变成 U+FFFD 写进文件，
+文件从此不可还原。

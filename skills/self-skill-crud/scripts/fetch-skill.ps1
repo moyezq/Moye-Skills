@@ -1,4 +1,4 @@
-﻿#Requires -Version 5.1
+#Requires -Version 5.1
 # 本文件必须存成 UTF-8 with BOM。Windows PowerShell 5.1 读无 BOM 的 UTF-8 会按 ANSI(cp936) 解，
 # 中文字符串乱码后直接破坏解析（`powershell -File` 会报一串 Missing expression after ','）。
 # pwsh 7 无此问题；setup.ps1 没 BOM 也活着，只因为它的中文全在注释里。改动本文件后确认 BOM 还在。
@@ -276,7 +276,7 @@ try {
         Set-Content -LiteralPath $sourcesPath -Encoding UTF8 -Value (@(
                 '# preinstall 取源记录'
                 ''
-                '本目录内容由 `find-skills` 的 `scripts/fetch-skill.ps1` 从上游取回，未收编。'
+                '本目录内容由 `self-skill-crud` 的 `scripts/fetch-skill.ps1` 从上游取回，未收编。'
                 ''
                 '| skill | 来源仓 | commit | 取回日期 |'
                 '| --- | --- | --- | --- |'

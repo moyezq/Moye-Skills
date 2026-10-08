@@ -45,13 +45,35 @@ Get-ChildItem node_modules -Recurse -Filter esbuild.exe -ErrorAction SilentlyCon
 
 在位就说明拦截没有造成实际影响，不必为此改动安装策略。
 
+## 类型错指向生成物（`Cannot find module`、命名空间缺成员）
+
+**症状**：类型检查报「找不到某个模块」，或「某个命名空间没有导出某个成员」，而那个文件**确实在盘上、也确实在编译范围里**（`--listFiles` 能看到它）。此时改 `tsconfig` 的解析、路径、include/exclude 全是白做功。
+
+**先验生成物本身**，它对不对是另一件事：
+
+- 声明的成员在生成文件里真的存在吗——框架生成的 `.d.ts` 常声明了实现文件里其实没有的命名空间。一条 `Select-String` 就够：
+
+  ```powershell
+  # 声明里列的每个导出，在生成文件里都应当能找到
+  Select-String -Path path\to\bindings\*.d.ts -Pattern '^export function (\w+)' |
+    ForEach-Object { $n = $_.Matches[0].Groups[1].Value
+      if (-not (Select-String -Path path\to\generated.ts -Pattern "function $n\b" -Quiet)) { "缺: $n" } }
+  ```
+
+- 生成物是**这一版**的吗：源码里新加的方法/字段在生成文件里有没有。框架的生成物过期时，症状正是上面这类模块解析错。
+- 过期就重跑那条生成命令，**不要改产物**；有些框架没有单独的「只生成」命令，生成与构建是同一个入口（Wails 就是 `wails build`）。
+
 ## 沙箱或受限环境里装依赖失败
 
-包管理器的默认缓存目录可能落在受限路径外。把缓存指到工作区内（用完删掉，别入库）：
+**只有缓存目录被拒时**，把缓存指到工作区内即可（用完删掉，别入库）：
 
 ```powershell
 npm install --cache .\.npm-cache
 ```
+
+**构建命令本身被拒**（编译器或包管理器写自己的缓存/临时目录时报 `Access is denied`、`EPERM`）就不一样了：**换目录、换临时目录都绕不过去**，那是环境的硬边界。对**那一条命令**提权一次，别在受限模式里变着法子重试。
+
+会话级的沙箱边界与提权规矩，见 `self-session-bootstrap/` 下当轮 harness 那一份（`agent-dsh.md` / `agent-cursor.md` / `agent-codex.md`）的「权限与提权」一节。
 
 ## 剪贴板与权限类 API 静默失败
 
