@@ -4,7 +4,7 @@
 
 完成标准：改到的 `.ts` / `.tsx` 没有 `any`；API 返回值与组件 props 都是具名类型；改了契约则前后端镜像字段对齐；互斥变体的 `switch` 有 `never` 穷尽。逐条都做到才算完成。
 
-类型检查命令见 `SKILL.md` 门禁。本文件要求 tsconfig 开 `strict` + `noUnusedLocals` + `noUnusedParameters`。契约怎么钉见 `self-python-function`。
+类型检查命令见 `SKILL.md` 门禁。本文件要求 tsconfig 开 `strict` + `noUnusedLocals` + `noUnusedParameters`。契约怎么钉见 `python-standard-coding` 的 `references/function.md`。
 
 ## 镜像类型
 

@@ -17,7 +17,7 @@ description: 笔记库 查阅、整理与书写（唯一事实源）。要读知
 - 写库/框架入门，或把课件/截图转成自有笔记
 - 处理带 `> 外部文档` 的第三方总结稿（含库外同形态笔记）
 
-命令与 conda 日探测见会话索引，不要在这里重跑。多文件 Python 项目目录见 `self-python-project`；`cases/` 命名见 `references/writing.md`；工程脚本见 `self-python-script` / `self-python-function`。
+命令与 conda 日探测见会话索引，不要在这里重跑。多文件 Python 项目目录见 `python-standard-coding` 的 `references/project.md`；`cases/` 命名见 `references/writing.md`；工程脚本见 `python-standard-coding` 的 `references/script.md` / `function.md`。
 
 新建/改结构、不确定概述/安装/实战/概念综览/库入门怎么摆时，**接着 Read** `references/writing.md` 全文。只改文风/精简、不改形态时，至少 Read 其中「文风对照」。只做外链收敛且不改结构、不改文风时，本节硬约束够用。
 

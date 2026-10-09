@@ -7,7 +7,7 @@ description: React 页面 / 布局 / 界面验收（Vite + TypeScript）。加�
 
 管 **页面怎么写、布局怎么定、界面怎么验收**。默认 Vite + TypeScript；换构建工具时只换命令，规范本身不变。
 
-12 条判断见 `self-code-principles`（冲突点以本文件为准，不是整份跳过那份）。目录分层见 `self-python-project`。点选、结构快照见 `playwright-cli`。
+12 条判断见 `self-code-principles`（冲突点以本文件为准，不是整份跳过那份）。目录分层见 `python-standard-coding` 的 `references/project.md`。点选、结构快照见 `playwright-cli`。
 
 完成标准：类型与构建门禁都 exit 0；写了 `.ts` / `.tsx` 则 `references/typescript.md` 的完成标准都做到；改布局则五个几何断言都给出数字；每个改动过的交互都真点过。逐条都做到才算完成。
 

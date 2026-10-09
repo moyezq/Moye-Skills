@@ -51,7 +51,7 @@ description: >
 
 单文件脚本、爬虫字段、已有项目的局部选型：不必走这一节，用上面的普通前沿即可。
 
-软件仓目标态落盘见 `self-project-docs` 的 `architecture.md`，目录怎么摆见 `self-python-project`。知识库文的目录落点是笔记路径，不建 `architecture.md`。
+软件仓目标态落盘见 `self-project-docs` 的 `architecture.md`，目录怎么摆见 `python-standard-coding` 的 `references/project.md`。知识库文的目录落点是笔记路径，不建 `architecture.md`。
 
 ## 分工：事实归 AI，决策归用户
 

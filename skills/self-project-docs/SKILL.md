@@ -91,7 +91,7 @@ description: 项目文档。管仓库里 CONTEXT、adr.md、HISTORY.md、archite
 
 ### 目标态先行
 
-多入口 / 多模块 / 对照实验台：动手写代码之前先有 `architecture.md` 的目标模块与目录落点。第一闭环不是设计终点。目录怎么摆见 `self-python-project`。有 UI 文档时，改界面先读 `DESIGN.md`，见 `self-frontend`。
+多入口 / 多模块 / 对照实验台：动手写代码之前先有 `architecture.md` 的目标模块与目录落点。第一闭环不是设计终点。目录怎么摆见 `python-standard-coding` 的 `references/project.md`。有 UI 文档时，改界面先读 `DESIGN.md`，见 `self-frontend`。
 
 ### 最小视图
 

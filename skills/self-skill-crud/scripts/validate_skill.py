@@ -17,7 +17,7 @@
 
   判据差别（为什么 `scripts/` 只提醒）
     `references/`、`agents/`、`assets/` 是本 skill 自己要读的材料，指针断了 agent 就够不到，必须不过。
-    `scripts/` 常出现在散文里当「另一个项目的布局示例」（本仓 self-python-project 的正文就那么写），
+    `scripts/` 常出现在散文里当「另一个项目的布局示例」（本仓 python-standard-coding 的 project 参考就那么写），
     它描述的不是本 skill 的资源，断了不影响本 skill 能不能跑，所以两处都找不到时只提醒。
     三类都先按本 skill 目录找，找不到再按父目录（`skills/` 根）下每个兄弟目录各试一次
     `<兄弟目录>/<相对路径>`：本仓 ADR-0006 说「其它 skill 可以指向这些独立 skill」，
@@ -28,7 +28,8 @@
       name `bad-skill-name` 与目录名不符、命令尾巴 /other-skill 与 name 不符、`references/nope.md` 不存在
       （这个路径在任何兄弟 skill 里都没有，跨 skill 兜底放不过它）。
     `skills/self-skill-crud` → 期望全过 → 实测 0 项不过、退出码 0。
-    `skills/self-python-project` → `scripts/ingest.py` 是别的项目布局示例 → 实测 1 项提醒、0 项不过、退出码 0。
+    `skills/python-standard-coding` → 正文只出现 `scripts/` 目录名、没有具体文件路径（旧例 `scripts/ingest.py`
+      已随该 skill 改写移除），触发不到「scripts/ 找不到」那条 → 实测 0 项提醒、0 项不过、退出码 0。
 
 怎么跑（本文件入口；编号和上面「一条目录」不是同一套）
   职责：给一个 skill 目录，逐项打印 `文件:行号: 说明`，末行给汇总，按有没有不过项定退出码。

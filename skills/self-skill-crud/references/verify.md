@@ -22,3 +22,5 @@ python skills/self-skill-crud/scripts/validate_skill.py <skill 目录>
 围栏代码块内的路径不参与判定（那是模板与示例）。
 
 路径检查的常见触发场景：刚把一份参考文件搬走或改名（`references/` 与 `agents/` 都要跟着改），或正文里提过一份还没建的参考。
+
+分批判落盘（skill 还没建全）时，指针表随文件落地逐行加：文件还不存在就先别写指针，否则每次查都多几项假红，真问题被淹在里面。

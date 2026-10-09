@@ -244,9 +244,9 @@
 
 | 形态 | 规范位置 |
 |------|----------|
-| 单文件分阶段脚本 | `self-python-script` |
-| 多文件 Python 项目目录 | `self-python-project` |
-| 从外部项目抽协议写爬虫 | 落地切步仍 `self-python-script` |
+| 单文件分阶段脚本 | `python-standard-coding` → `references/script.md` |
+| 多文件 Python 项目目录 | `python-standard-coding` → `references/project.md` |
+| 从外部项目抽协议写爬虫 | 落地切步仍 `python-standard-coding` → `references/script.md` |
 | 何时读笔记、整理纪律、**本写法框架** | `self-notes-read`（本文件属其披露参考） |
 
 知识库 `.md` 只记可复用知识与场景，不把工程 skill 里的规范再抄一遍。
