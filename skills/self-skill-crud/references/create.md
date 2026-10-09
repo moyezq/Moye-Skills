@@ -28,7 +28,7 @@
 建 `skills/<name>/SKILL.md`（`skills/` 是唯一写入落点，各产品目录是它的联接）。
 
 - `name`：kebab-case，与目录同名。命令名就等于这个名字，见 `references/mechanics.md`。
-- `description`：写清做什么 + 什么时候用，触发分支全放这里，正文不放。宁可写足：该触发时没触发是常态故障，多写几个触发说法比省字划算。
+- `description`：写清做什么 + 什么时候用，触发分支全放这里，正文不放。宁可写足：该触发时没触发是常态故障，多写几个触发说法比省字划算。**不要**在 description 里罗列 `references/` 路径——路径写在正文认场景表（见 `references/style.md`「指针怎么写」）。
 - 要人打命令触发，就按 `references/mechanics.md` 加 `命令：` 尾巴。
 
 **完成标准**：`python skills/self-skill-crud/scripts/validate_skill.py skills/<name>` 通过。

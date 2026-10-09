@@ -1,6 +1,9 @@
 ---
 name: self-skill-crud
-description: 个人 skill 的增删改查：新建、修改、删除 skill 的规范，以及该自己写还是去生态找现成 skill 的判据。要写或改 `skills/` 下任何 `SKILL.md`、判断一段内容值不值得写进 skill、判断某份上游 skill 值不值得收编、要删掉或退役一个 skill 时读这一份。四件事各有一份流程：`references/create.md`、`references/update.md`、`references/delete.md`、`references/find.md`；文本规范在 `references/style.md`，验证在 `references/verify.md`，调用机制在 `references/mechanics.md`。
+description: >-
+  个人 skill 的增删改查：新建、修改、删除 skill 的规范，以及该自己写还是去生态找现成 skill 的判据。
+  要写或改 `skills/` 下任何 `SKILL.md`、判断一段内容值不值得写进 skill、判断某份上游 skill 值不值得收编、要删掉或退役一个 skill 时读这一份。
+  四件事（新建 / 修改 / 删除或退役 / 去生态找或收编）；认出是哪一件后读正文认场景表指向的细则。
 ---
 
 # 个人 skill 的增删改查

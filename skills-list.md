@@ -3,8 +3,7 @@
 | Skill | 一句话 |
 |-------|--------|
 | `self-session-bootstrap` | 会话索引：开场七步（判 Agent / 系统 / skill 根目录、系统命令白名单、conda 环境、按 Agent 读 harness 操作规范）、全程约束、输出要求 |
-| `self-session-handoff` | 会话交接：写交接文档给下个会话，或从交接接着干（一个指针，一份活着的交接） |
-| `self-session-audit` | 自检本轮会话：工具调用/真失败/重复调用统计、token 与上下文占用、skill 是否真加载 |
+| `session-tools` | 本轮会话三件事：自检（操作/token/skill 加载）、交接（写/接）、从本轮抽可迁移面试题 |
 | `self-code-principles` | 代码设计默认原则（跨语言兜底） |
 
 ## Python 与项目
@@ -44,7 +43,6 @@
 | Skill | 一句话 |
 |-------|--------|
 | `self-spyder` | 浏览器自动化入口：其下 `playwright-cli` |
-| `self-interview-question` | 把开发经历抽成可迁移的面试题 |
 
 ## Skill 自身
 

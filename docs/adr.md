@@ -63,3 +63,9 @@
 为什么：一个会话只该读自己那套命令。按操作分家时，「跑 Python」与「改文件」的 harness 差异摊在两份文件里，git 走法又单占一份，一个会话常要读两份才拼得出全貌；按 harness 自包含后，工具名、提权方式、git 走法在同一页。代价是共用条款（新建直接写、先读后改、生成文件不手改）与 git 状态分派在三份里各出现一次。
 
 被否的备选：① 保留两份按操作分的文件——就是被取代的形制；② 共用条款与 git 状态分派只写一份、三份 harness 文档指过去——少三处重复，但一个会话要跳两个文件才动手，与自包含的目标相反。
+
+## ADR-0012 · 2026-10-10 · 会话向三份 skill 并入 session-tools
+
+把 `self-session-audit`、`self-session-handoff`、`self-interview-question` 合成工作树顶层一份 `session-tools`。三块都是「围着本轮会话干活」（自检 / 交接 / 从本轮抽面试题），共用一个入口；细则落在 `references/` 下三份 md，入口 `SKILL.md` 只做何时读哪一份。`self-session-bootstrap`（会话索引）与 `skill-analyse` 明确不进、本轮也不改。各块行为与落盘约定（审计脚本报告、HANDOFF 指针、`docs/questions` 四段结构）只搬家不改语义。
+
+目录名用 `session-tools`（不加 `self-`）：用户点名。不挂 `命令：` 尾巴（与 `self-skill-crud` 同）：靠 description 里的触发分支让模型自己够到，正文用表路由到 `references/`。否掉的备选：① 继续三份平铺；② 薄入口 + 子目录 `BODY.md`（ADR-0006/0007 形制）——本回合的细则更像流程分册，收进 `references/` 与 `self-skill-crud` 一致；③ 把 `skill-analyse` 一并塞进来——作用域不是会话态；④ 挂 `/session-tools`——人很少手打这三件事，命令尾巴是多余常驻。

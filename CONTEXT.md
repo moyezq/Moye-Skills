@@ -26,7 +26,11 @@ _Avoid_: 开场对齐, 开场探测, 日探测
 
 **会话索引**：
 新对话开场必须加载的那一份 skill（`self-session-bootstrap`）。它是开场步骤、进程级硬约束、个人 skills 命令清单的同一份正文。开场读这一份。各 harness 的操作规范在 `self-session-bootstrap/` 下按 `AGENT` 各一份：`agent-dsh.md`、`agent-cursor.md`、`agent-codex.md`，开场第 7 步读对应那份。
-_Avoid_: 规范总览, 开场检查单, skills 总文档
+_Avoid_: 规范总览, 开场检查单, skills 总文档, session-tools
+
+**session-tools**：
+工作树顶层 skill：本轮会话自检、交接（写/接）、从本轮抽可迁移面试题。入口 `SKILL.md` 路由；细则在 `references/` 下三份 md。不是会话索引（`self-session-bootstrap`）；不是 skill 分析报告（`skill-analyse`）。
+_Avoid_: self-session-audit, self-session-handoff, self-interview-question（并入后的旧名）, 会话工具包
 
 **会话标题**：
 开场拟的索引行，格式 `MMDD | type | Title`。写在第一条回复顶上；产品若无能改会话名的工具，由人复制。

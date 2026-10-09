@@ -1,13 +1,3 @@
----
-name: self-interview-question
-description: >-
-  把对话或项目开发里碰到的问题抽成可迁移的面试题。用户说总结成面试题、面试问答、
-  把这轮问题记成题、从开发经历出题、写入 docs/questions 时用。
-  题干问一类系统都会碰到的情况，不写本仓开关、路径、ADR 编号。
-  本仓决策仍走 self-project-docs；知识库主题文走 self-notes-read。
-  命令：/self-interview-question —— 把开发经历抽成可迁移的面试题
----
-
 # 开发经历抽面试题
 
 从本轮对话或改动里抽出以后还会被问到、排障还会碰到的情况，写成面试问答。
