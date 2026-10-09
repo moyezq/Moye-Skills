@@ -27,7 +27,7 @@ description: >-
 
 ## 何时不用
 
-- 新对话开场、全程硬约束 → 会话索引（`self-session-bootstrap`；禁止改它）
+- 新对话开场、全程硬约束 → 会话索引（`session-bootstrap`；禁止改它）
 - 分析上游/本地 skill、写 analyse 报告 → `skill-analyse`
 - 记本仓决策/术语/蓝图 → `self-project-docs`
 - 写 笔记库 → `self-notes-read`

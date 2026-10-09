@@ -31,7 +31,7 @@
 - `description`：写清做什么 + 什么时候用，触发分支全放这里，正文不放。宁可写足：该触发时没触发是常态故障，多写几个触发说法比省字划算。**不要**在 description 里罗列 `references/` 路径——路径写在正文认场景表（见 `references/style.md`「指针怎么写」）。
 - 要人打命令触发，就按 `references/mechanics.md` 加 `命令：` 尾巴。
 
-**完成标准**：`python skills/self-skill-crud/scripts/validate_skill.py skills/<name>` 通过。
+**完成标准**：`python skills/skill-crud/scripts/validate_skill.py skills/<name>` 通过。
 
 ## 5. 写正文
 
@@ -45,7 +45,7 @@
 
 ## 7. 查与收尾
 
-- 跑脚本层：`python skills/self-skill-crud/scripts/validate_skill.py skills/<name>`。
+- 跑脚本层：`python skills/skill-crud/scripts/validate_skill.py skills/<name>`。
 - 连带文件同轮改完，`skills-list.md` 必加一行。
 
 **完成标准**：脚本通过、连带文件已改。回报按 `references/style.md` 的「改动怎么给人看」写成三行（改前 / 改后 / 为什么）。

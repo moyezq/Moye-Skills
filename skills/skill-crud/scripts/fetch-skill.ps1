@@ -276,7 +276,7 @@ try {
         Set-Content -LiteralPath $sourcesPath -Encoding UTF8 -Value (@(
                 '# preinstall 取源记录'
                 ''
-                '本目录内容由 `self-skill-crud` 的 `scripts/fetch-skill.ps1` 从上游取回，未收编。'
+                '本目录内容由 `skill-crud` 的 `scripts/fetch-skill.ps1` 从上游取回，未收编。'
                 ''
                 '| skill | 来源仓 | commit | 取回日期 |'
                 '| --- | --- | --- | --- |'

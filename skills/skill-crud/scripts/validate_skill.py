@@ -27,7 +27,7 @@
     在临时目录里建一个 `bad-skill`（四坑同踩）→ 期望四项都报 → 实测 4 项不过、退出码 1：缺 description、
       name `bad-skill-name` 与目录名不符、命令尾巴 /other-skill 与 name 不符、`references/nope.md` 不存在
       （这个路径在任何兄弟 skill 里都没有，跨 skill 兜底放不过它）。
-    `skills/self-skill-crud` → 期望全过 → 实测 0 项不过、退出码 0。
+    `skills/skill-crud` → 期望全过 → 实测 0 项不过、退出码 0。
     `skills/python-standard-coding` → 正文只出现 `scripts/` 目录名、没有具体文件路径（旧例 `scripts/ingest.py`
       已随该 skill 改写移除），触发不到「scripts/ 找不到」那条 → 实测 0 项提醒、0 项不过、退出码 0。
 
@@ -60,7 +60,7 @@ MARKDOWN_LINK = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 # 含这些字符的是占位符或通配写法，不当真实路径去解析
 PLACEHOLDER_CHARS = ("<", ">", "*", "$")
 
-# 命令尾巴：命令：/名字 —— 一句话作用（反引号包住 /名字 的写法不算，见 self-skill-crud）
+# 命令尾巴：命令：/名字 —— 一句话作用（反引号包住 /名字 的写法不算，见 skill-crud）
 COMMAND_TAIL = re.compile(r"命令：\s*/([^`\s、，,。()（）]+?)\s*——")
 
 # name 必须是 kebab-case，与 DSH 的 SKILL_NAME 同一条规则

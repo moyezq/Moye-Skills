@@ -25,11 +25,11 @@ _Avoid_: 写进 README 的盘符路径
 _Avoid_: 开场对齐, 开场探测, 日探测
 
 **会话索引**：
-新对话开场必须加载的那一份 skill（`self-session-bootstrap`）。它是开场步骤、进程级硬约束、个人 skills 命令清单的同一份正文。开场读这一份。各 harness 的操作规范在 `self-session-bootstrap/` 下按 `AGENT` 各一份：`agent-dsh.md`、`agent-cursor.md`、`agent-codex.md`，开场第 7 步读对应那份。
-_Avoid_: 规范总览, 开场检查单, skills 总文档, session-tools
+新对话开场必须加载的那一份 skill（`session-bootstrap`）。它是开场步骤、进程级硬约束、个人 skills 命令清单的同一份正文。开场读这一份。各 harness 的操作规范在 `session-bootstrap/` 下按 `AGENT` 各一份：`agent-dsh.md`、`agent-cursor.md`、`agent-codex.md`，开场第 7 步读对应那份。
+_Avoid_: 规范总览, 开场检查单, skills 总文档, session-tools, self-session-bootstrap（旧名）
 
 **session-tools**：
-工作树顶层 skill：本轮会话自检、交接（写/接）、从本轮抽可迁移面试题。入口 `SKILL.md` 路由；细则在 `references/` 下三份 md。不是会话索引（`self-session-bootstrap`）；不是 skill 分析报告（`skill-analyse`）。
+工作树顶层 skill：本轮会话自检、交接（写/接）、从本轮抽可迁移面试题。入口 `SKILL.md` 路由；细则在 `references/` 下三份 md。不是会话索引（`session-bootstrap`）；不是 skill 分析报告（`skill-analyse`）。
 _Avoid_: self-session-audit, self-session-handoff, self-interview-question（并入后的旧名）, 会话工具包
 
 **会话标题**：
@@ -44,33 +44,33 @@ _Avoid_: 两拍, 两拍结果, env_available.json, session_env.json, 环境扫�
 环境卡对应字段的日期不是今天时，才执行的那次命令探测或 conda 环境名探测。
 _Avoid_: 两拍, 开场探测, 可用性探测
 
-**白名单**：
-以环境卡当天命令清单为准、允许在 Shell 里调用的第三方命令集合。
-_Avoid_: PATH, 可用命令列表, 两拍结果
+**命令白名单**：
+以环境卡当天命令清单为准、允许在 Shell 里调用的第三方命令集合。开场正文也称「系统命令白名单」。
+_Avoid_: 白名单（当用来单指这份清单时）, PATH, 可用命令列表, 两拍结果
 
 **self-***：
-个人编写、经工作树共用的 skill。与 Cursor 产品 skill（`skills-cursor`）相对。仅一端会读的 skill 仍算 self-*，何时 Read 由各自的 description 定。
+个人编写、经工作树共用的 skill。与 Cursor 产品 skill（`skills-cursor`）相对。仅一端会读的 skill 仍算 self-*，何时 Read 由各自的 description 定。目录名不必带 `self-` 前缀（如 `session-bootstrap`、`skill-crud`）。
 _Avoid_: 自定义 skill, 个人规范
+
+**skill-crud**：
+工作树顶层 skill：个人 skill 的增删改查（建 / 改 / 删 / 找）。入口 `SKILL.md` 认场景；细则在 `references/`。
+_Avoid_: self-skill-crud（旧名）
 
 **命令**：
 description 末尾的 `/名字`，人打它触发该 skill；开场清单从 `available_skills` 现抄，不另存一份。
 _Avoid_: 路由表, 触发条件表, 叠用关系
 
-**常驻成本**：
+**固定上下文开销**：
 每轮都躺在上下文里、不触发也照烧的 token 与注意力。skill 的 description、`AGENTS.md` 的一行都花这份预算。
-_Avoid_: 上下文负载, 常驻 token
-
-**人的记忆负担**：
-花在人身上的成本——有哪些文档、何时该去够哪一份。人是索引，不是要最小化的成本；人的判断值钱处就花它。
-_Avoid_: 认知负载
+_Avoid_: 常驻成本（旧名）, 上下文负载, 常驻 token
 
 **指针**：
-一句话点名一份正文外的材料，并编码「何时去够它」的条件。skill 的 description 是一个，正文里点名某文件的一行也是。
-_Avoid_: 上下文指针, 引用
+一句话带上「何时去够它」的条件。两类不要混：**触发向**（`description`：何时够到本 skill）与 **材料向**（正文里点名 `references/` 等：读哪份细则）。材料路径只进正文，不进 description。
+_Avoid_: 上下文指针, 引用（当用来混指这两类时）
 
-**逐层往下推**：
-正文只留每条路径都要的步骤，把只有部分路径需要的细则推到单独文件、靠指针够到。为的是保住顶层的可读层级，不是省 token。
-_Avoid_: 渐进披露, 信息层级, 披露参考
+**渐进披露**：
+正文只留每条路径都要的步骤，把只有部分路径需要的细则推到单独文件、靠指针够到。为的是保住顶层的可读层级，不是省 token。对应英文 progressive disclosure。
+_Avoid_: 逐层往下推（旧名）, 信息层级, 披露参考
 
 **完成标准**：
 一个步骤干完的条件，写清「完成」与「未完成」的边界。既可核查又穷尽的那种最强。
@@ -80,13 +80,13 @@ _Avoid_: 验收标准, 判据（当用来指步骤终点的那个条件时）
 模型预训练里已有的紧凑概念，在正文里当词反复出现，用最少的 token 锚住一整片行为。
 _Avoid_: 引导词, leading word
 
-**废话指令**：
-模型默认就会照做的指令，花了常驻成本换零行为改变。判据是「改不改默认行为」，相对模型、不相对读者。
-_Avoid_: 空操作, no-op
+**无效指令**：
+模型默认就会照做的指令，花了固定上下文开销换零行为改变。判据是「改不改默认行为」，相对模型、不相对读者。
+_Avoid_: 废话指令（旧名）, 空操作, no-op
 
-**抢跑**：
-步骤没做完，agent 自己宣布完成。根因通常是完成标准模糊，先打磨边界；边界不可约模糊且确实观察到抢跑，才把后续步骤推出视野。
-_Avoid_: 提前完成, premature completion
+**提前收工**：
+步骤没做完，agent 自己宣布完成。根因通常是完成标准模糊，先打磨边界；边界不可约模糊且确实观察到提前收工，才把后续步骤推出视野。
+_Avoid_: 抢跑（旧名）, 提前完成, premature completion
 
 **前端入口**：
 工作树顶层的 `self-frontend`。前端任务先读这一份，再按其表读目录下的 `self-react` 或 `web-clone`（入口是 `BODY.md`，不是 `SKILL.md`）。桌面壳那一层归 `self-desktop-ui`。
@@ -120,29 +120,17 @@ _Avoid_: 默认规范, 通用原则（当用来表示「有专门 skill 就别�
 按调用方已固定的字段名与结构直接访问，不为未知形状写多重类型判断和默认值。
 _Avoid_: 过度兜底, 防御性取值
 
-**薄包装**：
+**空壳函数**：
 只被一处调用一次、除了起名别无规则的函数或方法。
-_Avoid_: helper, 私有方法（当用来指这种一次性包装时）
-
-**数据跳**：
-一次请求或一次明确的数据变换，加上取字段、打印、本步产出。单文件脚本切 `stepN` 的单位。
-_Avoid_: 函数粒度, 阶段（当用来表示感觉上的分块而非这一跳时）
+_Avoid_: 薄包装（旧名）, helper, 私有方法（当用来指这种一次性包装时）
 
 **stepN**：
-单文件脚本里按 0、1、2… 排列、一个 def 做完一跳的阶段函数。
-_Avoid_: run, fetch_all, 主流程函数
-
-**落地形态**：
-实现落盘的三种目录选法：单文件分阶段脚本、流水线类（多文件案例）、FastAPI 小服务。一次任务只选一种，不要混套。
-_Avoid_: 项目模板, 架构（当用来指这三选一时）
+单文件脚本里按 0、1、2… 排列的阶段函数；一个 `stepN` 做完**一步处理**——一次请求或一次明确的数据变换，加上取字段、打印、本步产出。不要按感觉上的函数个数或「阶段」空名来切。
+_Avoid_: 数据跳（旧名）, run, fetch_all, 主流程函数, 函数粒度, 阶段（当用来表示感觉上的分块而非一步处理时）
 
 **契约**：
 样例 JSON、`scheme`、联调 POST body 钉死的字段名、路由和配置名。改代码前先统一，不要半套新名。
 _Avoid_: OpenAPI, 类型定义（当用来指这整链时）
-
-**薄文件瀑布**：
-一条短流水线拆成多个只被编排层调用一次的 `.py`。
-_Avoid_: 分层, 干净目录
 
 **对照项目**：
 已经能跑的开源 App、插件、阅读器或另一套爬虫。只当说明书读，不改上游仓库。
@@ -160,17 +148,17 @@ _Avoid_: reverse-skill（当用来指将要写进工作树的那几份时）, 87
 把对照项目里需要的能力按 `self-*` 写成少量个人 skill，经工作树两端共用。不是原样拷贝、不是全书中译、不是 dsh 插件另接一份。
 _Avoid_: 本地化, 原样灌入, 中译后使用
 
-**分析向逆向**：
+**对照还原**：
 弄懂或复现目标：对照源码还原协议、页面 JS 签名/加密、Android APK、按网页前端样式复刻。不是利用链、主动扫描、域渗透或 CTF 赛道。
-_Avoid_: 逆向工程（当用来统称 reverse-skill 全包时）, 渗透, 打穿
+_Avoid_: 分析向逆向（旧名）, 逆向工程（当用来统称 reverse-skill 全包时）, 渗透, 打穿
 
 **独立 skill**：
 不依赖 笔记库 或 reverse-skill 包就能执行的个人 skill。笔记里有、skill 没有的规则，写进 skill；别的 skill 可以指向它，它不能指向笔记才能开工。
 _Avoid_: 指向笔记, 技能包当运行时依赖
 
-**请求身份**：
-同一协议里 JSON/目录 与 文件/CDN 两套头。元数据签名不要打到拉文件的请求上。
-_Avoid_: UA, Cookie（当用来统称这两套头时）
+**两套请求头**：
+同一协议里 JSON/目录 与 文件/CDN 各用一套 HTTP 头。元数据签名不要打到拉文件的请求上。
+_Avoid_: 请求身份（旧名）, UA, Cookie（当用来统称这两套头时）
 
 **归纳日期**：
 知识库文档头里的 `YYYY-MM-DD`。等于今天且用户未点名该文件/主题时，跳过 Read 全文。

@@ -16,7 +16,7 @@
 
 ## ADR-0004 · 2026-09-20 · 个人 skill 独立可执行，不把笔记当运行时依赖
 
-分析向逆向 skill 必须单独能用。笔记库 给人读；笔记里有而 skill 没有的规则，吸收进 skill，不在 SKILL.md 里要求先打开某篇笔记。reverse-skill 包同样只作改写时的对照，不写进执行路径。
+对照还原类 skill 必须单独能用。笔记库 给人读；笔记里有而 skill 没有的规则，吸收进 skill，不在 SKILL.md 里要求先打开某篇笔记。reverse-skill 包同样只作改写时的对照，不写进执行路径。
 
 其它 skill 可以指向这些独立 skill（例如脚本切步指向协议还原）。不要反向依赖笔记路径，尤其不要写盘符。
 
@@ -58,7 +58,7 @@
 
 ## ADR-0011 · 2026-10-08 · 操作规范按 harness 自包含，开场读对应那一份
 
-`AGENT` 决定用哪套工具与沙箱，「读文件 / 改文件 / 跑 Python / Git / 提权 / 后台」这六块在每个 harness 里的做法都不同。决定：`self-session-bootstrap` 同目录按 harness 各一份——`agent-dsh.md` / `agent-cursor.md` / `agent-codex.md`，每份自包含这六块；会话索引开场第 7 步按 `AGENT` 只读对应那份（`其它` 不读，按自带工具照通用做法）。只写实测过的做法，没实测的段落明写未实测。它取代 ADR-0014 的「两份按操作分的并列文件」，两份旧文件删除。
+`AGENT` 决定用哪套工具与沙箱，「读文件 / 改文件 / 跑 Python / Git / 提权 / 后台」这六块在每个 harness 里的做法都不同。决定：`session-bootstrap` 同目录按 harness 各一份——`agent-dsh.md` / `agent-cursor.md` / `agent-codex.md`，每份自包含这六块；会话索引开场第 7 步按 `AGENT` 只读对应那份（`其它` 不读，按自带工具照通用做法）。只写实测过的做法，没实测的段落明写未实测。它取代 ADR-0014 的「两份按操作分的并列文件」，两份旧文件删除。
 
 为什么：一个会话只该读自己那套命令。按操作分家时，「跑 Python」与「改文件」的 harness 差异摊在两份文件里，git 走法又单占一份，一个会话常要读两份才拼得出全貌；按 harness 自包含后，工具名、提权方式、git 走法在同一页。代价是共用条款（新建直接写、先读后改、生成文件不手改）与 git 状态分派在三份里各出现一次。
 
@@ -66,6 +66,14 @@
 
 ## ADR-0012 · 2026-10-10 · 会话向三份 skill 并入 session-tools
 
-把 `self-session-audit`、`self-session-handoff`、`self-interview-question` 合成工作树顶层一份 `session-tools`。三块都是「围着本轮会话干活」（自检 / 交接 / 从本轮抽面试题），共用一个入口；细则落在 `references/` 下三份 md，入口 `SKILL.md` 只做何时读哪一份。`self-session-bootstrap`（会话索引）与 `skill-analyse` 明确不进、本轮也不改。各块行为与落盘约定（审计脚本报告、HANDOFF 指针、`docs/questions` 四段结构）只搬家不改语义。
+把 `self-session-audit`、`self-session-handoff`、`self-interview-question` 合成工作树顶层一份 `session-tools`。三块都是「围着本轮会话干活」（自检 / 交接 / 从本轮抽面试题），共用一个入口；细则落在 `references/` 下三份 md，入口 `SKILL.md` 只做何时读哪一份。`session-bootstrap`（会话索引）与 `skill-analyse` 明确不进、本轮也不改。各块行为与落盘约定（审计脚本报告、HANDOFF 指针、`docs/questions` 四段结构）只搬家不改语义。
 
-目录名用 `session-tools`（不加 `self-`）：用户点名。不挂 `命令：` 尾巴（与 `self-skill-crud` 同）：靠 description 里的触发分支让模型自己够到，正文用表路由到 `references/`。否掉的备选：① 继续三份平铺；② 薄入口 + 子目录 `BODY.md`（ADR-0006/0007 形制）——本回合的细则更像流程分册，收进 `references/` 与 `self-skill-crud` 一致；③ 把 `skill-analyse` 一并塞进来——作用域不是会话态；④ 挂 `/session-tools`——人很少手打这三件事，命令尾巴是多余常驻。
+目录名用 `session-tools`（不加 `self-`）：用户点名。不挂 `命令：` 尾巴（与 `skill-crud` 同）：靠 description 里的触发分支让模型自己够到，正文用表路由到 `references/`。否掉的备选：① 继续三份平铺；② 薄入口 + 子目录 `BODY.md`（ADR-0006/0007 形制）——本回合的细则更像流程分册，收进 `references/` 与 `skill-crud` 一致；③ 把 `skill-analyse` 一并塞进来——作用域不是会话态；④ 挂 `/session-tools`——人很少手打这三件事，命令尾巴是多余的固定上下文开销。
+
+## ADR-0013 · 2026-10-10 · 会话索引改名为 session-bootstrap
+
+工作树里会话索引目录由 `self-session-bootstrap` 改为 `session-bootstrap`（去掉 `self-`），与 `session-tools` 同族命名。正文职责与开场七步不变；`name`、技能清单、术语表与活指针同轮改完。否掉继续叫 `self-session-bootstrap`：个人 skill 不必一律带 `self-` 前缀，会话向两份已用无前缀名。
+
+## ADR-0014 · 2026-10-10 · skill 增删改查改名为 skill-crud
+
+工作树里个人 skill 的增删改查目录由 `self-skill-crud` 改为 `skill-crud`。职责与四份流程不变；`name`、校验脚本路径、清单、README、`.env.example` 与活指针同轮改完。否掉保留 `self-` 前缀：与 `session-bootstrap` / `session-tools` / `skill-analyse` 同族无前缀命名。

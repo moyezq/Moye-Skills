@@ -76,7 +76,7 @@ $env:npm_config_cache = (Select-String -Path <仓根>\.env -Pattern '^NPM_CACHE=
 ### 第 6 步：取回 preinstall
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File <self-skill-crud 目录>\scripts\fetch-skill.ps1 <owner>/<repo>@<skill>
+powershell -ExecutionPolicy Bypass -File <skill-crud 目录>\scripts\fetch-skill.ps1 <owner>/<repo>@<skill>
 ```
 
 脚本做的事：读本仓 `.env` 的 `PREINSTALL_SKILLS`（相对值按仓库根解析，缺省 `preinstall`）；git 偏克隆 + 稀疏检出，只拉目标 skill 那一个目录；落到 `<preinstall>/<skill>/`；把来源仓与 commit 追加进 `<preinstall>/SOURCES.md`。同名目录已存在就停下报错，除非加 `-Force`。
@@ -90,7 +90,7 @@ powershell -ExecutionPolicy Bypass -File <self-skill-crud 目录>\scripts\fetch-
 要比几个候选、或想先看清规则再决定取哪个，用 `-PreinstallDir` 把落点指到一次性目录，读完删掉即可，`preinstall/` 与 `skills/` 都不受影响：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File <self-skill-crud 目录>\scripts\fetch-skill.ps1 <owner>/<repo>@<skill> -PreinstallDir <一次性目录>
+powershell -ExecutionPolicy Bypass -File <skill-crud 目录>\scripts\fetch-skill.ps1 <owner>/<repo>@<skill> -PreinstallDir <一次性目录>
 ```
 
 #### 三条常态，别当故障

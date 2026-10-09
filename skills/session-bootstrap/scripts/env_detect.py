@@ -110,7 +110,7 @@ def detect_and_save_commands() -> dict:
     探测可用命令并更新环境卡的命令字段。
 
     功能：写入 commands_date、commands，保留 conda 字段。
-    应用场景：本对话第一次需要白名单 PATH 命令且 commands_date 不是今天。
+    应用场景：本对话第一次需要命令白名单（PATH 命令）且 commands_date 不是今天。
     输入：无。
     输出：更新后的环境卡 dict；同时向 stdout 打印命令切片。
     """

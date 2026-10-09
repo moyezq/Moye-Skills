@@ -2,7 +2,7 @@
 
 | Skill | 一句话 |
 |-------|--------|
-| `self-session-bootstrap` | 会话索引：开场七步（判 Agent / 系统 / skill 根目录、系统命令白名单、conda 环境、按 Agent 读 harness 操作规范）、全程约束、输出要求 |
+| `session-bootstrap` | 会话索引：开场七步（判 Agent / 系统 / skill 根目录、系统命令白名单、conda 环境、按 Agent 读 harness 操作规范）、全程约束、输出要求 |
 | `session-tools` | 本轮会话三件事：自检（操作/token/skill 加载）、交接（写/接）、从本轮抽可迁移面试题 |
 | `self-code-principles` | 代码设计默认原则（跨语言兜底） |
 
@@ -48,7 +48,7 @@
 
 | Skill | 一句话 |
 |-------|--------|
-| `self-skill-crud` | 个人 skill 的增删改查（建 / 改 / 删 / 找）：共用判据 + 四份流程；模型按边界自动够到，不挂命令 |
+| `skill-crud` | 个人 skill 的增删改查（建 / 改 / 删 / 找）：共用判据 + 四份流程；模型按边界自动够到，不挂命令 |
 | `skill-analyse` | 分析上游/本地 skill，写成 analyse 报告（用户触发 `/skill-analyse`） |
 
 ## 官方 Skills

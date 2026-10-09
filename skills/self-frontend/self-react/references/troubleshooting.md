@@ -73,7 +73,7 @@ npm install --cache .\.npm-cache
 
 **构建命令本身被拒**（编译器或包管理器写自己的缓存/临时目录时报 `Access is denied`、`EPERM`）就不一样了：**换目录、换临时目录都绕不过去**，那是环境的硬边界。对**那一条命令**提权一次，别在受限模式里变着法子重试。
 
-会话级的沙箱边界与提权规矩，见 `self-session-bootstrap/` 下当轮 harness 那一份（`agent-dsh.md` / `agent-cursor.md` / `agent-codex.md`）的「权限与提权」一节。
+会话级的沙箱边界与提权规矩，见 `session-bootstrap/` 下当轮 harness 那一份（`agent-dsh.md` / `agent-cursor.md` / `agent-codex.md`）的「权限与提权」一节。
 
 ## 剪贴板与权限类 API 静默失败
 

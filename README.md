@@ -22,19 +22,19 @@ powershell -ExecutionPolicy Bypass -File .\setup.ps1
 | 键 | 填什么 | 谁用 |
 |---|---|---|
 | `CURSOR_SKILLS` / `DSH_SKILLS` / `CODEX_SKILLS` | 三个产品扫个人 skills 的目录，模板里给的是 `%USERPROFILE%` 展开后的默认位置 | `setup.ps1` |
-| `PREINSTALL_SKILLS` | 取源脚本落上游 skill 的暂存目录（相对本仓根，缺省 `preinstall`） | `self-skill-crud` |
+| `PREINSTALL_SKILLS` | 取源脚本落上游 skill 的暂存目录（相对本仓根，缺省 `preinstall`） | `skill-crud` |
 | `GITHUB_PAT` | 可选。fine-grained PAT，权限 `Contents: Read and write`；留空则拉取与推送交你自己的终端 | `agent-dsh.md` 的 Git 一节 |
 | `MOYE_SKILLS_ROOT` | 本仓绝对路径；skill 目录 = `%MOYE_SKILLS_ROOT%\skills\<名字>` | 需绝对路径的 skill |
 | `WORKSPACE_ROOT` | 工作区根（本仓所在的那一级目录） | 需绝对路径的 skill |
 | `NOTES_ROOT` | 知识库 `笔记库` 的根 | `self-notes-read` |
-| `NPM_CACHE` | `npx` 缓存目录。**写全路径**：读取方只展开 `%VAR%` 这类系统变量，不认同一个 `.env` 里的另一个键 | `self-skill-crud` |
+| `NPM_CACHE` | `npx` 缓存目录。**写全路径**：读取方只展开 `%VAR%` 这类系统变量，不认同一个 `.env` 里的另一个键 | `skill-crud` |
 
 值里可以写 `%USERPROFILE%` 这类系统环境变量，读取方会展开。skill 正文不写死盘符与用户名——要用绝对路径就从这里的键取；哪个 skill 用哪个键写在该 skill 自己的正文里。
 
 ## 日常用
 
-- **会话**：新对话开场读 `self-session-bootstrap`，它决定这一轮按哪套工具干活；命令从对话里的 skill 目录现抄，本文件不维护清单。
-- **加 / 改 / 删 skill**：走 `self-skill-crud`（流程在它的 `references/`）。删 skill 时连带改 `skills-list.md` 与 [`CONTEXT.md`](CONTEXT.md)。
+- **会话**：新对话开场读 `session-bootstrap`，它决定这一轮按哪套工具干活；命令从对话里的 skill 目录现抄，本文件不维护清单。
+- **加 / 改 / 删 skill**：走 `skill-crud`（流程在它的 `references/`）。删 skill 时连带改 `skills-list.md` 与 [`CONTEXT.md`](CONTEXT.md)。
 - **清单与术语**：[`skills-list.md`](skills-list.md) 是给人看的薄索引，[`CONTEXT.md`](CONTEXT.md) 是本系统特有叫法的术语表，决策与废弃理由在 [`docs/adr.md`](docs/adr.md) / [`docs/HISTORY.md`](docs/HISTORY.md)。
 
 ## 验收

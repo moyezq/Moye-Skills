@@ -7,7 +7,7 @@
 ## 脚本层
 
 ```
-python skills/self-skill-crud/scripts/validate_skill.py <skill 目录>
+python skills/skill-crud/scripts/validate_skill.py <skill 目录>
 ```
 
 它查六样，任一「不过」都以非零退出码报出文件与行号：

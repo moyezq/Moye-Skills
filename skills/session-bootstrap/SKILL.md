@@ -1,5 +1,5 @@
 ---
-name: self-session-bootstrap
+name: session-bootstrap
 description: 新对话第一条用户消息必须先读本 skill——开场硬前置，全局约束与开场规矩都在这里。本对话尚未读过它、或用户说「先读规范 / 先看 skills」时同样先读。读时判当前 Coding Agent。
 ---
 

@@ -14,7 +14,7 @@ Select-String -Path skills\*\SKILL.md,skills\*\references\*.md,CONTEXT.md,skills
 
 ## 2. 判该不该加
 
-按 `SKILL.md` 第 1 条：会重复发生 **且** 模型默认不会做。模型默认就照做的指令是废话指令，花常驻成本换零行为改变，不写。
+按 `SKILL.md` 第 1 条：会重复发生 **且** 模型默认不会做。模型默认就照做的指令是无效指令，花固定上下文开销换零行为改变，不写。
 
 ## 3. 给对照，等点头
 
@@ -46,7 +46,7 @@ Select-String -Path skills\*\SKILL.md,skills\*\references\*.md,CONTEXT.md,skills
 
 ## 7. 验
 
-- 脚本层：`python skills/self-skill-crud/scripts/validate_skill.py skills/<name>`。
+- 脚本层：`python skills/skill-crud/scripts/validate_skill.py skills/<name>`。
 - 对照实验：**改写的或新增的**规则至少过一轮，照搬原文的不必（照搬不新增判断）。做法：同一个任务跑两臂——对照臂只给任务，实验臂多给被实验的那条规则原文，比两臂差异。它是自检、降低出错概率；不判规则有用性，真实使用更复杂，以后出错也不推翻这一轮。
 - 动了 description 就另验触发：造 20 条查询，一半该触发一半不该触发，不该触发的那些贴着实例写（别写成一望而知的远例）。给用户过一遍再定稿。这一步靠人判，没有自动化脚本。
 
