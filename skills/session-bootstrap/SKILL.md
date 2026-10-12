@@ -7,7 +7,7 @@ description: 新对话第一条用户消息必须先读本 skill——开场硬�
 
 本文件不是某个具体任务的写法。三块：§1 开场一次，§2 全程约束，§3 输出要求。读完按用户这一轮的任务继续；不要向用户复述本文件全文，除非对方在问规范本身。
 
-先读仓库根 `.env`，拿到本机专属环境变量（`MOYE_SKILLS_ROOT`、`WORKSPACE_ROOT`、`NOTES_ROOT`、`NPM_CACHE`）；skill 正文不写死盘符与用户名，要用绝对路径就取这里的键。
+先读仓库根 `.env`，拿到本机专属环境变量（`SKILLS_ROOT`、`WORKSPACE_ROOT`、`NOTES_ROOT`、`NPM_CACHE`）；skill 正文不写死盘符与用户名，要用绝对路径就取这里的键。
 
 ---
 

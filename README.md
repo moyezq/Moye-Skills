@@ -29,8 +29,6 @@ Agent Skill 是给 AI 读的规范：命中任务时它被读进上下文，替�
 | `session-tools` | 本轮会话自检、写交接文档、抽可迁移面试题 | 长会话丢了上下文，只能从头重讲 |
 | `self-notes-read` | 查阅、整理、书写 Markdown 知识库（要配 `NOTES_ROOT`） | 笔记不按统一框架进库，沉淀不下来 |
 
-`backup/` 里放着两份已退役、待重构的 skill（前端页面、Windows 桌面壳界面），不被三端扫描。
-
 ## 快速开始
 
 ### Ⅰ 装上并跑通（必需，约 5 分钟）
@@ -42,22 +40,28 @@ copy .env.example .env
 powershell -ExecutionPolicy Bypass -File .\setup.ps1
 ```
 
-`.env`（模板 [.env.example](.env.example)）里只需确认三个产品目录：模板给的是 `%USERPROFILE%` 下的默认位置，没装的产品留空。看到 `ok <产品目录> -> <本仓>\skills` 就是接上了，然后**重启 Cursor / dsh**——目录联接只在启动时读一次。
+`.env`（模板 [.env.example](.env.example)）这一步只管三个产品目录——它们是整套机制的唯一输入：
+
+| 键 | 是什么 | 装在默认位置时 |
+|---|---|---|
+| `CURSOR_SKILLS` | Cursor 扫个人 skill 的目录 | `%USERPROFILE%\.cursor\skills` |
+| `DSH_SKILLS` | dsh 扫个人 skill 的目录 | `%USERPROFILE%\.dsh\skills` |
+| `CODEX_SKILLS` | Codex 扫用户级 skill 的目录 | `%USERPROFILE%\.agents\skills` |
+
+`setup.ps1` 把这三个目录各做成指向本仓 `skills/` 的**目录联接**（同名目录已存在就先备份成 `<名字>.bak-<日期>`；联接指向别处则重建）。某个产品没装就把它留空，那一项会被跳过。看到 `ok <产品目录> -> <本仓>\skills` 就是接上了，然后**重启 Cursor / dsh**——目录联接只在启动时读一次。
 
 验收：新开一个对话，问「这段代码还能怎么简化」。`code-principles` 应当被读到，并按那 13 条回答。
 
-### Ⅱ 配齐完整能力（可选）
+### Ⅱ 配齐完整能力（让 Agent 自己填）
 
-`.env` 里这四组键按需填，都不影响 Ⅰ 能不能跑通：
+这几项都是「本机上有什么」的事实，不用你自己查：开一个新会话，让 Agent 跑一遍本地探测，按实情写进 `.env`。都不影响 Ⅰ 能不能跑通。
 
-| 键 | 配了能做什么 | 没配会怎样 |
+| 键 | 是什么 / 配了能做什么 | 没配会怎样 |
 |---|---|---|
-| `GITHUB_PAT` | dsh 会话里自行 fetch / pull / push 本仓 | 远端 git 操作交你自己的终端，其余不受影响 |
-| `NOTES_ROOT` | `self-notes-read` 能读写你的 Markdown 笔记库 | 这份 skill 拿不到库路径，其它 skill 不受影响 |
-| `NPM_CACHE` | npx 缓存落在你指定的目录，受限沙箱里也能写 | 回落到 `WORKSPACE_ROOT` 下的 `.npm-cache` |
-| `MOYE_SKILLS_ROOT` / `WORKSPACE_ROOT` | 需要绝对路径的 skill 有据可查 | 只少一条路径来源，不报错 |
-
-`GITHUB_PAT` 要 fine-grained、只给 `Contents: Read and write` 权限。
+| `GITHUB_PAT` | fine-grained PAT，权限 `Contents: Read and write`；dsh 会话里可自行 fetch / pull / push | 远端 git 操作交你自己的终端 |
+| `NOTES_ROOT` | 你的 Markdown 笔记库根目录，`self-notes-read` 用 | 这份 skill 拿不到库路径 |
+| `NPM_CACHE` | npx 缓存目录，`skill-crud` 的取源脚本用 | 回落到 `WORKSPACE_ROOT` 下的 `.npm-cache` |
+| `SKILLS_ROOT` / `WORKSPACE_ROOT` | 本仓根 / 本仓所在的那一级目录。skill 正文不写死盘符与用户名，要用绝对路径就取这两个键 | 只少一条路径来源，不报错 |
 
 ### Ⅲ 试一次（三条真实触发）
 
@@ -79,7 +83,7 @@ flowchart LR
   C -->|动 skill 本身| G[skill-crud]
 ```
 
-- **一份正文，三端共用**：产物只有 `skills/` 一棵树，三端目录都是它的联接。
+- **一份正文，三端共用**：正文只有 `skills/` 一棵树；三端各扫自己那个个人 skills 目录，而那三个目录都是指向本仓 `skills/` 的目录联接——改一处三端同时生效，不存在第二份拷贝。
 - **触发靠 description，材料靠指针**：`description` 常驻在对话目录里，命中才读正文；正文只留每条路径都要的步骤，细则推到 `references/` 按需读。
 - **开场只有一份**：`session-bootstrap` 决定这一轮按哪套工具干活，其余 skill 不在开场预加载。
 - **叫法与决策有落点**：规范名称进 `CONTEXT.md`，仍有效的为什么进 `docs/adr.md`，废掉的追加 `docs/HISTORY.md`。
@@ -94,11 +98,6 @@ Moye-Skills/
 ├── skills/            # 工作树：12 份 skill 的正文，三端共用
 ├── skills-list.md     # 薄索引：一行一个 skill
 ├── CONTEXT.md         # 术语表：本系统特有叫法的规范名称
-├── backup/            # 已退役待重构的 skill，不被扫描
 ├── docs/              # 内部说明，日常使用不必读
 └── preinstall/        # 上游 skill 取源暂存区，等人审
 ```
-
-远程仓库：`git@github.com:moyezq/Moye-Skills.git`（`origin` 用 SSH）。
-
-`.env`、`preinstall/`、`*-workspace/`、`.idea/` 都在 `.gitignore` 里，不进仓。
