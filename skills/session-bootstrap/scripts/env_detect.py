@@ -38,11 +38,8 @@ COMMANDS_TO_CHECK = [
     ("pandoc", ["--version"]),
 ]
 
-# PATH 上 which 不到时仍视为可用的本机入口（本轮已实测）。
-FALLBACK_EXES = {
-    "ffmpeg": Path(r"<软件目录>\ffmpeg-9.0.2\bin\ffmpeg.exe"),
-    "whisper": Path(r"<conda 根>\envs\asr\Scripts\whisper.exe"),
-}
+# PATH 上 which 不到时，把本机安装位置填在这里（留空表示只用 PATH）。
+FALLBACK_EXES = {}
 
 VERSION_TIMEOUT_SEC = 8
 

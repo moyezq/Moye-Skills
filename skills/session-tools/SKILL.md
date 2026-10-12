@@ -30,4 +30,4 @@ description: >-
 - 新对话开场、全程硬约束 → 会话索引（禁止改它）
 - 分析上游/本地 skill、写 analyse 报告 → skill 分析报告
 - 记本仓决策/术语/目标架构 → 写 `CONTEXT.md` / `docs/adr.md` / `docs/architecture.md`
-- 写 笔记库 → 知识库文档
+- 写笔记库 → 知识库文档

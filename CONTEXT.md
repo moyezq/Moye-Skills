@@ -97,7 +97,7 @@ _Avoid_: 浏览器入口, self-spyder（已退役）
 _Avoid_: 触发条件, 何时读
 
 **skill 分析报告**：
-技能仓 `analyse/<skill名>.md`：给人读的上游/本地 skill 拆解（简介、安装与命令、源码结构、核心原理、分步举例）。由用户触发的 `skill-analyse` 产出。不是 笔记库，不是 `SKILL.md`。
+技能仓 `analyse/<skill名>.md`：给人读的上游/本地 skill 拆解（简介、安装与命令、源码结构、核心原理、分步举例）。由用户触发的 `skill-analyse` 产出。不是笔记库，不是 `SKILL.md`。
 _Avoid_: 外部文档（分析报告文头只写来源）, 知识库文
 
 **最小视图**：
@@ -145,7 +145,7 @@ _Avoid_: 本地化, 原样灌入, 中译后使用
 _Avoid_: 分析向逆向（旧名）, 逆向工程（当用来统称 reverse-skill 全包时）, 渗透, 打穿
 
 **独立 skill**：
-不依赖 笔记库 或 reverse-skill 包就能执行的个人 skill。笔记里有、skill 没有的规则，写进 skill；别的 skill 可以指向它，它不能指向笔记才能开工。
+不依赖笔记库或 reverse-skill 包就能执行的个人 skill。笔记里有、skill 没有的规则，写进 skill；别的 skill 可以指向它，它不能指向笔记才能开工。
 _Avoid_: 指向笔记, 技能包当运行时依赖
 
 **两套请求头**：

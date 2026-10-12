@@ -17,7 +17,7 @@ description: >-
 
 - 新建或改本仓个人 skill、删 skill、找上游 skill → `skill-crud`
 - 写 agent 会读的规范 / description → `skill-crud/references/style.md`
-- 写 笔记库 主题文 → `self-notes-read`
+- 写笔记库主题文 → `self-notes-read`
 - 从本轮开发抽面试题 → `session-tools`
 
 ---
@@ -33,7 +33,7 @@ analyse/<skill名>.md
 - `<skill名>` 用上游包名或目录名（去 `-main` / `-master` 后缀），如 `skill-context-doctor`。
 - 用户指定了路径就用指定路径。
 - 已有同名报告则改写，不平行再开一篇。
-- 报告是给人读的分析，不是 笔记库，也不是 `SKILL.md`。
+- 报告是给人读的分析，不是笔记库，也不是 `SKILL.md`。
 
 文头只留来源一行，不要写归纳日期、不要写「外部文档」：
 

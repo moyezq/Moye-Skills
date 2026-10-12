@@ -16,7 +16,7 @@
     4. report_tokens     — 第二份：token 与上下文占用（在 projcache 里，不在事件流里）。
     5. report_skill_loads— 第三份：每个 skill 的正文首次进上下文的 turn/seq 与方式。
   输入：下面的 SESSION_ID / TURN 两个常量（改常量定范围，不用命令行参数）。
-  前置：zstandard。base 与 rag 环境有，multimodal 没有。
+  前置：zstandard。跑前先 `python -c "import zstandard"` 确认这份解释器装了它。
   产出：全部打到 stdout，不落盘；已把 stdout 强制成 UTF-8，Windows 控制台不再出乱码。
   对外：无（脚本，跑完即退）。
 """

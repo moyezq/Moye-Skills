@@ -43,7 +43,7 @@ description: 新对话第一条用户消息必须先读本 skill——开场硬�
    python -c "import sys; sys.path.insert(0, r'<skill根目录>/scripts'); import conda_envs; print(conda_envs.list_conda_env_names())"
    ```
 
-   默认环境 `base`；项目 README 或用户点名了才换（如 `rag`）。不要跑 `pip list`。
+   默认环境 `base`；项目 README 或用户点名了才换。不要跑 `pip list`。
 
 7. **Harness 操作**：按第 2 步的 `AGENT`，读 `<skill根目录>` 下对应的一份，按它执行，别读别家那份：
 

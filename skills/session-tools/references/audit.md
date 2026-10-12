@@ -5,10 +5,10 @@
 ## 跑
 
 ```powershell
-<conda 根>\python.exe <本 skill>\scripts\session_audit.py
+<装了 zstandard 的解释器> <本 skill>\scripts\session_audit.py
 ```
 
-用**装了 `zstandard` 的解释器**跑：本机是 `<conda 根>\python.exe`（base）与 rag 环境，`multimodal` 里没有。
+用**装了 `zstandard` 的解释器**跑：本机实测 base 有、部分环境没有；跑前先 `python -c "import zstandard"` 确认。
 
 范围由脚本顶部的两个常量决定，不用命令行参数：`SESSION_ID`（空 = 最近改动的会话）、`TURN`（0 = 全部轮次）。
 

@@ -7,5 +7,5 @@
 - **背景**：ADR-0014 把 harness 相关的操作细则从会话索引 §2 拆出，落成两份并列文件——`agent-file-op.md`（按 `AGENT` 分节写文件操作）与 `agent-git-op.md`（独立的 git 流程）。
 - **原因**：细则的读者是当轮那个 harness，放通用层等于让三个 harness 互相读对方的命令。git 单独立一份，是因为它已经在用、`CONTEXT.md` 与 `mechanics.md` 都按它写，合并的连带面大过收益。
 - **做法**：改成按 harness 自包含的三份——`agent-dsh.md` / `agent-cursor.md` / `agent-codex.md`，每份同一套六块（读文件与列目录 / 改文件 / 运行 Python 脚本 / Git 操作 / 权限与提权 / 长跑、后台与服务）。会话索引开场第 7 步按 `AGENT` 只读对应那份，两份旧文件删除。
-- **意义**：一个会话只读自己那套命令，工具名、提权方式、git 走法在同一页；codex 那栏由 Codex 本机自测回填，原始输出留在 `docs/agent-codex-verify.md`。
+- **意义**：一个会话只读自己那套命令，工具名、提权方式、git 走法在同一页。
 - **废弃原因**：分家让 git 与文件操作各占一页，一个会话常要读两份才拼得出全貌，与「按 harness 自包含」冲突。后继 ADR-0016。

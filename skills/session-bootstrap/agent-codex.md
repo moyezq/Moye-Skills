@@ -1,6 +1,6 @@
 # codex 操作规范
 
-会话索引 §1 第 7 步按 `AGENT` 读本文件：`AGENT` = `codex` 时读这一份，别读另外两份。以下由 Codex 在本机自测回填（2026-10-08），每条原始输出见 `docs/agent-codex-verify.md`（首轮确认清单与复检报告已合成那一份）。
+会话索引 §1 第 7 步按 `AGENT` 读本文件：`AGENT` = `codex` 时读这一份，别读另外两份。以下由 Codex 在本机自测回填（2026-10-08）。
 
 工具集：`exec_command`（起 PowerShell 7.6.5 Core）。**没有** `read` / `edit` 这类独立文件工具。
 

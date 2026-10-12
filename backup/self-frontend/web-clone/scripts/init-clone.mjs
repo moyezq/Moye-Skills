@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
-const DEFAULT_ROOT = "<工作目录>\\Clone";
+const DEFAULT_ROOT = path.join(os.homedir(), "Clone");
 
 function usage() {
   console.log(`Usage:

@@ -1,6 +1,6 @@
 # cursor 操作规范
 
-会话索引 §1 第 7 步按 `AGENT` 读本文件：`AGENT` = `cursor` 时读这一份，别读另外两份。以下为 2026-10-08 Cursor 会话实测（原始输出见 `docs/agent-cursor-verify.md`）。
+会话索引 §1 第 7 步按 `AGENT` 读本文件：`AGENT` = `cursor` 时读这一份，别读另外两份。以下为 2026-10-08 Cursor 会话实测。
 
 工具集：`Read` / `Write` / `StrReplace` / `Grep` / `Glob` / `Shell`，另有 `Delete`、`AwaitShell`。**定点替换的工具叫 `StrReplace`，本机没有名为 `Edit` 的工具。**
 
@@ -23,7 +23,7 @@
 
 ## 3. 运行 Python 脚本
 
-**`conda activate` 在 Cursor 的 PowerShell 里有效**：实测 `conda activate rag` 后 `python` 落到 `<conda 根>\envs\rag\python.exe`，`conda deactivate` 回 base。而且 **Shell 跨调用保留状态**——上一轮 activate 过的环境会带到下一轮，除非显式 `deactivate` 或换掉。
+**`conda activate` 在 Cursor 的 PowerShell 里有效**：实测 `conda activate <环境名>` 后 `python` 落到该环境的 `python.exe`，`conda deactivate` 回 base。而且 **Shell 跨调用保留状态**——上一轮 activate 过的环境会带到下一轮，除非显式 `deactivate` 或换掉。
 
 - 所以默认写 `conda activate <环境>` 再 `python`；要确定性时用显式路径 `<envs>\<环境>\python.exe`（base 是 `<conda根>\python.exe`）。
 - 拿不准当前哪个环境时先 `python -c "import sys;print(sys.executable)"`，别看变量。
