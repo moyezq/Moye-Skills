@@ -1,51 +1,104 @@
 # Moye-Skills
 
-个人 skill 仓库。clone 后把各产品的个人 skills 目录联接到本仓 `skills/`，不要再各拷一份。
+一套个人向的 **Agent Skill** 库：把「怎么判断、怎么做」写成可复用的规范，一次编写，Cursor / dsh / Codex 三端共用。
 
-本机路径写在 `.env`，不要写进 README。
+Markdown 为主 · 无运行时依赖 · 目录联接共用一份正文 · 个人分享
 
-## clone 与装
+## 页内目录
+
+[介绍](#介绍) · [快速开始](#快速开始) · [怎么工作](#怎么工作) · [项目结构](#项目结构)
+
+## 介绍
+
+Agent Skill 是给 AI 读的规范：命中任务时它被读进上下文，替掉每次重讲一遍的口头约定。本仓把这些规范按作用域拆成 12 份，每份只管一层——会话怎么开场、代码怎么写、文档落在哪、需求怎么问清。
+
+三端共用靠**目录联接**，不是拷贝：`setup.ps1` 把 Cursor / dsh / Codex 各自的个人 skills 目录指向本仓 `skills/`，所以只有一份正文，改一处三端同时生效。
+
+| 能力（skill） | 做什么 | 不装会怎样 |
+|---|---|---|
+| `session-bootstrap` | 新对话开场七步：判当前 Agent、系统、skill 根目录、可用命令与 conda 环境，定这一轮的全局约束 | 每个会话都要重新交代工具与约定 |
+| `code-principles` | 13 条跨语言代码判断，写改代码时兜底 | 没有兜底原则，AI 按各自默认口味写 |
+| `python-standard-coding` | Python 写法与落盘：风格、类型、函数、容器、性能、脚本、多文件目录 | Python 风格与目录随对话漂 |
+| `python-testing` | 先选定测试边界，再写进 spec，最后按一条用户路径写 pytest | 测试写了也不知道该测哪一层 |
+| `project-docs` | 项目文档：术语表、ADR、人读 README、文档地图、最小视图 | 术语和决策没有落点，反复问同一件事 |
+| `grill-with-docs` | 拷问式访谈：按轮次只问当前前沿能答的，边问边沉淀文档 | 需求没对齐就开写，返工 |
+| `plain-todo` | 用白话把一项待办讲清再执行 | 待办含糊，动手后才发现没想清 |
+| `playwright-cli` | 浏览器自动化：点击填表、页面快照、UI 走查、录屏/tracing、请求 mock、生成测试 | 界面验收只能靠人截图描述 |
+| `skill-crud` | 个人 skill 的增删改查（建 / 改 / 删 / 找）与 skill 文本规范 | 改 skill 容易破坏单一事实源、漏改连带文件 |
+| `skill-analyse` | 把上游或本地的 skill 拆成 analyse 分析报告 | 想收编别人的 skill 时得自己啃源码 |
+| `session-tools` | 本轮会话自检、写交接文档、抽可迁移面试题 | 长会话丢了上下文，只能从头重讲 |
+| `self-notes-read` | 查阅、整理、书写 Markdown 知识库（要配 `NOTES_ROOT`） | 笔记不按统一框架进库，沉淀不下来 |
+
+`backup/` 里放着两份已退役、待重构的 skill（前端页面、Windows 桌面壳界面），不被三端扫描。
+
+## 快速开始
+
+### Ⅰ 装上并跑通（必需，约 5 分钟）
 
 ```powershell
-git clone git@github.com:moye233057/Moye-Skills.git
+git clone git@github.com:moyezq/Moye-Skills.git
 cd Moye-Skills
 copy .env.example .env
 powershell -ExecutionPolicy Bypass -File .\setup.ps1
 ```
 
-`setup.ps1` 读仓库根 `.env`，把三个产品的个人 skills 目录做成指向本仓 `skills/` 的**目录联接**。联接做完重启 Cursor / dsh 才认。第一次跑时若没有 `.env`，脚本会从 `.env.example` 复制一份并停下，等你填完再跑一次。
+`.env`（模板 [.env.example](.env.example)）里只需确认三个产品目录：模板给的是 `%USERPROFILE%` 下的默认位置，没装的产品留空。看到 `ok <产品目录> -> <本仓>\skills` 就是接上了，然后**重启 Cursor / dsh**——目录联接只在启动时读一次。
 
-## `.env` 要填什么
+验收：新开一个对话，问「这段代码还能怎么简化」。`code-principles` 应当被读到，并按那 13 条回答。
 
-`.env` **不进仓**（已在 `.gitignore`），模板是 [.env.example](.env.example)。两类值：
+### Ⅱ 配齐完整能力（可选）
 
-| 键 | 填什么 | 谁用 |
+`.env` 里这四组键按需填，都不影响 Ⅰ 能不能跑通：
+
+| 键 | 配了能做什么 | 没配会怎样 |
 |---|---|---|
-| `CURSOR_SKILLS` / `DSH_SKILLS` / `CODEX_SKILLS` | 三个产品扫个人 skills 的目录，模板里给的是 `%USERPROFILE%` 展开后的默认位置 | `setup.ps1` |
-| `PREINSTALL_SKILLS` | 取源脚本落上游 skill 的暂存目录（相对本仓根，缺省 `preinstall`） | `skill-crud` |
-| `GITHUB_PAT` | 可选。fine-grained PAT，权限 `Contents: Read and write`；留空则拉取与推送交你自己的终端 | `agent-dsh.md` 的 Git 一节 |
-| `MOYE_SKILLS_ROOT` | 本仓绝对路径；skill 目录 = `%MOYE_SKILLS_ROOT%\skills\<名字>` | 需绝对路径的 skill |
-| `WORKSPACE_ROOT` | 工作区根（本仓所在的那一级目录） | 需绝对路径的 skill |
-| `NOTES_ROOT` | 知识库 `笔记库` 的根 | `self-notes-read` |
-| `NPM_CACHE` | `npx` 缓存目录。**写全路径**：读取方只展开 `%VAR%` 这类系统变量，不认同一个 `.env` 里的另一个键 | `skill-crud` |
+| `GITHUB_PAT` | dsh 会话里自行 fetch / pull / push 本仓 | 远端 git 操作交你自己的终端，其余不受影响 |
+| `NOTES_ROOT` | `self-notes-read` 能读写你的 Markdown 笔记库 | 这份 skill 拿不到库路径，其它 skill 不受影响 |
+| `NPM_CACHE` | npx 缓存落在你指定的目录，受限沙箱里也能写 | 回落到 `WORKSPACE_ROOT` 下的 `.npm-cache` |
+| `MOYE_SKILLS_ROOT` / `WORKSPACE_ROOT` | 需要绝对路径的 skill 有据可查 | 只少一条路径来源，不报错 |
 
-值里可以写 `%USERPROFILE%` 这类系统环境变量，读取方会展开。skill 正文不写死盘符与用户名——要用绝对路径就从这里的键取；哪个 skill 用哪个键写在该 skill 自己的正文里。
+`GITHUB_PAT` 要 fine-grained、只给 `Contents: Read and write` 权限。
 
-## 日常用
+### Ⅲ 试一次（三条真实触发）
 
-- **会话**：新对话开场读 `session-bootstrap`，它决定这一轮按哪套工具干活；命令从对话里的 skill 目录现抄，本文件不维护清单。
-- **加 / 改 / 删 skill**：走 `skill-crud`（流程在它的 `references/`）。删 skill 时连带改 `skills-list.md` 与 [`CONTEXT.md`](CONTEXT.md)。
-- **清单与术语**：[`skills-list.md`](skills-list.md) 是给人看的薄索引，[`CONTEXT.md`](CONTEXT.md) 是本系统特有叫法的术语表，决策与废弃理由在 [`docs/adr.md`](docs/adr.md) / [`docs/HISTORY.md`](docs/HISTORY.md)。
+1. 新开会话，第一句话说任意内容 —— `session-bootstrap` 先做开场，报出当前 Agent、系统与工作目录。
+2. 说「先问清楚再动手」—— `grill-with-docs` 按轮次提问，每轮只问当前前沿能答的。
+3. 说「用浏览器把这一步点一遍」—— `playwright-cli` 驱动浏览器并留下快照。
 
-## 验收
+触发全靠各 skill 的 `description`：命中就读，没命中就直接点它的名字。
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\setup.ps1
-git remote -v
+## 怎么工作
+
+```mermaid
+flowchart LR
+  A[新对话] --> B[session-bootstrap 开场]
+  B --> C{这一轮是什么活}
+  C -->|写改代码| D[code-principles 兜底<br>python-standard-coding / python-testing]
+  C -->|文档与术语| E[project-docs]
+  C -->|需求还没对齐| F[grill-with-docs]
+  C -->|动 skill 本身| G[skill-crud]
 ```
 
-`setup.ps1` 对已经指向本仓 `skills/` 的联接会打印 `ok`；报别的就说明那一条联接指到了别处（常见是指到另一个产品的 skills 目录）。`origin` 用 SSH。
+- **一份正文，三端共用**：产物只有 `skills/` 一棵树，三端目录都是它的联接。
+- **触发靠 description，材料靠指针**：`description` 常驻在对话目录里，命中才读正文；正文只留每条路径都要的步骤，细则推到 `references/` 按需读。
+- **开场只有一份**：`session-bootstrap` 决定这一轮按哪套工具干活，其余 skill 不在开场预加载。
+- **叫法与决策有落点**：规范名称进 `CONTEXT.md`，仍有效的为什么进 `docs/adr.md`，废掉的追加 `docs/HISTORY.md`。
 
-## 不要放进仓
+## 项目结构
 
-`.env`（含密钥、本机路径）、`preinstall/`（还没审过的上游第三方代码）、`*-workspace/`（试验与探查的过程文件）、`.idea/`（IDE 本地状态）。都在 `.gitignore` 里。
+```text
+Moye-Skills/
+├── README.md          # 你正在读的这份
+├── setup.ps1          # 把三端个人 skills 目录联接到本仓 skills/
+├── .env.example       # 本机配置模板，复制成 .env 再填
+├── skills/            # 工作树：12 份 skill 的正文，三端共用
+├── skills-list.md     # 薄索引：一行一个 skill
+├── CONTEXT.md         # 术语表：本系统特有叫法的规范名称
+├── backup/            # 已退役待重构的 skill，不被扫描
+├── docs/              # 内部说明，日常使用不必读
+└── preinstall/        # 上游 skill 取源暂存区，等人审
+```
+
+远程仓库：`git@github.com:moyezq/Moye-Skills.git`（`origin` 用 SSH）。
+
+`.env`、`preinstall/`、`*-workspace/`、`.idea/` 都在 `.gitignore` 里，不进仓。
