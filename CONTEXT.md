@@ -88,17 +88,9 @@ _Avoid_: 废话指令（旧名）, 空操作, no-op
 步骤没做完，agent 自己宣布完成。根因通常是完成标准模糊，先打磨边界；边界不可约模糊且确实观察到提前收工，才把后续步骤推出视野。
 _Avoid_: 抢跑（旧名）, 提前完成, premature completion
 
-**前端入口**：
-工作树顶层的 `self-frontend`。前端任务先读这一份，再按其表读目录下的 `self-react` 或 `web-clone`（入口是 `BODY.md`，不是 `SKILL.md`）。桌面壳那一层归 `self-desktop-ui`。
-_Avoid_: 把那两份再平铺到 skills/, 被收目录里再放 SKILL.md
-
-**桌面壳**：
-Electron / Tauri / WebView2 桌面应用里，窗口层与网页层的分界。窗口、标题栏、材质、托盘、全局热键、单一实例、IME 候选框、原生右键菜单属于壳层，归 `self-desktop-ui`；页面、组件、布局属于页面层，归 `self-frontend`。
-_Avoid_: 桌面端（当用来同时指这两层时）, 客户端界面（当用来指壳层时）
-
-**浏览器入口**：
-工作树顶层的 `self-spyder`。页面快照、UI 走查、Playwright CLI 先读这一份，再读目录下的 `playwright-cli`（入口是 `BODY.md`，不是 `SKILL.md`）。
-_Avoid_: 把 playwright-cli 再平铺到 skills/, 被收目录里再放 SKILL.md
+**浏览器自动化**：
+工作树顶层的 `playwright-cli`。页面快照、UI 走查、Playwright CLI、录屏/tracing、请求 mock 直接读这一份。
+_Avoid_: 浏览器入口, self-spyder（已退役）
 
 **清单**：
 给人看的薄索引（`skills-list.md`）：路径、分组、一句话。不复述何时 Read。
@@ -109,11 +101,11 @@ _Avoid_: 触发条件, 何时读
 _Avoid_: 外部文档（分析报告文头只写来源）, 知识库文
 
 **最小视图**：
-把项目、模块或代码文件收成能说清关键点的可视化。选型在 `self-project-docs` 的 `SHOW-FORMAT.md`。不是目标态蓝图（`architecture.md`）。
+把项目、模块或代码文件收成能说清关键点的可视化。选型在 `project-docs` 的 `SHOW-FORMAT.md`。不是目标态蓝图（`architecture.md`）。
 _Avoid_: 状态图（当用来指这份产物时）, show-me, 架构图（口语落到文件仍叫最小视图）
 
 **兜底**：
-写代码时默认生效的通用判断层（`self-code-principles` 的 12 条）。更专门 `self-*` 只在冲突点覆盖它，不是整份跳过。
+写代码时默认生效的通用判断层（`code-principles` 的 13 条）。更专门 `self-*` 只在冲突点覆盖它，不是整份跳过。
 _Avoid_: 默认规范, 通用原则（当用来表示「有专门 skill 就别读」时）, 过度兜底（字段访问场景，见信任上游）
 
 **信任上游**：

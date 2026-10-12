@@ -81,7 +81,7 @@ git -C "<仓根>" -c credential.helper= -c $instead <fetch|pull --ff-only|push>
 
 **没有一条活可以在没有上限、没有进度的情况下跑**——跑一小时的静默任务等于卡死，而且没人会发现。
 
-- 上限：每个等待都自带上限（连接、读、子进程、重试次数），熔断只是全都失效时的兜底——脚本见 `python-standard-coding` → `references/script.md`「运行上限」（默认 5 分钟，更久先问，拉起的子进程也要收）；测试见 `self-python-testing`「pytest.ini 第一版就带熔断」；前台调用 `timeoutMs` ≤ 120000。
+- 上限：每个等待都自带上限（连接、读、子进程、重试次数），熔断只是全都失效时的兜底——脚本见 `python-standard-coding` → `references/script.md`「运行上限」（默认 5 分钟，更久先问，拉起的子进程也要收）；测试见 `python-testing`「pytest.ini 第一版就带超时强杀」；前台调用 `timeoutMs` ≤ 120000。
 - 进度：每批 / 每阶段打一行并 `flush=True`；一行不出的长活按卡死处理。
 - 追踪：分钟级任务用 `run_in_background` 拿 job id，起完去干别的、完成会通知，不要 busy-poll、不重复起同一个 job。前台只跑秒到分钟级的活——前台的活只有「超时转后台」这一层保险，提前中止就什么都没有：没有 job id、没有通知、进程还活着。
 - 收尾前用 `job_output` 收未读结果、`job_kill` 停掉不再需要的 job，不留后台任务。

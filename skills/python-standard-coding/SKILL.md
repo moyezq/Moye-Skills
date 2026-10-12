@@ -14,7 +14,7 @@ description: >-
 
 **用**：写或改 `.py`；第一次为任务跑 Python；新项目装依赖；写单文件脚本或入口文件头；改函数/类/FastAPI 路由或嫌拆太碎；补类型标注或改返回值形状；重构一段已有代码；新建/整理 Python 项目目录或写改根 README。
 
-**不用**：探测脚本（`env_detect.py` / `conda_envs.py`）不算为任务跑 Python。pytest 定缝与用例见 `self-python-testing`。只改 ADR / architecture / 术语表、不动代码与目录树。前端页面、桌面壳、知识库笔记。
+**不用**：探测脚本（`env_detect.py` / `conda_envs.py`）不算为任务跑 Python。pytest 测试边界与用例见 `python-testing`。只改 ADR / architecture / 术语表、不动代码与目录树。前端页面、桌面壳、知识库笔记。
 
 ## 技能清单
 

@@ -10,9 +10,9 @@
 
 **不用**：
 
-- 记本仓为什么选这个开关、文件放哪 → `self-project-docs`
-- 写 笔记库 主题文 → `self-notes-read`
-- 动手前对齐需求 → `grill-with-docs`
+- 记本仓为什么选这个开关、文件放哪 → 写 `CONTEXT.md` / `docs/adr.md` / `docs/architecture.md`
+- 写 笔记库 主题文 → 知识库文档
+- 动手前对齐需求 → 拷问式访谈
 
 ---
 

@@ -3,7 +3,7 @@ name: self-frontend
 description: >
   前端开发入口。写或改页面、布局、React、Vite、TypeScript、界面验收、
   仿站、克隆网页、抄个站时查阅。读完按本文再读其下 self-react 或 web-clone。
-  点选走查走 self-spyder。不要用本文件还原接口签名。
+  点选走查走 playwright-cli。不要用本文件还原接口签名。
 ---
 
 # 前端
@@ -16,7 +16,7 @@ description: >
 
 **用**：写或改前端页面 / 布局 / 样式；React（默认 Vite + TypeScript）；界面验收；按网页前端样式复刻（克隆 / 仿站 / 抄个站）。
 
-**不用**：后端接口；纯事实查询；可交互分析面板走官方 `canvas`；只做页面点击走查走 `self-spyder`，不必先读本文。写 `.py` 走 Python 那几份。
+**不用**：后端接口；纯事实查询；可交互分析面板走官方 `canvas`；只做页面点击走查走 `playwright-cli`，不必先读本文。写 `.py` 走 Python 那几份。
 
 ## 再读哪份
 

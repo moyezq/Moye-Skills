@@ -15,7 +15,7 @@ python skills/skill-crud/scripts/validate_skill.py <skill 目录>
 - `SKILL.md` 存在，frontmatter 有 `name` 与 `description`
 - `name` 与目录名一致、kebab-case
 - description 末尾的命令尾巴与 `name` 一致（带尾巴时）
-- 正文点到的 `references/`、`agents/`、`assets/` 路径真实存在；本 skill 里没有就按兄弟 skill 找（ADR-0006 允许 skill 互指），两边都没有才算不过
+- 正文点到的 `references/`、`agents/`、`assets/` 路径真实存在；本 skill 里没有就按兄弟 skill 找（仅核路径是否存在；邻域入口是否合规见 `style.md`，本脚本不判），两边都没有才算不过
 - `scripts/` 路径找不到只**提醒**：散文里的 `scripts/x.py` 多半是别的项目的布局示例
 - 正文非空行超过 500 行只**提醒**：该往下推一层
 

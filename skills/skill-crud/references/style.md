@@ -47,7 +47,10 @@
 - 领头的词前置——指针就靠它在触发。
 - 一个分支一个触发条件；同义改写的两个分支合并成一个。
 - 正文已经交代过的身份，指针里删掉。
-- **`description` 不点同族兄弟 skill 名**。同族分流写在正文「何时用」的用/不用，或写在真分叉处的材料向指针；开篇只写本文件管什么。邻域入口（如上层兜底、文档何时建）开篇最多留一条，且带「什么时候够它」。
+- **`description` 不点同族兄弟 skill 名**。同族分流写在正文「何时用」的用/不用；开篇只写本文件管什么。
+- **正文不拿兄弟目录名当路由表**。跨 skill 边界优先点**产物**（`CONTEXT.md`、`docs/adr.md`、`docs/architecture.md`、`README.md` 等）或动作（「写项目术语表」），让 catalog / description 自己够到对应 skill。真有分工、必须点名时：整份 skill **最多一条**邻域入口，且带「什么时候够它」；同一句不得在 `references/` 里再抄。
+  - ✅ 软件仓沉淀术语与目标架构时写 `CONTEXT.md` / `docs/architecture.md`（项目文档 skill 会管写法）。
+  - ❌ 在 handoff、interview、project 细则里反复写「再加载 `foo-bar`」「见 `foo-bar`」。
 
 ## 步骤与完成标准
 

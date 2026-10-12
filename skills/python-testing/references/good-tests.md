@@ -37,7 +37,7 @@ def test_checkout_calls_payment_service_process():
 
 危险信号：
 
-- mock 内部协作者
+- mock 内部依赖
 - 测试私有方法
 - 对调用次数/顺序做断言
 - 重构了但行为没变，测试却挂了
@@ -58,7 +58,7 @@ def test_create_user_makes_user_retrievable():
     assert retrieved.name == "Alice"
 ```
 
-**同义反复测试（tautological tests）**：期望值只是把实现重述一遍，于是测试按构造就通过。
+**自证式测试（tautological tests）**：期望值只是把实现重述一遍，于是测试必然通过。
 
 ```python
 # BAD: Expected value is recomputed the way the code computes it

@@ -28,7 +28,7 @@
 
 ## ADR-0006 · 2026-10-01 · 前端入口 self-frontend
 
-工作树顶层只留 `self-frontend` 的 description。前端任务先读这一份，再按其表读目录下的 `self-react` 或 `web-clone`。两份被收 skill 正文不改，整目录挪进 `self-frontend/`。入口文件必须叫 `BODY.md` 不能叫 `SKILL.md`：Cursor 递归扫描所有 `SKILL.md`，嵌套分类目录挡不住。点选走查走 `self-spyder`（其下 `playwright-cli`）。
+工作树顶层只留 `self-frontend` 的 description。前端任务先读这一份，再按其表读目录下的 `self-react` 或 `web-clone`。两份被收 skill 正文不改，整目录挪进 `self-frontend/`。入口文件必须叫 `BODY.md` 不能叫 `SKILL.md`：Cursor 递归扫描所有 `SKILL.md`，嵌套分类目录挡不住。点选走查走顶层 `playwright-cli`。
 
 备选是三份平铺，或把细则抄进入口。否掉是为了渐进披露：入口薄、细则仍在原文件。
 
@@ -77,3 +77,27 @@
 ## ADR-0014 · 2026-10-10 · skill 增删改查改名为 skill-crud
 
 工作树里个人 skill 的增删改查目录由 `self-skill-crud` 改为 `skill-crud`。职责与四份流程不变；`name`、校验脚本路径、清单、README、`.env.example` 与活指针同轮改完。否掉保留 `self-` 前缀：与 `session-bootstrap` / `session-tools` / `skill-analyse` 同族无前缀命名。
+
+## ADR-0015 · 2026-10-12 · playwright-cli 恢复顶层，退役 self-spyder
+
+撤销 ADR-0007 的入口分层：`playwright-cli` 整目录回到 `skills/playwright-cli/`，入口恢复 `SKILL.md`；薄入口 `self-spyder` 从工作树删除。浏览器自动化、快照、走查由 catalog 里 `playwright-cli` 的 description 直接触发，不再经二级入口。否掉继续 `self-spyder` + `BODY.md`：多一层只分流、无额外判据，占固定上下文且与 ADR-0009「路由靠 description」重复。
+
+## ADR-0016 · 2026-10-12 · self-python-testing 改名为 python-testing
+
+工作树里 Python 测试 skill 目录由 `self-python-testing` 改为 `python-testing`（去掉 `self-`）。职责与三步流程不变；`name`、清单与活指针同轮改完。否掉保留 `self-` 前缀：与 `python-standard-coding` / `session-bootstrap` / `skill-crud` 同族无前缀命名。
+
+## ADR-0017 · 2026-10-12 · self-project-docs 改名为 project-docs；正文不拿目录名当路由
+
+工作树里项目文档 skill 目录由 `self-project-docs` 改为 `project-docs`。`skill-crud` 补硬规矩：跨 skill 优先点产物，真要分工点名时整份 skill 最多一条邻域入口，禁止在 `references/` 里把目录名抄成第二张路由表。改名后清掉 session-tools / plain-todo / grill 等处的重复互点。否掉全仓搜替换旧名：那会把坏模式固化进改名流程。
+
+## ADR-0018 · 2026-10-12 · self-code-principles 改名为 code-principles
+
+工作树里代码设计默认原则的目录由 `self-code-principles` 改为 `code-principles`（去掉 `self-`）。13 条正文与作用不变；`name`、description 里的冲突指针、术语表那一行的计数（12 条 → 13 条）、清单与活指针同轮改完。否掉保留 `self-` 前缀：与 `python-testing` / `session-bootstrap` / `skill-crud` 同族无前缀命名。
+
+## ADR-0019 · 2026-10-12 · 退役 self-frontend 与 self-desktop-ui，材料落 backup/
+
+`self-frontend`（含其下 `self-react`、`web-clone`）与 `self-desktop-ui` 从工作树退役，整目录移进新建的 `backup/`。三端目录联接到 `skills/`，移出即三端同时不再列出这两份；`setup.ps1` 只连到 `skills/` 根、不枚举 skill，不改。退役原因：两份都要重构，重构版赶不上各自项目的公开计划；本轮先退出工作树，内容留 `backup/` 备用，重构版落地时再收回 `skills/`。
+
+落点选 `backup/` 而否掉 `preinstall/`：后者是上游第三方待审区，已 gitignore（`.gitignore`、README、`.env.example` 三处都写「不入仓」），自家 skill 退役要留在仓里可追溯；`SOURCES.md` 里 `backup/find-skills/` 是同形先例。也否掉 `git mv` 进 `preinstall/` 保留跟踪：那要把「不入仓」那三处说明改掉，把 preinstall 撑成两类落点。
+
+连带同轮改完：`CONTEXT.md` 删「前端入口」「桌面壳」两条术语；`skills-list.md` 删前端、桌面两个分组；`playwright-cli` 的 description 去掉「整站复刻/仿站走 self-frontend」；`DOC-MAP.md` 去掉「实现手法走前端入口 skill」；`code-principles` 的冲突指针只留 `python-standard-coding`；`skill-crud/references/mechanics.md` 的 `BODY.md` 先例改指 `backup/`；`SOURCES.md` 两条去向列改指 `backup/self-desktop-ui`。ADR-0006 / 0007 / 0010 是当时的决策记载，不动。

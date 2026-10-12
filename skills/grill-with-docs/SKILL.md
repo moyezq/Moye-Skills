@@ -5,7 +5,7 @@ description: >
   每轮一次问完并给推荐答案。新系统/多模块/对照实验台：第一轮先问边界、明确不做、
   目标模块、目录落点，不要第一闭环问完就停。用户要压力测试想法、对齐需求，
   或说拷问/盘问/先问清楚/对齐/边问边记时用。对齐过程按落点沉淀文档：
-  软件仓走 self-project-docs，知识库走 self-notes-read。分工：事实归 AI 查，决策归用户拍。
+  软件仓写 CONTEXT/adr/architecture 等，知识库走 笔记库。分工：事实归 AI 查，决策归用户拍。
   命令：/grill-with-docs —— 拷问式访谈，按轮次问清需求并沉淀文档
 ---
 
@@ -51,7 +51,7 @@ description: >
 
 单文件脚本、爬虫字段、已有项目的局部选型：不必走这一节，用上面的普通前沿即可。
 
-软件仓目标态落盘见 `self-project-docs` 的 `architecture.md`，目录怎么摆见 `python-standard-coding` 的 `references/project.md`。知识库文的目录落点是笔记路径，不建 `architecture.md`。
+软件仓目标架构写进 `docs/architecture.md`；目录怎么摆见 `python-standard-coding` 的 `references/project.md`。知识库文的目录落点是笔记路径，不建 `architecture.md`。
 
 ## 分工：事实归 AI，决策归用户
 
@@ -68,11 +68,11 @@ description: >
 
 ## 沉淀文档
 
-结晶了就写。按落点加载，不要把细则抄进本文件。
+结晶了就写。按产物落盘，写法细则由 catalog 对应 skill 够到，不要把细则抄进本文件。
 
-- 软件仓沉淀 CONTEXT、adr、architecture、README、AGENTS、最小视图：再加载 `self-project-docs`。
-- 笔记库 知识库文：再加载 `self-notes-read`；新建或改结构则接着读其 `references/writing.md`。
-- 两处都要沉淀时两份都加载。
+- 软件仓：写 `CONTEXT.md`、`docs/adr.md`、`docs/architecture.md`、`README.md`、`AGENTS.md`、最小视图。
+- 笔记库 知识库文：写库文档；新建或改结构时读写法框架。
+- 两处都要沉淀时两边都写。
 
 ## 结束条件
 

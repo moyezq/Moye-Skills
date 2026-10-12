@@ -23,7 +23,7 @@
 
 分类入口把细则收进自己目录时，被收的入口文件必须叫 `BODY.md`，**不能**叫 `SKILL.md`：DSH 只认扫描根顶层的 `<名>/SKILL.md`，嵌套的 `SKILL.md` 刻意不发现；Cursor 却会递归扫所有 `SKILL.md`，分类目录挡不住。
 
-先例：`self-frontend/self-react/BODY.md`、`self-frontend/web-clone/BODY.md`、`self-spyder/playwright-cli/BODY.md`。
+先例：`backup/self-frontend/self-react/BODY.md`、`backup/self-frontend/web-clone/BODY.md`。
 
 ## 共享参考放哪
 
