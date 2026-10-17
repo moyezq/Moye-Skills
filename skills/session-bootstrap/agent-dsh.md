@@ -90,3 +90,15 @@ git -C "<仓根>" -c credential.helper= -c $instead <fetch|pull --ff-only|push>
 - 按命令行模糊匹配杀进程会**连自己一起杀**：匹配串出现在你自己（或 pwsh）的命令行里时，先杀的就是自己（实测 exit 15、半轮探针白跑）。按 pid 精确杀；非要模糊匹配就把匹配串拼出来（`"dsh-probe-" + "marker"`），匹配时跳过自己与父进程的 pid。
 - 起服务（HTTP、向量、Vite）：起 → 验端口 → 测完立刻停，不常驻占端口。用户终端里已在跑的不要杀。
 - 杀进程前先认身份：`Get-Process` 看 `Path` 与 `StartTime`，`netstat -ano` 看监听端口的 PID，确认是自己的孤儿再杀。跨会话的进程在受限子进程里**可能列不出来**（实测别人会话起的 8030/8031 不在 `Get-Process` 里、在 `netstat -ano` 里）——列不出来时，监听端口的按 `netstat` 的 PID 判，别当成已退出。
+
+## 7. 浏览器操作
+
+要开网页、读页面、填表、走查界面、看请求与 console 输出，**优先用 `browser-skill` skill 带来的 `browser_*` 工具**：`browser_session` / `browser_page` / `browser_inspect` / `browser_interact` / `browser_tabs` / `browser_assist`。它们驱动用户已登录的 Chrome，任务跑在插件自己开的一个 Agent Window 里，用户看得见、能接管。
+
+1. 调 `skill` 加载 `browser-skill`——工具的 schema 这时才注入，没加载就调会报 `unknown tool "browser_session"`。
+2. `browser_session({action:"start"})` 拿 `sessionId`，后续每个调用都带 `session`；结束时必须 `browser_session({action:"stop", session:"<id>"})`。
+
+- ✅ 读用户已登录的页面、在真实站点上点一遍、看某次点击发了什么请求 → 加载 `browser-skill` 后走上面两步。
+- ❌ 起 `playwright-cli` 自己开一个 Chromium 去撞登录墙；❌ 用空白配置反复打开同一个站点。
+- 用法细则（会话与标签页、ref 失效后重观察、观察/快照/截图/调试的取舍、借用用户标签页、人工接管）以 `browser-skill` 正文与它按需加载的 `references/` 为准，本文件不复述。
+- 连不上时跑 `bsk doctor`：`extension connected` 一行就是浏览器连接状态。

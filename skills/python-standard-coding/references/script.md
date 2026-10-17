@@ -1,14 +1,76 @@
 # 单文件分阶段脚本
 
-命中「写脚本、stepN、入口文件头、`data/`、运行上限」时读本文。风格与怎么跑见 [SKILL.md](../SKILL.md)；抽函数通则见 [function.md](./function.md)；多文件目录见 [project.md](./project.md)。
+命中「写脚本、stepN、入口文件头、`data/`、运行上限」或「测一条 API / URL、cURL 转 requests、服务单接口」时读本文。风格与怎么跑见 [SKILL.md](../SKILL.md)；抽函数通则见 [function.md](./function.md)；多文件目录见 [project.md](./project.md)。
 
-完成标准：每一步处理一个 `stepN`；`__main__` 只编排、且在文件最末尾；参数硬编码；脚本自己带运行上限（默认 5 分钟，见「运行上限」）；输入在 `data/` 或 `data/source/`，产出在 `data/result/`，分步文件名与 `stepN` 同号。入口脚本模块 docstring 按「顶部注释」四层写（真·一步可压成开场 + 怎么跑）；原理编号与入口编号不混用。写分层文件头时对照本文末尾的完整范本。
+完成标准：一次请求脚本按「一次请求」核对（无 `main`、无 `if __name__`、url 紧挨着 `requests.get` / `requests.post`）；分阶段脚本每一步处理一个 `stepN`，`__main__` 只编排、且在文件最末尾；参数硬编码；脚本自己带运行上限（默认 5 分钟，见「运行上限」）；输入在 `data/` 或 `data/source/`，产出在 `data/result/`，分步文件名与 `stepN` 同号。入口脚本模块 docstring 按「顶部注释」四层写（真·一步可压成开场 + 怎么跑）；原理编号与入口编号不混用。写分层文件头时对照本文末尾的完整范本。
 
 ## 何时用
 
 **用**：目标已经说清（下哪本书、处理哪份 JSON、打哪条接口）；实现可以放进一个 `.py`；中间有真实的一步处理（请求 → 取字段 → 下一步）。写或改入口脚本的文件头模块注释（顶部 docstring）时也读：分阶段脚本，以及多文件项目 `scripts/` 里跑完就退出的入库、评测、探测。
 
+**用（一次请求）**：测一条 API / URL；把 cURL 转成 `requests`；给某个服务或系统写单接口探测。这一档只读「一次请求」，不切 `stepN`、不写 `main`。
+
 **不用**：FastAPI / 多文件服务的目录分层（见 [project.md](./project.md)）；纯工具函数集（没有「跑一遍」的流程）。真·一步脚本不切 `stepN`；只要写文件头，仍读下面「顶部注释」的压缩档。
+
+---
+
+## 一次请求
+
+测一条 API / URL、把 cURL 转成 `requests`、给某个服务写单接口探测：一个文件、一次请求、从上到下直跑。不切 `stepN`，不写 `main`，不写 `if __name__`。
+
+顺序固定：headers → cookies → body → `url` 紧挨着 `requests.get` / `requests.post` → 解析 → 落盘。
+
+变量名就用 `headers` / `cookies` / `body` / `url` / `response`。字典字面量：`{` 后换行，键缩进 4 空格，`}` 单独一行。没有 cookies 或 body 就整块不写。字典/列表当请求体用 `json=`，字符串用 `data=`。响应写到脚本同目录（或已有的 `data/result/`）一份 JSON，`indent=4`。
+
+```python
+# ✅
+import json
+from pathlib import Path
+
+import requests
+
+headers = {
+    "accept": "application/json",
+    "origin": "https://example.com"
+}
+
+cookies = {
+    "session": "abc"
+}
+
+body = {
+    "q": 1
+}
+
+url = "https://example.com/api/search"
+response = requests.post(url, headers=headers, cookies=cookies, json=body, timeout=30)
+
+try:
+    result = response.json()
+except ValueError:
+    result = response.text
+
+out = Path(__file__).resolve().parent / "step1_response.json"
+out.write_text(
+    json.dumps({"status_code": response.status_code, "body": result}, ensure_ascii=False, indent=4),
+    encoding="utf-8",
+)
+print(response.status_code, "->", out)
+```
+
+```python
+# ❌
+METHOD = "POST"
+URL = "https://example.com/api/search"
+HEADERS = {"accept": "application/json", "origin": "https://example.com"}
+
+def main() -> None:
+    kwargs = {"headers": HEADERS, "timeout": 30, "json": BODY}
+    response = requests.request(METHOD, URL, **kwargs)
+
+if __name__ == "__main__":
+    main()
+```
 
 ---
 
@@ -166,6 +228,8 @@
 
 ## 脚本入口
 
+一次请求脚本没有入口函数，直接从上到下跑，见「一次请求」。下面只管分阶段脚本。
+
 - 运行参数放文件顶部常量区或 `__main__` 第一行（不用 argparse，见 [SKILL.md](../SKILL.md) S12）。
 - `if __name__ == "__main__"` 只按阶段调用 `stepN_...`，不解析参数、不写业务细节。
 
@@ -201,7 +265,7 @@ if __name__ == "__main__":
 - **步骤内注释写清数据流**：哪个 URL、吃上一步哪个字段、吐给下一步什么。`#` 怎么写见 [SKILL.md](../SKILL.md) S4 / S5。
 - **日志前缀与函数同号**：`step2_...` 打印 `[阶段2]`，不要阶段号和函数号错位。
 
-协议还没摸清时，先写 **探测脚本**（一个文件打一个 URL），不要一上来写总控。落盘见下节。
+协议还没摸清时，先写一次请求脚本，不要一上来写总控。写法见「一次请求」。
 
 ## 脚本里什么算无效封装
 

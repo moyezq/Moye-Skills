@@ -23,7 +23,7 @@
    - 隐私配置：API Key、Token、填了密钥的别人家 `.env` 路径。不要写进 `config.yaml`，也不要在 yaml 里指向另一份带密钥的 `.env`。
 3. 项目的层/模块测试文件，统一放在根目录 `scripts` 中。跑完就退出的入库、评测、探测也放这里。这些入口脚本的文件头怎么写见 [script.md](./script.md)。
 4. 如果是单服务的项目，根目录启动文件统一使用 `main.py` 命名；如果是多服务项目，根目录放多个服务的启动文件，以 `服务名_server.py` 命名。启动文件只负责启动服务、写明 host 和 port、挂路由和生命周期。业务实现放在架构层或模块层目录里。不要用 `python 子目录/xxx.py` 启动服务。同一个进程不要在包内再留一份 `__main__`。
-5. 项目的设计文档、架构图、项目关键架构和技术决策（ADR）统一放在 `docs` 中（`docs/architecture.md`、`docs/adr.md` 等）。
+5. 项目的设计文档统一放在 `docs` 中：`docs/architecture.md`、`docs/adr.md`、`docs/history.md`、`docs/pipelines.md`。待办方向按需写 `docs/todo.md`，不要放仓根。架构图走最小视图，不写进 `architecture.md`。
 6. 没有前端时，不建 `frontend/` 和 `backend/`。架构层直接放在仓库根目录下，架构层下面再放模块。
 7. 只被一个模块使用的工具函数和 SDK，放在该模块目录里。被同一服务里多个架构层共用的，在该服务下建 `utils/`。纯 Python、没有服务文件夹、且被多个架构层共用时，才在仓库根建 `utils/`。
 8. 开始写代码之前，先确定模块清单和每个模块所在的目录。多模块项目把这份清单写进 `docs/architecture.md`。之后加模块，放进已经定好的目录，不要另起一套。
@@ -47,14 +47,15 @@
 
 ```plaintext
 README.md                  # 人读写法见邻域入口 README-FORMAT
-CONTEXT.md  DESIGN.md  TODO.md
+CONTEXT.md  DESIGN.md
 AGENTS.md                  # 给 AI 的项目规矩
 conf/
   base.py                  # ROOT 等要推算的值
   config.yaml              # 各环境相同的公共常量
 .env  .env_example
-docs/                      # 架构、ADR、术语（见第 5 条）
+docs/                      # 架构、ADR、术语、待办方向（见第 5 条）
   architecture.md
+  todo.md                  # 本阶段打算做的方向
 data/                      # 脚本与服务的输入产出（见 script.md）
   source/  result/  lancedb/
 offline/                   # 架构层：离线入库链

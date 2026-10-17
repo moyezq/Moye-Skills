@@ -89,7 +89,7 @@ _Avoid_: 废话指令（旧名）, 空操作, no-op
 _Avoid_: 抢跑（旧名）, 提前完成, premature completion
 
 **浏览器自动化**：
-工作树顶层的 `playwright-cli`。页面快照、UI 走查、Playwright CLI、录屏/tracing、请求 mock 直接读这一份。
+playwright-cli 自己启动 Chromium 就能点完的界面测试时读 `playwright-cli`。要接到已经在跑的浏览器、或依赖用户日常登录态取当前页时读 `web-crawler`。
 _Avoid_: 浏览器入口, self-spyder（已退役）
 
 **清单**：

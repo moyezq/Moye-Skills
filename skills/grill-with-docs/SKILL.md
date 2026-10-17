@@ -70,7 +70,7 @@ description: >
 
 结晶了就写。按产物落盘，写法细则由 catalog 对应 skill 够到，不要把细则抄进本文件。
 
-- 软件仓：写 `CONTEXT.md`、`docs/adr.md`、`docs/architecture.md`、`README.md`、`AGENTS.md`、最小视图。
+- 软件仓：写 `CONTEXT.md`、`docs/adr.md`、`docs/architecture.md`、`README.md`、`AGENTS.md`、最小视图。主流程实现细节写 `docs/pipelines.md`；过时但仍有用的决策写 `docs/history.md`。
 - 笔记库文：写库文档；新建或改结构时读写法框架。
 - 两处都要沉淀时两边都写。
 

@@ -4,6 +4,7 @@ description: >-
   Python 写法与落盘的中文规范：风格与怎么跑、类型标注、函数签名与重构、容器选择、
   大输入与性能、单文件脚本、多文件目录与 README。写或改 .py、写脚本、抽函数或拆文件、
   补类型标注、改返回值形状、重构一段代码、新建或整理 Python 仓目录时查阅。
+  测一条 API / URL、把 cURL 转成 requests、给某个服务写单接口探测时也查阅。
 ---
 
 # Python 写法与落盘
@@ -12,7 +13,7 @@ description: >-
 
 ## 何时用
 
-**用**：写或改 `.py`；第一次为任务跑 Python；新项目装依赖；写单文件脚本或入口文件头；改函数/类/FastAPI 路由或嫌拆太碎；补类型标注或改返回值形状；重构一段已有代码；新建/整理 Python 项目目录或写改根 README。
+**用**：写或改 `.py`；第一次为任务跑 Python；新项目装依赖；写单文件脚本或入口文件头；改函数/类/FastAPI 路由或嫌拆太碎；补类型标注或改返回值形状；重构一段已有代码；新建/整理 Python 项目目录或写改根 README；测一条 API / URL、把 cURL 转成 requests、给某个服务写单接口探测。
 
 **不用**：探测脚本（`env_detect.py` / `conda_envs.py`）不算为任务跑 Python。pytest 测试边界与用例见 `python-testing`。只改 ADR / architecture / 术语表、不动代码与目录树。前端页面、桌面壳、知识库笔记。
 
@@ -28,6 +29,7 @@ description: >-
 | 边界数据校验（pydantic / `dataclass` 的分工） | [references/function.md](./references/function.md) F9 |
 | 大文件、大结果集流式处理、比内存大的数组 | [references/perf.md](./references/perf.md)（P1、P4） |
 | 单文件脚本、stepN、入口文件头、`data/`、运行上限 | [references/script.md](./references/script.md) |
+| 测一条 API / URL、cURL 转 requests、服务单接口 | [references/script.md](./references/script.md)「一次请求」 |
 | 多文件目录、README、FastAPI、前后端同仓 | [references/project.md](./references/project.md) |
 
 完成标准：命中「按任务读哪一块」的每一块，该块要求都做到。
@@ -179,6 +181,7 @@ def _load() -> dict: ...
 ```
 
 - 分阶段脚本的 `stepN` 按执行序号从上到下排
+- 一次请求探测脚本（测一条 API / URL、cURL 转成的 `requests`、服务单接口）不写 `main`、不写 `if __name__`，见 [references/script.md](./references/script.md)「一次请求」
 
 ### S7 可单独试的模块，`__main__` 里留个最小调研例子
 
@@ -230,6 +233,7 @@ class usr_repo: ...
 
 - 模块常量放 import 之后、函数之前，名字全大写、单词之间下划线；不在函数体里定义常量
 - 同一个值只在这一个地方出现
+- 一次请求探测脚本的 `headers` / `cookies` / `body` / `url` 用小写，见 [references/script.md](./references/script.md)「一次请求」
 
 ```python
 # ✅ 正确

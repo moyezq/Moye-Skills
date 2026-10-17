@@ -1,10 +1,27 @@
 ---
 name: playwright-cli
-description: 用 playwright-cli 自动化浏览器交互、测网页、调试/生成 Playwright 测试。用户提到浏览器自动化、网页点击填表、页面快照、Playwright CLI、UI 走查、录屏/tracing、请求 mock、或要用 npx playwright test --debug=cli 时必须使用本 skill。
+description: >-
+  用 playwright-cli 自己启动 Chromium 做自动化测试：点击填表、页面快照、UI 走查、
+  录屏/tracing、请求 mock、生成 Playwright 测试。只有这条 CLI 新开的浏览器里
+  就能做完的任务才用。用户提到 Playwright CLI、npx playwright test --debug=cli、
+  对本仓走查、给测试录步骤时必须使用本 skill。需要接到已经在跑的浏览器、
+  或依赖用户日常登录态时不要用。
 allowed-tools: Bash(playwright-cli:*) Bash(npx:*) Bash(npm:*)
 ---
 
-# 用 playwright-cli 做浏览器自动化
+# 用 playwright-cli 驱动自己启动的 Chromium
+
+## 何时用 / 何时不用
+
+**用**：playwright-cli 自己 `open` 拉起 Chromium，在这个新开的浏览器里就能点完、填完、拍完。
+
+**不用**：要接到已经在跑的浏览器；或新开的空白 Chromium 做不完（缺用户日常登录态）。
+
+```text
+✅ playwright-cli open http://127.0.0.1:5173 然后点登录表单、对照快照
+❌ playwright-cli attach --cdp=chrome 接到用户已经开着的窗口
+❌ playwright-cli open 之后仍是登录墙或验证码、做不完 —— 停在这里，不要改去接管已开的浏览器
+```
 
 ## 快速开始
 

@@ -101,3 +101,27 @@
 落点选 `backup/` 而否掉 `preinstall/`：后者是上游第三方待审区，已 gitignore（`.gitignore`、README、`.env.example` 三处都写「不入仓」），自家 skill 退役要留在仓里可追溯；`SOURCES.md` 里 `backup/find-skills/` 是同形先例。也否掉 `git mv` 进 `preinstall/` 保留跟踪：那要把「不入仓」那三处说明改掉，把 preinstall 撑成两类落点。
 
 连带同轮改完：`CONTEXT.md` 删「前端入口」「桌面壳」两条术语；`skills-list.md` 删前端、桌面两个分组；`playwright-cli` 的 description 去掉「整站复刻/仿站走 self-frontend」；`DOC-MAP.md` 去掉「实现手法走前端入口 skill」；`code-principles` 的冲突指针只留 `python-standard-coding`；`skill-crud/references/mechanics.md` 的 `BODY.md` 先例改指 `backup/`；`SOURCES.md` 两条去向列改指 `backup/self-desktop-ui`。ADR-0006 / 0007 / 0010 是当时的决策记载，不动。
+
+## ADR-0020 · 2026-10-14 · web-crawler 装入 skills；playwright-cli 只做自动化测试
+
+`web-crawler` 从 `preinstall/` 迁入 `skills/`。取有登录墙、验证码、反爬站点的当前页，走用户本机 Chrome 的一条 CDP 连接。`playwright-cli` 的 description 收窄为对本仓库或公开演示页做自动化测试，不再作为「打开任意网站看看」的默认入口。否掉继续把两者叠在 `attach --cdp=chrome`：开关模式下这条命令和 `tab-list` 会挂死。
+
+## ADR-0021 · 2026-10-14 · playwright-cli 只覆盖自己启动的 Chromium
+
+`playwright-cli` 的用/不用从「本仓库或公开演示页」改成能力判据：只有这条 CLI 自己 `open` 拉起的 Chromium 里就能做完的任务才用。接到已经在跑的浏览器、或新开空白窗口做不完（缺用户日常登录态），都不走这份 skill。否掉继续用「本仓 / 公开演示页」当边界：本地登录表单在 CLI 自己的窗口里能填完，该用；公开站若要用户日常 Cookie，不该用。
+
+## ADR-0022 · 2026-10-14 · dsh 的浏览器入口改用插件注入的 browser_* 工具
+
+本机装了 `browser-skill-dsh-plugin`（0.3.2）与 `bsk` CLI（`%USERPROFILE%\.local\bin\bsk.exe`），扩展连在用户的 Chrome 上。dsh 的浏览器活（开网页、读页面、填表、走查界面、看请求与 console）优先走它注入的 `browser_*` 工具。
+
+决定性判据是**要不要麻烦用户**：`web-crawler` 的原生 CDP 五步走 Chrome 开关模式，按连接弹 Allow，用户在每一轮都得在场点一次（实测 2.9s / 9.9s 连得上，也有 25s / 90s 完全静默）；插件的扩展连接是一次性人工步骤，连上之后同一会话又起了 3 次会话、零弹窗。两条路都驱动用户已登录的 Chrome，插件这条路省掉逐次授权。`playwright-cli` 仍是可用的浏览器自动化工具，只是它新开的 Chromium 拿不到用户日常登录态，dsh 上不作首选。
+
+否掉在 dsh 上继续以 `web-crawler` 为默认入口：它的 CDP 五步已验证可行，保留给其它 harness，切换判据是授权成本而不是能力。
+
+落点选 `skills/session-bootstrap/agent-dsh.md` 新增 §7：会话开场第 7 步每轮必读，能盖过 catalog 里 `web-crawler` 的默认触发。`CONTEXT.md` 的「浏览器自动化」术语条不动——它说的是有哪些可用工具，dsh 的优先级由本条与 §7 承接；`playwright-cli` / `web-crawler` 正文也不改。
+
+## ADR-0023 · 2026-10-15 · Chrome 开关模式 Allow 按连接计，超时当没点
+
+日常 User Data 走 `chrome://inspect/#remote-debugging` 时，勾选会留下开关，弹窗 Allow 是**每条新进来的 WebSocket 点一次**，不是按时间过期。同一条连接一直开着不用再点；脚本断开再连就再弹。握手超过 60 秒的默认解释是用户没点到 Allow，不按程序或网络排障，也不重连。
+
+否掉给 agent 写「授权 N 小时」或超时自动重试：Chrome 136+ 在默认目录上会忽略 `--remote-debugging-port`，免弹只能换非默认用户数据目录，那不是本 skill 的默认路径。拦即将发出的请求必须复用已经打开的那一条连接（`references/chrome-network.md`），禁止每个子步骤各自握手。

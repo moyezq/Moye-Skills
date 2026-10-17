@@ -10,7 +10,7 @@ Markdown 为主 · 无运行时依赖 · 目录联接共用一份正文 · 个�
 
 ## 介绍
 
-Agent Skill 是给 AI 读的规范：命中任务时它被读进上下文，替掉每次重讲一遍的口头约定。本仓把这些规范按作用域拆成 12 份，每份只管一层——会话怎么开场、代码怎么写、文档落在哪、需求怎么问清。
+Agent Skill 是给 AI 读的规范：命中任务时它被读进上下文，替掉每次重讲一遍的口头约定。本仓把这些规范按作用域拆成 13 份，每份只管一层——会话怎么开场、代码怎么写、文档落在哪、需求怎么问清。
 
 三端共用靠**目录联接**，不是拷贝：`setup.ps1` 把 Cursor / dsh / Codex 各自的个人 skills 目录指向本仓 `skills/`，所以只有一份正文，改一处三端同时生效。
 
@@ -18,12 +18,13 @@ Agent Skill 是给 AI 读的规范：命中任务时它被读进上下文，替�
 |---|---|---|
 | `session-bootstrap` | 新对话开场七步：判当前 Agent、系统、skill 根目录、可用命令与 conda 环境，定这一轮的全局约束 | 每个会话都要重新交代工具与约定 |
 | `code-principles` | 13 条跨语言代码判断，写改代码时兜底 | 没有兜底原则，AI 按各自默认口味写 |
-| `python-standard-coding` | Python 写法与落盘：风格、类型、函数、容器、性能、脚本、多文件目录 | Python 风格与目录随对话漂 |
+| `python-standard-coding` | Python 写法与落盘：风格、类型、函数、容器、性能、脚本、一次请求探测、多文件目录 | Python 风格与目录随对话漂 |
 | `python-testing` | 先选定测试边界，再写进 spec，最后按一条用户路径写 pytest | 测试写了也不知道该测哪一层 |
 | `project-docs` | 项目文档：术语表、ADR、人读 README、文档地图、最小视图 | 术语和决策没有落点，反复问同一件事 |
 | `grill-with-docs` | 拷问式访谈：按轮次只问当前前沿能答的，边问边沉淀文档 | 需求没对齐就开写，返工 |
 | `plain-todo` | 用白话把一项待办讲清再执行 | 待办含糊，动手后才发现没想清 |
-| `playwright-cli` | 浏览器自动化：点击填表、页面快照、UI 走查、录屏/tracing、请求 mock、生成测试 | 界面验收只能靠人截图描述 |
+| `playwright-cli` | 自己启动 Chromium 做自动化测试：点击填表、快照、走查、生成 Playwright 测试 | 本仓界面验收只能靠人截图描述 |
+| `web-crawler` | 取当前页：先判匿名能不能进，再列已有会话；登录墙/反爬站接用户已登录 Chrome | 会用空白浏览器反复撞登录墙，或把内置浏览器当成用户登录态 |
 | `skill-crud` | 个人 skill 的增删改查（建 / 改 / 删 / 找）与 skill 文本规范 | 改 skill 容易破坏单一事实源、漏改连带文件 |
 | `skill-analyse` | 把上游或本地的 skill 拆成 analyse 分析报告 | 想收编别人的 skill 时得自己啃源码 |
 | `session-tools` | 本轮会话自检、写交接文档、抽可迁移面试题 | 长会话丢了上下文，只能从头重讲 |
@@ -67,7 +68,8 @@ powershell -ExecutionPolicy Bypass -File .\setup.ps1
 
 1. 新开会话，第一句话说任意内容 —— `session-bootstrap` 先做开场，报出当前 Agent、系统与工作目录。
 2. 说「先问清楚再动手」—— `grill-with-docs` 按轮次提问，每轮只问当前前沿能答的。
-3. 说「用浏览器把这一步点一遍」—— `playwright-cli` 驱动浏览器并留下快照。
+3. 说「用浏览器把这一步点一遍」（CLI 自己开 Chromium 就能做完）—— `playwright-cli` 驱动测试浏览器并留下快照。
+4. 说「看看这个已登录页上有什么」—— `web-crawler` 接到用户 Chrome，不新开空白配置。
 
 触发全靠各 skill 的 `description`：命中就读，没命中就直接点它的名字。
 
@@ -95,7 +97,7 @@ Moye-Skills/
 ├── README.md          # 你正在读的这份
 ├── setup.ps1          # 把三端个人 skills 目录联接到本仓 skills/
 ├── .env.example       # 本机配置模板，复制成 .env 再填
-├── skills/            # 工作树：12 份 skill 的正文，三端共用
+├── skills/            # 工作树：13 份 skill 的正文，三端共用
 ├── skills-list.md     # 薄索引：一行一个 skill
 ├── CONTEXT.md         # 术语表：本系统特有叫法的规范名称
 ├── docs/              # 内部说明，日常使用不必读

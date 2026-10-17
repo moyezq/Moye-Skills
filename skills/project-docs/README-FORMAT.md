@@ -13,7 +13,7 @@ Python 仓目录怎么摆见主文件邻域入口；**人读 README 的结构与
 README 给**人**上手跑项目。`docs/`、`CONTEXT.md`、`AGENTS.md`、ADR 给协作与自动化——不在 README 里当导航表罗列。
 
 ✅ 目录树末行：`docs/  # 内部说明，日常使用不必读`  
-❌ 开篇「设计原型」下列一串 architecture / adr / RUNBOOK / EXTENDING 链接
+❌ 开篇「设计原型」下列一串 architecture / adr / 运行手册 / 扩展手册 链接
 
 ---
 
@@ -52,7 +52,7 @@ README 给**人**上手跑项目。`docs/`、`CONTEXT.md`、`AGENTS.md`、ADR �
 开关矩阵、入口 URL、关键环境变量名、最小 `curl`/命令示例写进 README。
 
 ✅ 文内表格写清「看图要 `ocr` 且 `llm`」并给一条 `curl`  
-❌ 「字段见 docs/API.md」「验收见 docs/RUNBOOK.md」代替正文
+❌ 「字段见接口手册」「验收见运行手册」代替正文
 
 ### 扩展：写清「缺了缺什么」
 
