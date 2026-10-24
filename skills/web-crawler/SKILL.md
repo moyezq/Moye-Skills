@@ -41,6 +41,7 @@ description: >-
 |------|--------|
 | 用户本机 Chrome / Edge：列标签并取当前页 | [references/chrome-tabs.md](references/chrome-tabs.md) |
 | 用户本机 Chrome：同一条连接拦请求 | [references/chrome-network.md](references/chrome-network.md) |
+| 取数脚本：写不写、留不留 | [references/probe-scripts.md](references/probe-scripts.md) |
 
 完成标准：命中上表时已经读完对应文件再动手。
 

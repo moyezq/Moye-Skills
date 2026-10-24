@@ -48,6 +48,10 @@ _Avoid_: 两拍, 开场探测, 可用性探测
 以环境卡当天命令清单为准、允许在 Shell 里调用的第三方命令集合。开场正文也称「系统命令白名单」。
 _Avoid_: 白名单（当用来单指这份清单时）, PATH, 可用命令列表, 两拍结果
 
+**产物落地**：
+探测脚本、抓包转储、会话副本、日志的固定去处 `$env:TEMP`（dsh 给本会话建的可写临时目录，随会话回收）：结论先进项目 `docs/`，再删源文件；同一形状用到第二次才留下。不是工作区里的 `.playwright-cli/`，也不是产品数据目录下的 `scripts/`。
+_Avoid_: 临时目录, 归档目录, 清理任务
+
 **self-***：
 个人编写、经工作树共用的 skill。与 Cursor 产品 skill（`skills-cursor`）相对。仅一端会读的 skill 仍算 self-*，何时 Read 由各自的 description 定。目录名不必带 `self-` 前缀（如 `session-bootstrap`、`skill-crud`）。
 _Avoid_: 自定义 skill, 个人规范

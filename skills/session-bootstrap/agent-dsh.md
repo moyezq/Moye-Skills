@@ -102,3 +102,19 @@ git -C "<仓根>" -c credential.helper= -c $instead <fetch|pull --ff-only|push>
 - ❌ 起 `playwright-cli` 自己开一个 Chromium 去撞登录墙；❌ 用空白配置反复打开同一个站点。
 - 用法细则（会话与标签页、ref 失效后重观察、观察/快照/截图/调试的取舍、借用用户标签页、人工接管）以 `browser-skill` 正文与它按需加载的 `references/` 为准，本文件不复述。
 - 连不上时跑 `bsk doctor`：`extension connected` 一行就是浏览器连接状态。
+
+## 8. 外网取数
+
+先分是哪个出口被拦：`web_fetch` 走宿主侧，`pwsh` 里的 `curl` / `Invoke-WebRequest` 走本会话 shell 的出口。按报错选路：
+
+- `curl: (35) schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E)`：本会话 shell 出网被禁。换参数、换 `Invoke-WebRequest` 都不通（2026-10-15 实测 39 个文件逐个失败），直接改用 `web_fetch`。
+- 直连外站超时（本机 github 如此）：shell 能出网时加本机代理 `curl.exe -x http://127.0.0.1:7897 -L -o <文件> <url>`（2026-10-24 实测 200）。
+- `web_fetch` 只把正文交回上下文、不落盘；要文件就自己写，落点按 §9。
+
+## 9. 一次性产物
+
+探测脚本、抓包转储、会话副本、日志落 `$env:TEMP`——dsh 给本会话建的 `dsh-*` 临时目录，工作区外唯一可写的位置，随会话回收；工作区与产品自己的数据目录（`<dataDir>/scripts/`、`<repo>/flows/`）不放。
+
+- 结论先写进该项目的 `docs/`（或 skill 的 `references/`），再删源文件；同一形状用到第二次才留下。
+- 留下时带「用途 / 用法 / 依赖 / 输出位置」四行头部，并原样跑一次；搬过家、改过名再跑一次，跑不动就改到能跑或删掉。
+- `playwright-cli` 的 console 日志与 `page-*.yml` 默认落 cwd 的 `.playwright-cli/` 且默认无上限（实测单个 console 日志 62 MB）。在 `open` 那条命令里一并设 `$env:PLAYWRIGHT_MCP_OUTPUT_DIR = "$env:TEMP\playwright-cli"`（`open` 不认 `--output-dir`）；`~/.playwright/cli.config.json` 的 `outputMaxSize` 是兜底淘汰，32 MB、最旧的先删。
