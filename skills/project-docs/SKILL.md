@@ -104,7 +104,7 @@ description: 项目文档。管仓库里 CONTEXT、adr.md、history.md、archite
 
 ### 目标架构先行
 
-多入口 / 多模块 / 对照实验环境：动手写代码之前先有 `architecture.md` 的核心功能、核心模块、暂时或明确不做。多个系统组合**分开**写架构，除非写的是系统之间怎么通信。第一条可跑通路径不是设计终点。目录怎么摆见 Python 仓结构规范（邻域入口：`python-standard-coding` → `references/project.md`）。有 UI 文档时，改界面先读 `DESIGN.md`。
+多入口 / 多模块 / 对照实验环境：动手写代码之前先有 `architecture.md` 的核心功能、核心模块、暂时或明确不做。多个系统组合**分开**写架构，除非写的是系统之间怎么通信。第一条可跑通路径不是设计终点。目录怎么摆见 Python 仓结构规范（邻域入口：`python-standard-coding` → `references/prd-fastapi.md`）。有 UI 文档时，改界面先读 `DESIGN.md`。
 
 ### 最小视图
 

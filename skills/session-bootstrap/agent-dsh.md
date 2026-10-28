@@ -33,10 +33,13 @@
 - 非交互 shell 里 stdin 类提问**立刻 `EOFError`**（实测 `input()` 0.1s），不用为它设防；读控制台的凭据提示是另一回事，见 §4。
 - 起带空格参数的外部命令**别用 `Start-Process -ArgumentList`**（它按空格切开）：`-c 'import conf; print(1)'` 到了解释器只剩 `import`，报 `SyntaxError` 却看着像跑过了（实测 9 条探针全是假 ok）——直接 `& <解释器> -c "…"`，或把代码落成 `.py` 再跑。
 - 量"有没有卡住"用 `$p.WaitForExit(<毫秒>)`（返回 bool）再看 `$p.ExitCode`；`Wait-Process -Timeout` 出错会静默返回、`$p.HasExited` 仍是 `$false`，把刚起 0.1s 的进程误报成 HUNG（实测 6 条假 HUNG）。
+- **装依赖先问**：`pip install` / `uv pip install` 装 GB 级依赖（`torch`、CUDA 运行时、解包后 1GB+ 的任何包）之前必须问用户。先看本机已有环境能不能复用（`nvidia-smi` 有卡、`$env:Path` 里已有解释器就先查它），**不要默认装 CPU 版**——装了 CPU 版，后面所有耗时测量和"跑不跑得动"的判断全部作废（2026-10-25：有 3060 却装了 2.94GB CPU torch，模型被逼到 CPU 上 5s/次，这组延迟数字不能代表 GPU）。
 
 ## 4. Git 操作
 
 **本地**：`status` / `log` / `diff` / `add` / `commit` 照跑。
+
+**克隆**：`git clone` 到 **5 分钟没有字节落地**就停，不试第二次。本机 github 直连不通是已知的（见 §8）——先按 §8 挂代理，或直接取 tarball（`https://codeload.github.com/<owner>/<repo>/tar.gz/refs/heads/<branch>`，比 clone 快且可断点续取），或请用户给。**不要 clone 失败后换 tarball、又换镜像连试**：每换一次都是几分钟，换之前先把"要什么、为什么要"说清。
 
 **远端**：`<仓根>` 指**仓库根**（`.git` 与 `.env` 都在那一层，不是 `skills/`）。默认走下面这条 PAT 形式：`-c credential.helper=` 去掉凭据助手，`-c $instead` 把 SSH 地址改写成 HTTPS。凭据助手或交互口令一介入就可能**挂死到超时**，所以不重试、不等待。（2026-10-08 复查：本机 SSH 免密可通时 `ls-remote` 5.9 秒就返回，「必挂死」不成立；按这条形式走仍然是对的。）`$pat` 读自 `<仓根>/.env` 的 `GITHUB_PAT`（不打印、不外传）：
 
@@ -90,6 +93,7 @@ git -C "<仓根>" -c credential.helper= -c $instead <fetch|pull --ff-only|push>
 - 按命令行模糊匹配杀进程会**连自己一起杀**：匹配串出现在你自己（或 pwsh）的命令行里时，先杀的就是自己（实测 exit 15、半轮探针白跑）。按 pid 精确杀；非要模糊匹配就把匹配串拼出来（`"dsh-probe-" + "marker"`），匹配时跳过自己与父进程的 pid。
 - 起服务（HTTP、向量、Vite）：起 → 验端口 → 测完立刻停，不常驻占端口。用户终端里已在跑的不要杀。
 - 杀进程前先认身份：`Get-Process` 看 `Path` 与 `StartTime`，`netstat -ano` 看监听端口的 PID，确认是自己的孤儿再杀。跨会话的进程在受限子进程里**可能列不出来**（实测别人会话起的 8030/8031 不在 `Get-Process` 里、在 `netstat -ano` 里）——列不出来时，监听端口的按 `netstat` 的 PID 判，别当成已退出。
+- **卡住的上限是分钟，不是"再试一次"**：一个活超过 **10 分钟**没有进展就停手汇报（卡在哪、还差什么、需要用户做什么），不写第二版下载器、不加第二层重试、不换协议再试。2026-10-25 为下 1.7GB 权重手写了三版并行下载器（无重试 → 大小校验误判"已完成" → 全量重下），白耗约 25 分钟。下载权重与大文件默认不做，见 §10。
 
 ## 7. 浏览器操作
 
@@ -105,11 +109,11 @@ git -C "<仓根>" -c credential.helper= -c $instead <fetch|pull --ff-only|push>
 
 ## 8. 外网取数
 
-先分是哪个出口被拦：`web_fetch` 走宿主侧，`pwsh` 里的 `curl` / `Invoke-WebRequest` 走本会话 shell 的出口。按报错选路：
-
-- `curl: (35) schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E)`：本会话 shell 出网被禁。换参数、换 `Invoke-WebRequest` 都不通（2026-10-15 实测 39 个文件逐个失败），直接改用 `web_fetch`。
-- 直连外站超时（本机 github 如此）：shell 能出网时加本机代理 `curl.exe -x http://127.0.0.1:7897 -L -o <文件> <url>`（2026-10-24 实测 200）。
-- `web_fetch` 只把正文交回上下文、不落盘；要文件就自己写，落点按 §9。
+- 要网页正文用 `read_page`；`web_fetch` 只当备份——本机打到 github / huggingface 一律 `fetch failed`。
+- 找来源用 `web_search`，拿到 URL 再 `read_page` 取正文；社区讨论用 `x_search`。
+- 私网、要登录态、要点按钮的页面走 §7 的 browser-skill，不拿 `read_page` 撞登录墙。
+- shell 出网被禁（`SEC_E_NO_CREDENTIALS`）就别换 `Invoke-WebRequest` 再试一遍；能出网时 github 走 `curl.exe -x http://127.0.0.1:7897 -L -o <文件> <url>`。
+- 取回的正文只进上下文、不落盘；要文件自己写，落点按 §9。
 
 ## 9. 一次性产物
 
@@ -118,3 +122,13 @@ git -C "<仓根>" -c credential.helper= -c $instead <fetch|pull --ff-only|push>
 - 结论先写进该项目的 `docs/`（或 skill 的 `references/`），再删源文件；同一形状用到第二次才留下。
 - 留下时带「用途 / 用法 / 依赖 / 输出位置」四行头部，并原样跑一次；搬过家、改过名再跑一次，跑不动就改到能跑或删掉。
 - `playwright-cli` 的 console 日志与 `page-*.yml` 默认落 cwd 的 `.playwright-cli/` 且默认无上限（实测单个 console 日志 62 MB）。在 `open` 那条命令里一并设 `$env:PLAYWRIGHT_MCP_OUTPUT_DIR = "$env:TEMP\playwright-cli"`（`open` 不认 `--output-dir`）；`~/.playwright/cli.config.json` 的 `outputMaxSize` 是兜底淘汰，32 MB、最旧的先删。
+
+## 10. 外部模型、权重与重依赖
+
+要在本机验证一个外部模型，**先给方案，再问一句，等用户点头**。方案只给四样东西（此时不动手）：官方部署文档链接、权重在哪个仓库、是哪几个文件（名字与大小）、下载命令、最小验证请求（一条 `curl` 或几行 python）。用户说可以，才下权重。
+
+- **权重不自己下**：沙箱里下载既慢又不可靠（单连接 0.6MB/s、CDN 会 `SSL EOF` / `IncompleteRead` 断流、`huggingface_hub` 的符号链接探测会因 `0o700`/chmod 被拒直接崩）。下不下、下到哪、用哪个量化版本，由用户定。
+- **重依赖不自己装**：`torch` 这类按 §3 先问；别默认 CPU 版，别为一次验证再建第二个完整环境（实测一个 CPU venv 3.3GB、HF 缓存里同一份权重被存两份 3.3GB）。
+- **先跑通最小闭环**：假端点 / `--self-test` / mock 先把请求、解析、统计跑通，再碰真实权重；环境问题堆着的时候不继续拉数据。
+- **结论落 `docs/`**（选型、实测数、为什么否），**探针脚本留 `scripts/`**（不带权重也能复跑 `--self-test`）；权重不进仓、不进工作区。
+- 判"这个尺寸值不值"时，延迟要在目标硬件上量；由 CPU 兜底量出来的延迟不能拿来否掉整条技术路线。

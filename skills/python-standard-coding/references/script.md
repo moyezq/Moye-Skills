@@ -1,93 +1,43 @@
-# 单文件分阶段脚本
+# 单文件脚本
 
-命中「写脚本、stepN、入口文件头、`data/`、运行上限」或「测一条 API / URL、cURL 转 requests、服务单接口」时读本文。风格与怎么跑见 [SKILL.md](../SKILL.md)；抽函数通则见 [function.md](./function.md)；多文件目录见 [project.md](./project.md)。
+一个 `.py` 跑完就退出：文件头怎么写、入口怎么排、产出放哪、上限怎么设。只有一次请求、或中间分几步，是它的两种形态，见文末两个特例。
 
-完成标准：一次请求脚本按「一次请求」核对（无 `main`、无 `if __name__`、url 紧挨着 `requests.get` / `requests.post`）；分阶段脚本每一步处理一个 `stepN`，`__main__` 只编排、且在文件最末尾；参数硬编码；脚本自己带运行上限（默认 5 分钟，见「运行上限」）；输入在 `data/` 或 `data/source/`，产出在 `data/result/`，分步文件名与 `stepN` 同号。入口脚本模块 docstring 按「顶部注释」四层写（真·一步可压成开场 + 怎么跑）；原理编号与入口编号不混用。写分层文件头时对照本文末尾的完整范本。
+命中「写脚本、入口文件头、运行参数、`data/`、运行上限」「测一条 API / URL、cURL 转 requests、服务单接口」「分阶段脚本」时读本文。代码写法见 [SKILL.md](../SKILL.md)；抽函数通则见 [function.md](./function.md)；多文件目录见 [project.md](./project.md)。
+
+## 目录
+
+通用规范（顶部注释 · 脚本入口 · `__main__` 自测 · 文件名 · 运行上限 · `data/` 输入产出 · 编号 · 日志 · 批处理 · 无效封装）· 特例一：一次请求 · 特例二：分阶段脚本
+
+完成标准：入口脚本模块 docstring 按「顶部注释」四层写；`__main__` 只编排、且在文件最末尾；步骤顺序用带序号的注释标出，函数名不带 `step` 前缀；运行参数硬编码在顶部常量；脚本自己带运行上限（默认 5 分钟）；输入在 `data/` 或 `data/source/`，产出在 `data/result/`，分步文件名 `step<N>_…` 与注释里的步号同号；一次请求脚本无 `main`、无 `if __name__`、url 紧挨着 `requests.get` / `requests.post`。
 
 ## 何时用
 
-**用**：目标已经说清（下哪本书、处理哪份 JSON、打哪条接口）；实现可以放进一个 `.py`；中间有真实的一步处理（请求 → 取字段 → 下一步）。写或改入口脚本的文件头模块注释（顶部 docstring）时也读：分阶段脚本，以及多文件项目 `scripts/` 里跑完就退出的入库、评测、探测。
+**用**：目标已经说清（下哪本书、处理哪份 JSON、打哪条接口）；实现可以放进一个 `.py`，跑完就退出。写或改入口脚本的文件头模块注释（顶部 docstring）时也读；多文件项目 `scripts/` 里跑完就退出的入库、评测、探测也是这套写法。
 
-**用（一次请求）**：测一条 API / URL；把 cURL 转成 `requests`；给某个服务或系统写单接口探测。这一档只读「一次请求」，不切 `stepN`、不写 `main`。
+**用（一次请求）**：测一条 API / URL；把 cURL 转成 `requests`；给某个服务或系统写单接口探测。读文末「特例一」，不写 `main`。
 
-**不用**：FastAPI / 多文件服务的目录分层（见 [project.md](./project.md)）；纯工具函数集（没有「跑一遍」的流程）。真·一步脚本不切 `stepN`；只要写文件头，仍读下面「顶部注释」的压缩档。
+**用（分阶段）**：中间有真实的一步处理（请求 → 取字段 → 下一步）。读文末「特例二」。
 
----
-
-## 一次请求
-
-测一条 API / URL、把 cURL 转成 `requests`、给某个服务写单接口探测：一个文件、一次请求、从上到下直跑。不切 `stepN`，不写 `main`，不写 `if __name__`。
-
-顺序固定：headers → cookies → body → `url` 紧挨着 `requests.get` / `requests.post` → 解析 → 落盘。
-
-变量名就用 `headers` / `cookies` / `body` / `url` / `response`。字典字面量：`{` 后换行，键缩进 4 空格，`}` 单独一行。没有 cookies 或 body 就整块不写。字典/列表当请求体用 `json=`，字符串用 `data=`。响应写到脚本同目录（或已有的 `data/result/`）一份 JSON，`indent=4`。
-
-```python
-# ✅
-import json
-from pathlib import Path
-
-import requests
-
-headers = {
-    "accept": "application/json",
-    "origin": "https://example.com"
-}
-
-cookies = {
-    "session": "abc"
-}
-
-body = {
-    "q": 1
-}
-
-url = "https://example.com/api/search"
-response = requests.post(url, headers=headers, cookies=cookies, json=body, timeout=30)
-
-try:
-    result = response.json()
-except ValueError:
-    result = response.text
-
-out = Path(__file__).resolve().parent / "step1_response.json"
-out.write_text(
-    json.dumps({"status_code": response.status_code, "body": result}, ensure_ascii=False, indent=4),
-    encoding="utf-8",
-)
-print(response.status_code, "->", out)
-```
-
-```python
-# ❌
-METHOD = "POST"
-URL = "https://example.com/api/search"
-HEADERS = {"accept": "application/json", "origin": "https://example.com"}
-
-def main() -> None:
-    kwargs = {"headers": HEADERS, "timeout": 30, "json": BODY}
-    response = requests.request(METHOD, URL, **kwargs)
-
-if __name__ == "__main__":
-    main()
-```
+**不用**：生产服务的目录分层与接口写法见 [prd-fastapi.md](./prd-fastapi.md)；调研用的最小服务见 [service.md](./service.md)；纯工具函数集（没有「跑一遍」的流程）。
 
 ---
 
-## 顶部注释
+## 通用规范
+
+### 顶部注释
 
 文件开头的模块 docstring（`"""..."""`）是这份脚本的说明书。打开文件先读它，就能知道：干什么、顺着哪条链路、停在哪、拿什么当例子、从哪几个函数跑起来。
 
 函数内部的 docstring、行内 `#`、怎么跑那几项字段名见 [SKILL.md](../SKILL.md)「全局规范」。本节只管文件头怎么分层。
 
-### 读完文件头要能答的四件事
+#### 读完文件头要能答的四件事
 
 1. 这一份脚本干什么、明确不干什么。
 2. 一条样本在系统里逐步发生什么；本脚本走到哪一步结束。
 3. 用本文件会跑的输入，能看出「过 / 没过 / 过了但不够好」。
 4. 从哪几个函数进、吃什么、要先起什么、吐什么。
 
-### 四层，从上到下
+#### 四层，从上到下
 
 缺一层就补。真·一步脚本把第 2、3 层压掉，只留开场和怎么跑。
 
@@ -115,7 +65,7 @@ if __name__ == "__main__":
 
 这里的步骤编号是「打开这个文件从哪进」，和原理里「一条样本走的步」不是同一套。两套都从 1 数时，标题里写明「不是同一套」。入口步骤用一句话把函数名映射回原理编号（这个函数把原理第几到第几步跑完再判）。
 
-### 骨架
+#### 骨架
 
 按这个顺序写，不要把例子插到开场前面，也不要把怎么跑揉进原理。
 
@@ -145,7 +95,7 @@ if __name__ == "__main__":
 """
 ```
 
-### 完整范本
+#### 完整范本
 
 下面是一份抽出来的完整四层 docstring。对照层次怎么叠、两套编号怎么分开。范本里的指标名、样本问句、一次实测名次只服务这份例子，不要抄进正在写的脚本。
 
@@ -214,40 +164,52 @@ if __name__ == "__main__":
         不是评测台，不生成。
   入口步骤：
     1. open_knowledge_base — 读 data/lancedb，整个脚本只做一次。
-    2. step2_check_samples — 逐条：改写 → 召回约 20 条 → 精排截 5 条 → 同节邻块
+    2. check_samples — 逐条：改写 → 召回约 20 条 → 精排截 5 条 → 同节邻块
        （对应原理正样本 1～4），再按 expect 判 Hit@k 或拒答（原理 5～6）。
   输入：下面常量 SAMPLES。hit 要 source、pages；refuse 只要 expect。
   前置：已入库；embed_server.py 已起。改写开时要 DEEPSEEK_API_KEY。
   产出：控制台汇总；召回调试仍写 data/result/qa/step2_hits.json（只留最后一条）。
-  对外：_hit_at（来源+页是否算对）、step2_check_samples。
+  对外：_hit_at（来源+页是否算对）、check_samples。
 """
 
 ```
 
----
+### 脚本入口
 
-## 脚本入口
-
-一次请求脚本没有入口函数，直接从上到下跑，见「一次请求」。下面只管分阶段脚本。
-
-- 运行参数放文件顶部常量区或 `__main__` 第一行（不用 argparse，见 [SKILL.md](../SKILL.md) S12）。
-- `if __name__ == "__main__"` 只按阶段调用 `stepN_...`，不解析参数、不写业务细节。
+- 运行参数写成文件顶部常量，临时调整写在 `__main__` 第一行；不用 `argparse`、`sys.argv`、`click`。参数来自外部、要被别人长期调用的程序才做命令行参数。
+- `if __name__ == "__main__"` 只按顺序编排步骤，不解析参数、不写业务细节；`__main__` 放文件最末尾。
 
 ```python
-if __name__ == "__main__":
-    COMIC_NAME = "书名"
-    # 阶段0：network2 → api_host
-    api_host = step0_resolve_api_host()
-    # 阶段1：搜索 → path_word
-    hit = step1_search_comic(api_host, COMIC_NAME)
-    # 阶段2：comic2 → 简介、默认分组话数
-    results = step2_fetch_comic_detail(api_host, hit["path_word"])
+# ❌ 错误 —— 参数走 argparse
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--comic", required=True)
+parser.add_argument("--limit", type=int, default=10)
+args = parser.parse_args()
+COMIC_NAME, LIMIT = args.comic, args.limit
 ```
 
-- 每阶段一行注释（做什么、产出路径）+ 一行调用。不要再包一层 `run()` / `fetch_all()` 把步骤藏进去。
-- 步骤函数就写在本文件，按 `step0`、`step1`… 排。不要为了对齐「逻辑必须在 utils」而拆文件。
+### `__main__` 也当自测开关
 
-## 运行上限
+可单独试的模块，`__main__` 里留个最小调研例子：硬编码最少参数，打一次调用并打印结果。完整业务流程留给入口脚本或服务启动文件。
+
+```python
+# ✅ 正确
+if __name__ == "__main__":
+    print(parse_record({"id": 1, "text": "测试文本"}))
+
+# ❌ 错误
+if __name__ == "__main__":
+    for row in db.query("select * from orders"):
+        process(row)
+```
+
+### 文件名
+
+探针、临时工具脚本的文件名加业务前缀：`<前缀>_probe_<用途>.py`、`<前缀>_tool_<用途>.py`。不占标准库的模块名（`inspect.py`、`typing.py`、`json.py` 这类不用）。
+
+### 运行上限
 
 一次运行默认最多 **5 分钟**：预估更久，先报给用户或主进程「预计 X 分钟」，得到同意再改上限常量。
 
@@ -256,28 +218,7 @@ if __name__ == "__main__":
 - 拉起的子进程要自己收：父进程到点自杀**不带走**子进程，杀掉直接子进程也**不带走**孙进程（都实测过）——`subprocess.run(..., timeout=N)` 只管一层，所以每个 spawn 点都要带上限；主动收用 `Popen.kill()` / `psutil`，`taskkill` 在受限沙箱里会被拒（实测 `ERROR: Access denied`）。
 - 本机实测超过 5 分钟的：整库入库约 13 分钟；跑真模型的评测同理。这类先问再跑。
 
-## 按真实的一步处理切 `stepN`
-
-不要按「感觉上的函数粒度」切。一步处理 = 一次请求或一次明确的数据变换，加上取字段、打印、本步产出。
-
-- **一步一个 `stepN_xxx`**：一个 def 做完这一步。函数在文件里按 0、1、2… 顺序排。
-- **步骤内按执行顺序写**：先请求、再取字段、再打印/落盘。读一个 step 就能看懂这一步。
-- **步骤内注释写清数据流**：哪个 URL、吃上一步哪个字段、吐给下一步什么。`#` 怎么写见 [SKILL.md](../SKILL.md) S4 / S5。
-- **日志前缀与函数同号**：`step2_...` 打印 `[阶段2]`，不要阶段号和函数号错位。
-
-协议还没摸清时，先写一次请求脚本，不要一上来写总控。写法见「一次请求」。
-
-## 脚本里什么算无效封装
-
-抽函数的一般规则见 [function.md](./function.md)（空壳函数）。脚本里另外这几条会把流程写难看懂：
-
-- 把同一步拆成 `fetch_x` + `download_one_x` + `download_selected_x`，主流程要跳三次才能看完
-- `max_workers=1` 的线程池包一层 for 循环
-- 同一步骤里若线程池需要 callable，用 **步骤内嵌套 def**，不要提升成模块级工具
-
-可以留：被 **两个以上步骤** 真正调用、且规则固定的协议细节（共用 HMAC GET、设备指纹、统一的 HTTP 非 200 报错）。
-
-## data/ 输入与产出
+### data/ 输入与产出
 
 这一节是脚本级输入输出的**单一事实源**。多文件项目不套本节的 `data/source` / `data/result` 分法。
 
@@ -291,25 +232,135 @@ if __name__ == "__main__":
 **产出**
 
 - 一律写 `data/result/`。
-- 分阶段脚本每步若落盘：文件名 `stepN_<含义>.<ext>`，`N` 与函数 `stepN_...` 同号，print 写出的路径。
+- 分阶段脚本每步若落盘：文件名 `step<N>_<含义>.<ext>`，`N` 与 `__main__` 注释里的步号同号，print 写出的路径。
 - 一步脚本只有一份结果：`data/result/<含义>.<ext>`。
 
 打开 `data/result/` 应能看出哪一步写出了哪个文件。没落盘的步骤不必硬造空文件。
 
-## 编号只对应一条有序序列
+### 编号只对应一条有序序列
 
 使用者按序号选择的列表（第 N 话、第 N 条）必须对应 **一条有序序列**。站点上并行的分类（默认话 vs 单行本 / 番外）不要加总后再从 1 编号。
 
-## 日志
+### 日志
 
 | 场景 | 示例 |
 |------|------|
-| 大步骤 | `[阶段2] 已写入 data/result/step2_detail.json` |
+| 大步骤 | `[2] 已写入 data/result/step2_detail.json` |
 | 循环 | `[3/120] 条目名` |
 | 结论 | `问 → 答 → ... \| 结论: xxx` |
 
-用 print 还是 logger 见 [SKILL.md](../SKILL.md) S13。批量 HTTP 关闭 per-request 调试；循环内不 dump 完整 JSON。
+用 print 还是 logger 见 [SKILL.md](../SKILL.md) S7。批量 HTTP 关闭 per-request 调试；循环内不 dump 完整 JSON。
 
-## 批处理
+### 批处理
 
 循环处理多条时，一笔失败记入失败列表并继续下一条；整批结束打印成功数/失败数，并列出失败项与原因。
+
+### 脚本里什么算无效封装
+
+抽函数的一般规则见 [function.md](./function.md)（空壳函数）。脚本里另外这几条会把流程写难看懂：
+
+- 把同一步拆成 `fetch_x` + `download_one_x` + `download_selected_x`，主流程要跳三次才能看完
+- `max_workers=1` 的线程池包一层 for 循环
+- 同一步骤里若线程池需要 callable，用 **步骤内嵌套 def**，不要提升成模块级工具
+
+可以留：被 **两个以上步骤** 真正调用、且规则固定的协议细节（共用 HMAC GET、设备指纹、统一的 HTTP 非 200 报错）。
+
+---
+
+## 特例一：一次请求
+
+测一条 API / URL、把 cURL 转成 `requests`、给某个服务写单接口探测：一个文件、一次请求、从上到下直跑。不写步骤、不写 `main`、不写 `if __name__`。
+
+顺序固定：headers → cookies → body → `url` 紧挨着 `requests.get` / `requests.post` → 解析 → 落盘。
+
+变量名就用 `headers` / `cookies` / `body` / `url` / `response`。字典字面量：`{` 后换行，键缩进 4 空格，`}` 单独一行。没有 cookies 或 body 就整块不写。字典/列表当请求体用 `json=`，字符串用 `data=`。响应写到脚本同目录（或已有的 `data/result/`）一份 JSON，`indent=4`。
+
+```python
+# ✅
+import json
+from pathlib import Path
+
+import requests
+
+headers = {
+    "accept": "application/json",
+    "origin": "https://example.com"
+}
+
+cookies = {
+    "session": "abc"
+}
+
+body = {
+    "q": 1
+}
+
+url = "https://example.com/api/search"
+response = requests.post(url, headers=headers, cookies=cookies, json=body, timeout=30)
+
+try:
+    result = response.json()
+except ValueError:
+    result = response.text
+
+out = Path(__file__).resolve().parent / "response.json"
+out.write_text(
+    json.dumps({"status_code": response.status_code, "body": result}, ensure_ascii=False, indent=4),
+    encoding="utf-8",
+)
+print(response.status_code, "->", out)
+```
+
+```python
+# ❌
+METHOD = "POST"
+URL = "https://example.com/api/search"
+HEADERS = {"accept": "application/json", "origin": "https://example.com"}
+
+def main() -> None:
+    kwargs = {"headers": HEADERS, "timeout": 30, "json": BODY}
+    response = requests.request(METHOD, URL, **kwargs)
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+## 特例二：分阶段脚本
+
+中间有真实的一步处理（请求 → 取字段 → 下一步），就按阶段往下排。
+
+### 怎么切一步
+
+不要按「感觉上的函数粒度」切。一步处理 = 一次请求或一次明确的数据变换，加上取字段、打印、本步产出。
+
+- **一步一个函数**：一个 def 做完这一步，函数名说清它做什么（`resolve_api_host`、`search_comic`、`fetch_comic_detail`），不加 `step` 前缀
+- **函数按执行顺序排**：文件里从上到下就是 1、2、3
+- **步骤内按执行顺序写**：先请求、再取字段、再打印/落盘。读一个函数就能看懂这一步
+- **步骤内注释写清数据流**：哪个 URL、吃上一步哪个字段、吐给下一步什么。`#` 怎么写见 [SKILL.md](../SKILL.md) S1 / S2
+- **日志与落盘跟着同一个步号走**：注释写 `# 2.`，日志打 `[2]`，落盘写 `step2_hits.json`
+
+协议还没摸清时，先写一次请求脚本，不要一上来写总控。
+
+### 步骤方法与步号
+
+`__main__` 里一行带序号的注释接一行调用：注释说明这一步做什么、吃什么、吐什么。
+
+```python
+if __name__ == "__main__":
+    COMIC_NAME = "书名"
+
+    # 1. 解析入口地址：network2 → api_host
+    api_host = resolve_api_host()
+
+    # 2. 搜索：书名 → path_word
+    hit = search_comic(api_host, COMIC_NAME)
+
+    # 3. 拉详情：path_word → 简介、默认分组话数
+    results = fetch_comic_detail(api_host, hit["path_word"])
+```
+
+- 步号只出现在注释、日志前缀、落盘文件名三处（文件名保留 `step` 前缀：`step2_hits.json`）；函数名里不带号
+- 不要再包一层 `run()` / `fetch_all()` 把步骤藏进去
+- 步骤函数就写在本文件，按 1、2、3 排；不要为了对齐「逻辑必须在 utils」而拆文件
