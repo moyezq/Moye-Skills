@@ -168,3 +168,9 @@ ADR-0025 之后 `project.md` 有十一条，其中六条各有更好的归属：
 工作树里 Markdown 知识库 skill 目录由 `self-notes-read` 改为 `knowledge-base-design`。职责仍是查阅、整理、切篇与书写；写法目标从「初学者短文 + 最少必要示例 + 以正则符号表为唯一范本」改为「词条查阅、前置跟父目录、语法文与用法文分范本」。`name`、清单、README、`.env.example`、术语表与活指针同轮改完。标题不超过四级，不加 `#####`。一次一篇不是硬规则，只在多篇且目标未对齐时用。
 
 否掉保留 `self-notes-read`：名字只说「读笔记」，盖不住切篇与写法设计。否掉把一次一篇写成硬规则，也否掉给拷问访谈 skill 单开知识库约束。
+
+## ADR-0028 · 2026-10-31 · 退役 code-principles，材料落 backup/
+
+`code-principles` 从工作树退役，整目录移进 `backup/code-principles/`。写代码判断改走更专门的 skill（`python-standard-coding` / `python-testing`），不再常驻一份跨语言 13 条。否掉继续留在 `skills/`：它每轮占固定上下文，和专门 skill 冲突时还要再读一遍，收益不够。
+
+ADR-0018 是改名记载，不动。`backup/self-frontend` 里旧指针是暂存记载，不动。

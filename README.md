@@ -17,7 +17,6 @@ Agent Skill 是给 AI 读的规范：命中任务时它被读进上下文，替�
 | 能力（skill） | 做什么 | 不装会怎样 |
 |---|---|---|
 | `session-bootstrap` | 新对话开场七步：判当前 Agent、系统、skill 根目录、可用命令与 conda 环境，定这一轮的全局约束 | 每个会话都要重新交代工具与约定 |
-| `code-principles` | 13 条跨语言代码判断，写改代码时兜底 | 没有兜底原则，AI 按各自默认口味写 |
 | `python-standard-coding` | Python 写法与落盘：风格、类型、函数、容器、性能、脚本、一次请求探测、多文件目录 | Python 风格与目录随对话漂 |
 | `python-testing` | 先选定测试边界，再写进 spec，最后按一条用户路径写 pytest | 测试写了也不知道该测哪一层 |
 | `project-docs` | 项目文档：术语表、ADR、人读 README、文档地图、最小视图 | 术语和决策没有落点，反复问同一件事 |
@@ -51,7 +50,7 @@ powershell -ExecutionPolicy Bypass -File .\setup.ps1
 
 `setup.ps1` 把这三个目录各做成指向本仓 `skills/` 的**目录联接**（同名目录已存在就先备份成 `<名字>.bak-<日期>`；联接指向别处则重建）。某个产品没装就把它留空，那一项会被跳过。看到 `ok <产品目录> -> <本仓>\skills` 就是接上了，然后**重启 Cursor / dsh**——目录联接只在启动时读一次。
 
-验收：新开一个对话，问「这段代码还能怎么简化」。`code-principles` 应当被读到，并按那 13 条回答。
+验收：新开一个对话，问「这段 Python 函数怎么抽」。`python-standard-coding` 应当被读到。
 
 ### Ⅱ 配齐完整能力（让 Agent 自己填）
 
@@ -79,7 +78,7 @@ powershell -ExecutionPolicy Bypass -File .\setup.ps1
 flowchart LR
   A[新对话] --> B[session-bootstrap 开场]
   B --> C{这一轮是什么活}
-  C -->|写改代码| D[code-principles 兜底<br>python-standard-coding / python-testing]
+  C -->|写改代码| D[python-standard-coding / python-testing]
   C -->|文档与术语| E[project-docs]
   C -->|需求还没对齐| F[grill-with-docs]
   C -->|动 skill 本身| G[skill-crud]

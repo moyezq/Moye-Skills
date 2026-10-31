@@ -4,7 +4,6 @@
 |-------|--------|
 | `session-bootstrap` | 会话索引：开场七步（判 Agent / 系统 / skill 根目录、系统命令白名单、conda 环境、按 Agent 读 harness 操作规范）、全程约束、输出要求 |
 | `session-tools` | 本轮会话三件事：自检（操作/token/skill 加载）、交接（写/接）、从本轮抽可迁移面试题 |
-| `code-principles` | 代码设计默认原则（跨语言兜底） |
 
 ## Python 与项目
 
