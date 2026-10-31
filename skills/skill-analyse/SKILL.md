@@ -17,7 +17,7 @@ description: >-
 
 - 新建或改本仓个人 skill、删 skill、找上游 skill → `skill-crud`
 - 写 agent 会读的规范 / description → `skill-crud/references/style.md`
-- 写笔记库主题文 → `self-notes-read`
+- 写笔记库主题文 → `knowledge-base-design`
 - 从本轮开发抽面试题 → `session-tools`
 
 ---

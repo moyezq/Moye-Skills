@@ -195,7 +195,7 @@ def find_sibling_hit(skill_dir: Path, target: str) -> str:
 
     功能：本 skill 里找不到时，按父目录（`skills/` 根）下每个兄弟目录各试一次
     `<兄弟目录>/<相对路径>`；本仓 ADR-0006 允许 skill 之间互相指向，命中就不是断链。
-    应用场景：正文写 `references/writing.md` 而文件在兄弟 skill `self-notes-read` 里的那种指针。
+    应用场景：正文写 `references/writing.md` 而文件在兄弟 skill `knowledge-base-design` 里的那种指针。
     输入：skill_dir — 本 skill 目录；target — 已去两端空白的相对路径。
     输出：命中的兄弟目录名；一个都没命中返回空串。
     """

@@ -10,14 +10,14 @@
 
 | Skill | 一句话 |
 |-------|--------|
-| `python-standard-coding` | Python 写法与落盘：风格/类型/函数/容器/性能/脚本/一次请求探测/多文件项目目录 |
+| `python-standard-coding` | Python 写法与落盘：风格/类型/函数/容器/性能/脚本/一次请求探测/第三方 HTTP 客户端/多文件项目目录 |
 | `python-testing` | 选定测试边界 → 写进 spec → 写 pytest；上游 `tdd` / `to-spec` / `python-testing-patterns` 三份的中文组合 |
 
 ## 知识库
 
 | Skill | 一句话 |
 |-------|--------|
-| `self-notes-read` | 笔记库查阅、整理、书写 |
+| `knowledge-base-design` | 知识库设计：查阅、整理、切篇与书写 |
 
 ## 对齐与建模
 

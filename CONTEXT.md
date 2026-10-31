@@ -60,6 +60,10 @@ _Avoid_: 自定义 skill, 个人规范
 工作树顶层 skill：个人 skill 的增删改查（建 / 改 / 删 / 找）。入口 `SKILL.md` 认场景；细则在 `references/`。
 _Avoid_: self-skill-crud（旧名）
 
+**knowledge-base-design**：
+工作树顶层 skill：Markdown 知识库的设计、查阅、整理与书写。入口 `SKILL.md`；写法框架在 `references/writing.md`。
+_Avoid_: self-notes-read（旧名）, 笔记库查阅
+
 **命令**：
 description 末尾的 `/名字`，人打它触发该 skill；开场清单从 `available_skills` 现抄，不另存一份。
 _Avoid_: 路由表, 触发条件表, 叠用关系

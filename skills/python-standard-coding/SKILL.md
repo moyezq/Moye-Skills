@@ -6,6 +6,7 @@ description: >-
   定环境或装依赖、
   补类型标注、改返回值形状、重构一段代码、新建或整理 Python 仓目录时查阅。
   测一条 API / URL、把 cURL 转成 requests、给某个服务写单接口探测，或给模型、外站接口起一个只听本机的最小验证服务时也查阅。
+  封装调第三方 HTTP 的模块、按真实返回写分支时查阅。
 ---
 
 # Python 写法与落盘
@@ -14,7 +15,7 @@ description: >-
 
 ## 何时用
 
-**用**：写或改 `.py`；第一次为任务跑 Python；新项目装依赖；写单文件脚本或入口文件头；改函数/类/FastAPI 路由或嫌拆太碎；补类型标注或改返回值形状；重构一段已有代码；新建/整理 Python 项目目录或写改根 README；测一条 API / URL、把 cURL 转成 requests、给某个服务写单接口探测。
+**用**：写或改 `.py`；第一次为任务跑 Python；新项目装依赖；写单文件脚本或入口文件头；改函数/类/FastAPI 路由或嫌拆太碎；补类型标注或改返回值形状；重构一段已有代码；新建/整理 Python 项目目录或写改根 README；测一条 API / URL、把 cURL 转成 requests、给某个服务写单接口探测；封装调第三方 HTTP 的模块、按真实返回写分支。
 
 **不用**：探测脚本（`env_detect.py` / `conda_envs.py`）不算为任务跑 Python。pytest 测试边界与用例见 `python-testing`。只改 ADR / architecture / 术语表、不动代码与目录树。前端页面、桌面壳、知识库笔记。
 
@@ -34,6 +35,7 @@ description: >-
 | 大文件、大结果集流式处理、比内存大的数组 | [references/perf.md](./references/perf.md)（P1、P4） |
 | 单文件脚本：顶部注释、入口与运行参数、文件命名、`data/`、运行上限、分阶段脚本 | [references/script.md](./references/script.md) |
 | 测一条 API / URL、cURL 转 requests、服务单接口 | [references/script.md](./references/script.md)「一次请求」 |
+| 封装调第三方 HTTP 的模块、按真实返回写分支 | [references/third-party-http.md](./references/third-party-http.md) |
 | 调研用的最小服务：单文件起 HTTP 服务、先钉契约、探针当验收 | [references/service.md](./references/service.md) |
 | 配置文件、`.env`、`scripts/` 落点、启动文件命名、`utils/`、先定模块清单、已有结构优先 | [references/project.md](./references/project.md) |
 | 生产服务：层与模块怎么切、目录树、router/schema、启动文件、`lifespan`、前后端同仓 | [references/prd-fastapi.md](./references/prd-fastapi.md) |

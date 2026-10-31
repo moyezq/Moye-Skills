@@ -28,7 +28,7 @@ Agent Skill 是给 AI 读的规范：命中任务时它被读进上下文，替�
 | `skill-crud` | 个人 skill 的增删改查（建 / 改 / 删 / 找）与 skill 文本规范 | 改 skill 容易破坏单一事实源、漏改连带文件 |
 | `skill-analyse` | 把上游或本地的 skill 拆成 analyse 分析报告 | 想收编别人的 skill 时得自己啃源码 |
 | `session-tools` | 本轮会话自检、写交接文档、抽可迁移面试题 | 长会话丢了上下文，只能从头重讲 |
-| `self-notes-read` | 查阅、整理、书写 Markdown 知识库（要配 `NOTES_ROOT`） | 笔记不按统一框架进库，沉淀不下来 |
+| `knowledge-base-design` | 知识库设计：查阅、整理、切篇与书写 Markdown 知识库（要配 `NOTES_ROOT`） | 笔记不按统一框架进库，沉淀不下来 |
 
 ## 快速开始
 
@@ -60,7 +60,7 @@ powershell -ExecutionPolicy Bypass -File .\setup.ps1
 | 键 | 是什么 / 配了能做什么 | 没配会怎样 |
 |---|---|---|
 | `GITHUB_PAT` | fine-grained PAT，权限 `Contents: Read and write`；dsh 会话里可自行 fetch / pull / push | 远端 git 操作交你自己的终端 |
-| `NOTES_ROOT` | 你的 Markdown 笔记库根目录，`self-notes-read` 用 | 这份 skill 拿不到库路径 |
+| `NOTES_ROOT` | 你的 Markdown 笔记库根目录，`knowledge-base-design` 用 | 这份 skill 拿不到库路径 |
 | `NPM_CACHE` | npx 缓存目录，`skill-crud` 的取源脚本用 | 回落到 `WORKSPACE_ROOT` 下的 `.npm-cache` |
 | `SKILLS_ROOT` / `WORKSPACE_ROOT` | 本仓根 / 本仓所在的那一级目录。skill 正文不写死盘符与用户名，要用绝对路径就取这两个键 | 只少一条路径来源，不报错 |
 
