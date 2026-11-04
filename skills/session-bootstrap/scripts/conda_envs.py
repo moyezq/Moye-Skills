@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 r"""
-列出本机 conda 环境名：只读入口给环境名，写入入口更新环境卡。
+列出本机 conda 环境名：探测原语给环境名，写入入口更新环境卡。
 
 ================================================================================
 使用前注意事项
 ================================================================================
-1. 会话只调只读入口 `list_conda_env_names()`；写环境卡的 `detect_and_save_conda_envs()` 在受限沙箱下会被拒。
+1. 开场不调本文件。用户点名刷新 conda 名单、或环境卡文件不存在时，调 `detect_and_save_conda_envs()`。
 2. 读 `conda info --json` 的 envs 与 root_prefix，不要把原始 JSON 打到 stdout。
 3. stdout 只有 conda_date 与 conda_envs。本脚本不算为任务跑 Python。
 4. 调 conda 的子进程带空 `CONDA_OVERRIDE_CUDA`：沙箱（DSH workspace-write）不许开命名管道，
@@ -34,7 +34,7 @@ def list_conda_env_names() -> list:
     从 conda info --json 取出环境名。
 
     功能：root_prefix 对应 base，其余用路径最后一段。
-    应用场景：conda 日探测。
+    应用场景：刷新环境卡时收集环境名。
     输入：无。
     输出：环境名列表，base 在前。
     异常：找不到 conda → FileNotFoundError；非 0 或超时 → RuntimeError。
@@ -78,7 +78,7 @@ def detect_and_save_conda_envs() -> dict:
     探测 conda 环境名并更新环境卡的 conda 字段。
 
     功能：写入 conda_date、conda_envs，保留命令字段。
-    应用场景：第一次为任务跑 Python 且 conda_date 不是今天。
+    应用场景：用户点名刷新 conda 名单，或环境卡文件不存在。
     输入：无。
     输出：更新后的环境卡 dict；同时向 stdout 打印 conda 切片。
     """

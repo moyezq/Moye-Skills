@@ -21,7 +21,7 @@ description: >-
 - 写库/框架用法文或入门文，或把课件/截图转成自有笔记
 - 处理带 `> 外部文档` 的第三方总结稿（含库外同形态笔记）
 
-命令与 conda 日探测见会话索引，不要在这里重跑。多文件 Python 项目目录见 `python-standard-coding` 的 `references/project.md`；`cases/` 命名见 `references/writing.md`；工程脚本见 `python-standard-coding` 的 `references/script.md` / `function.md`。
+命令白名单与 conda 环境名见会话索引环境卡，不要在这里重探。多文件 Python 项目目录见 `python-standard-coding` 的 `references/project.md`；`cases/` 命名见 `references/writing.md`；工程脚本见 `python-standard-coding` 的 `references/script.md` / `function.md`。
 
 新建/改结构、不确定文首/概念/核心规则/用法对照/实战怎么摆时，**接着 Read** `references/writing.md` 全文。只改文风/精简、不改形态时，至少 Read 其中「文风对照」。只做外链收敛且不改结构、不改文风时，本节硬约束够用。
 

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 r"""
-探测 PATH 高频命令：只读入口给出当天可用命令名，写入入口更新环境卡。
+探测 PATH 高频命令：探测原语给出可用命令名，写入入口更新环境卡。
 
 ================================================================================
 使用前注意事项
 ================================================================================
-1. 会话只调只读入口 `list_available_commands()`；写环境卡的 `detect_and_save_commands()` 在受限沙箱下会被拒。不读 conda 环境名单。
+1. 开场不调本文件。用户点名刷新命令名单、或环境卡文件不存在时，调 `detect_and_save_commands()`。不读 conda 环境名单。
 2. 要增删命令只改 COMMANDS_TO_CHECK；每条 version 参数写死。PATH 上 which 不到时看 FALLBACK_EXES。
 3. 只把探测成功的名字写入 commands；不写版本、不写失败项。
 4. stdout 只有 commands_date 与 commands。本脚本不算为任务跑 Python。
@@ -91,7 +91,7 @@ def list_available_commands() -> list:
     按 COMMANDS_TO_CHECK 收集当前可用的命令名。
 
     功能：which + version，只保留成功的名字。
-    应用场景：命令日探测。
+    应用场景：刷新环境卡时收集命令名。
     输入：无。
     输出：可用命令名列表，顺序与 COMMANDS_TO_CHECK 一致。
     """
@@ -107,7 +107,7 @@ def detect_and_save_commands() -> dict:
     探测可用命令并更新环境卡的命令字段。
 
     功能：写入 commands_date、commands，保留 conda 字段。
-    应用场景：本对话第一次需要命令白名单（PATH 命令）且 commands_date 不是今天。
+    应用场景：用户点名刷新命令名单，或环境卡文件不存在。
     输入：无。
     输出：更新后的环境卡 dict；同时向 stdout 打印命令切片。
     """

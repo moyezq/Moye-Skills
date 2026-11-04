@@ -29,21 +29,15 @@ description: 新对话第一条用户消息必须先读本 skill——开场硬�
 
    别把它和**工作树**搞混：`%USERPROFILE%\.dsh\skills`、`%USERPROFILE%\.cursor\skills`、`%USERPROFILE%\.agents\skills` 都只是指向同一个工作树的目录联接，由本仓 `setup.ps1` 按根目录 `.env` 建立；`<skill根目录>` 是工作树下面**单个 skill** 的那一层。skill 只有这一份正文，读与写都落在 `<skill根目录>`。命令与路径随系统走，不写死盘符。
 
-5. **系统命令白名单**：读环境卡 `<skill根目录>/scripts/_meta/env_card.json` 的 `commands`；`commands_date` 不是今天就跑一次只读探测，拿到当天必定可用的第三方命令清单：
+5. **系统命令白名单**：读环境卡 `<skill根目录>/scripts/_meta/env_card.json` 的 `commands`，本轮默认这些第三方命令可用。不看日期，不开场探测。不在清单里的命令不用，也不罗列缺什么。要增删探测项只改 `env_detect.py` 顶部的 `COMMANDS_TO_CHECK`。
 
-   ```powershell
-   python -c "import sys; sys.path.insert(0, r'<skill根目录>/scripts'); import env_detect; print(env_detect.list_available_commands())"
-   ```
+   - ✅ 读卡上的 `commands`，本轮按这份名单用
+   - ❌ 因日期不是今天、或「确认命令还在」而开场跑 `env_detect`
 
-   不在清单里的命令不用，也不罗列缺什么。要增删探测项只改 `env_detect.py` 顶部的 `COMMANDS_TO_CHECK`；这不是为任务跑 Python。
+6. **Conda 环境**：读同一份卡的 `conda_envs`。默认环境 `base`；项目 README 或用户点名了才换。不要跑 `pip list`。不看日期，不开场探测。
 
-6. **Conda 环境**：读环境卡同一份的 `conda_envs`；`conda_date` 不是今天就跑一次只读探测，拿到本机环境名清单：
-
-   ```powershell
-   python -c "import sys; sys.path.insert(0, r'<skill根目录>/scripts'); import conda_envs; print(conda_envs.list_conda_env_names())"
-   ```
-
-   默认环境 `base`；项目 README 或用户点名了才换。不要跑 `pip list`。
+   - ✅ 读卡上的 `conda_envs`
+   - ❌ 因日期不是今天而开场跑 `conda_envs`
 
 7. **Harness 操作**：按第 2 步的 `AGENT`，读 `<skill根目录>` 下对应的一份，按它执行，别读别家那份：
 
@@ -59,6 +53,13 @@ description: 新对话第一条用户消息必须先读本 skill——开场硬�
    三端共用的三条先照这个：新建文件直接写；改已有文件先读再改；一个文件要改多处就一次改完，生成文件（`.d.ts`、绑定的模型声明、前端产物）不手改、改源头再重跑。
 
 开场只做这七步。其它正文：用到才读，读过不重读。
+
+**刷新环境卡**（开场七步之外）：用户点名刷新命令或 conda 名单、或卡文件不存在时才跑；开场不做。分别：
+
+```powershell
+python -c "import sys; sys.path.insert(0, r'<skill根目录>/scripts'); import env_detect; env_detect.detect_and_save_commands()"
+python -c "import sys; sys.path.insert(0, r'<skill根目录>/scripts'); import conda_envs; conda_envs.detect_and_save_conda_envs()"
+```
 
 ---
 
